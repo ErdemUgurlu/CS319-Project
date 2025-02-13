@@ -40,7 +40,7 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 
 ---
 
-### 🔄 **TA Duty Workflow / Proctoring**  
+###   **TA Duty Workflow / Proctoring**  
 1. **TAs select** task type, duration, date, and time.  
 2. **Course instructors** can approve or reject tasks.  
 3. **Approved tasks** update TA workload automatically.  
