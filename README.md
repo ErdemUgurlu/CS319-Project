@@ -46,12 +46,6 @@ TAs can **track schedules and workloads** through a provided **Excel file**.
 
 ---
 
-## 📷 Screenshots  
-![TA Management System](https://your-image-link.com/image.png)  
-
----
-
-## 📌 Installation & Usage  
 
 ### 🔧 **Installation**  
 ```bash
