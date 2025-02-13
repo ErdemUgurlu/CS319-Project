@@ -1,5 +1,5 @@
 
-TA Management System [ CS 319 TERM PROJECT]
+#TA Management System [ CS 319 TERM PROJECT]
 
 Group Members
 Berfin Örtülü (21802704) 
