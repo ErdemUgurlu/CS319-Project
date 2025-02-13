@@ -3,7 +3,7 @@
 
 ---
 
-## 👥 Group Members  
+##  Group Members  
 - **Berfin Örtülü** *(21802704)*  
 - **Gülferiz Bayar** *(21901442)*  
 - **Ahmet Kenan Ataman** *(22203434)*  
@@ -15,7 +15,7 @@
 ##  1) Description  
 The **TA Management System** is a **Linux and web-based platform** designed to efficiently manage the responsibilities of **Teaching Assistants (TAs)**.  
 
-### ✅ Key Features:
+###   Key Features:
 - Provides **reporting and administrative tools** for workload management.  
 - Assigns **proctoring tasks** based on TA workload distribution.  
 - Ensures **equitable workload sharing** within the department.  
@@ -25,7 +25,7 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 
 ## 2) Features  
 
-### 📑 **Primary Functions**  
+###   **Primary Functions**  
 - **TAs can log their tasks**, including:  
   - Lab work  
   - Grading  
@@ -71,7 +71,7 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 ---
 
 ###   **Dean’s Office Assignments**  
-📌 **Interdepartmental Proctoring:**  
+  **Interdepartmental Proctoring:**  
 - Centrally scheduled exams can have **cross-departmental** TA assignments.  
 - Departments can collaborate for **shared proctoring duties**.  
 
