@@ -1,71 +1,60 @@
+# 🎓 TA Management System  
+**[CS 319 TERM PROJECT]**  
 
-#TA Management System [ CS 319 TERM PROJECT]
+## 👥 Group Members  
+- **Berfin Örtülü** (21802704)  
+- **Gülferiz Bayar** (21901442)  
+- **Ahmet Kenan Ataman** (22203434)  
+- **Mehmet Emre Şahin** (22201765)  
+- **Erdem Uğurlu** (22203391)  
 
-Group Members
-Berfin Örtülü (21802704) 
-Gülferiz bayar (21901442) 
-Ahmet Kenan Ataman (22203434) 
-Mehmet Emre Şahin (22201765) 
-Erdem Uğurlu (22203391)
+---
 
-Description
-A Linux and web-based platform called the TA Management System was created to effectively manage the responsibilities of teaching assistants (TAs). The system offers reporting and administrative features, lets TAs document their work, and assigns proctoring assignments according to workload distribution. The technology accelerates TA-related activities in a university department and guarantees equitable workload sharing. The workloads and the schedules of the TA’s will be achieved through the given excel file.
+## 📌 Description  
+TA Management System is a **Linux and web-based platform** designed to efficiently manage the responsibilities of Teaching Assistants (TAs).  
 
-Features
+✅ This system offers **reporting and administrative features** to:  
+- Document TA tasks.  
+- Assign proctoring duties based on workload distribution.  
+- Ensure fair workload distribution across the department.  
 
-Primary Functions
-Lab work, grading, recitation, office hours, and other responsibilities can be entered by TAs
-TAs with the least amount of work are given priority when proctoring tasks are assigned
+TAs can **track schedules and workloads** through a provided **Excel file**.
 
-Secondary Functions
-Develops exam distribution lists for students in the classroom.
-Reports on workload are provided.
+---
 
-TA Duty Workflow / Proctoring
-TAs choose the task type, duration, date, and time
-After being notified, the course instructor has the option to accept or reject the submission
-The TA's overall workload for the semester is increased by approved tasks
-TAs ask for leave for particular dates (e.g., conferences, medical reasons).
-The request is approved or denied by the department head or authorized personnel.
-Proctoring assignments on those dates is prohibited by approved leave.
+## 🚀 Features  
 
-Assignment In Detail
-Instructors define exam parameters (course, date/time, duration, and number of proctors). Assignments can be manual or automatic:
-Automated Assignment prioritizes TAs with the least workload, considering availability and PHD/MS
-course restrictions.
-Manual Assignment allows authorized staff to select TAs with priority warnings.
+### 🏫 **Primary Functions**  
+- Lab work, grading, recitation, and office hours can be logged by TAs.  
+- **Fair task assignment**: TAs with the least workload are prioritized for proctoring.  
 
-If TAs are insufficient, overrides (e.g., consecutive assignments, MS/PHD restrictions) or additional TAs from other departments can be requested.
+### 📊 **Secondary Functions**  
+- Automated **exam distribution list** generation for students.  
+- Workload report generation for better management.  
 
-Once finalized, the system notifies all parties via email and updates TA workloads.
-  
-Proctor Swaps
-TAs in the department have the option to request exchanges with other TAs.
-The system updates workloads and alerts everyone whether it is accepted.
-In order to avoid recurring cycles, staff members can also reassign proctors while keeping track of any modifications.
+### 🔄 **TA Duty Workflow / Proctoring**  
+1. TAs choose **task type, duration, date, and time**.  
+2. **Course instructors** review and approve/reject submissions.  
+3. **Semester workload** updates automatically.  
+4. **Leave requests** (e.g., for conferences, medical reasons) require approval.  
 
-Dean’s Office Assignments
-Assignments can be distributed around departments for tests that are centrally scheduled, and certain departments can combine for proctoring.
+### 🎯 **Assignment Management**  
+- **Instructors define exam parameters** (course, date, duration, number of proctors).  
+- **Assignment modes:**  
+  - ✅ **Automated**: Prioritizes TAs with lower workload & ensures fair distribution.  
+  - 📝 **Manual**: Allows authorized staff to assign proctors with priority warnings.  
 
-Stored Information
-Student Table: Name, academic level, TA status, student ID, and eligibility for proctoring.
-Staff Table: Name, role, and personnel ID.
- Courses & Offerings: Interactions among TAs, instructors, and students.
-Classrooms: Details on the space and its capacity.
-Permissions: TAs, instructors, department employees, and administrators have varying degrees of access.
+---
 
-System Limits
-adjustable TA workload caps for each semester or school year.
+## 📷 Screenshots  
+![TA Management System](https://your-image-link.com/image.png)  
 
-Import Functionality (Excel)
-Import data (students, faculty, courses, enrollments) from Excel.
+---
 
-Role-Based Access Control
-Groups: TA, Faculty, Department Staff, Department Chair, Dean, Administrator.
-Global parameters, like the current semester, can be modified by administrators.
+## 📌 Installation & Usage  
 
-System Requirements
-Operating System: Linux
-Web Server: Apache2
-Database: MySQL
-
+### 🔧 **Installation**  
+```bash
+git clone https://github.com/your-repo-link.git
+cd ta-management-system
+pip install -r requirements.txt
