@@ -2,7 +2,11 @@
 TA Management System [ CS 319 TERM PROJECT]
 
 Group Members
-Berfin Örtülü (21802704) Gülferiz bayar (21901442) Ahmet Kenan Ataman (22203434) Mehmet Emre Şahin (22201765) Erdem Uğurlu (22203391)
+Berfin Örtülü (21802704) 
+Gülferiz bayar (21901442) 
+Ahmet Kenan Ataman (22203434) 
+Mehmet Emre Şahin (22201765) 
+Erdem Uğurlu (22203391)
 
 Description
 A Linux and web-based platform called the TA Management System was created to effectively manage the responsibilities of teaching assistants (TAs). The system offers reporting and administrative features, lets TAs document their work, and assigns proctoring assignments according to workload distribution. The technology accelerates TA-related activities in a university department and guarantees equitable workload sharing. The workloads and the schedules of the TA’s will be achieved through the given excel file.
