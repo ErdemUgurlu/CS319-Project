@@ -1,4 +1,4 @@
-# 🎓 TA Management System  
+# TA Management System  
 **[ CS 319 TERM PROJECT ]**  
 
 ---
@@ -12,7 +12,7 @@
 
 ---
 
-## 📌 1) Description  
+##  1) Description  
 The **TA Management System** is a **Linux and web-based platform** designed to efficiently manage the responsibilities of **Teaching Assistants (TAs)**.  
 
 ### ✅ Key Features:
@@ -23,7 +23,7 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 
 ---
 
-## 🚀 2) Features  
+## 2) Features  
 
 ### 📑 **Primary Functions**  
 - **TAs can log their tasks**, including:  
@@ -34,7 +34,7 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 - **Smart Task Allocation:**  
   - **TAs with the least workload** are prioritized for proctoring assignments.  
 
-### 🏫 **Secondary Functions**  
+### **Secondary Functions**  
 - **Automated Exam Distribution Lists:** Ensures fair and balanced workload for exam supervision.  
 - **Workload Reports:** Generates workload summaries for TAs and faculty.  
 
@@ -49,35 +49,35 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 
 ---
 
-### 📝 **Assignment Management**  
-📌 **Exam parameters** (course, date, duration, number of proctors) are defined by instructors.  
+### **Assignment Management**  
+  **Exam parameters** (course, date, duration, number of proctors) are defined by instructors.  
 
-✅ **Assignment Modes:**  
+  **Assignment Modes:**  
 - **Automated:** Prioritizes **least-burdened TAs**, considering **MS/PHD workload restrictions**.  
 - **Manual:** Staff can manually assign proctors with **priority warnings**.  
 
-💡 If **TAs are insufficient**, the system allows:  
+  If **TAs are insufficient**, the system allows:  
 - Overrides (e.g., **back-to-back assignments** or **MS/PHD exemptions**).  
 - Requesting additional **TAs from other departments**.  
 - Notifications via **email** with **real-time workload updates**.
 
 ---
 
-### 🔄 **Proctor Swaps**  
+###   **Proctor Swaps**  
 - **TAs** can request **swaps** with other TAs.  
 - **The system updates workloads** and notifies relevant parties.  
 - **Staff can intervene** to reassign proctors **if necessary**, maintaining **fair distribution**.  
 
 ---
 
-### 🏛 **Dean’s Office Assignments**  
+###   **Dean’s Office Assignments**  
 📌 **Interdepartmental Proctoring:**  
 - Centrally scheduled exams can have **cross-departmental** TA assignments.  
 - Departments can collaborate for **shared proctoring duties**.  
 
 ---
 
-### 📊 **Stored Information**  
+###  **Stored Information**  
 | **Category**    | **Details** |
 |----------------|------------|
 | **Student Table**  | Name, academic level, TA status, student ID, eligibility for proctoring |
@@ -88,16 +88,16 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 
 ---
 
-### ⚙️ **System Limits**  
+###   **System Limits**  
 - Adjustable **TA workload caps** per semester or academic year.  
 
-### 📥 **Import Functionality (Excel)**  
+###   **Import Functionality (Excel)**  
 - Import **students, faculty, courses, enrollments** from **Excel files**.  
 
 ---
 
-### 🔐 **Role-Based Access Control**  
-✅ **User Groups:**  
+###   **Role-Based Access Control**  
+  **User Groups:**  
 - **TA**  
 - **Faculty**  
 - **Department Staff**  
@@ -105,11 +105,11 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 - **Dean**  
 - **Administrator**  
 
-📌 **Global System Settings** (e.g., current semester) can only be modified by **administrators**.  
+  **Global System Settings** (e.g., current semester) can only be modified by **administrators**.  
 
 ---
 
-## 🛠 **System Requirements**  
+##   **System Requirements**  
 | **Component**  | **Requirement** |
 |--------------|----------------|
 | **Operating System** | Linux |
@@ -118,7 +118,5 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 
 ---
 
-### 📩 Contact & Contributions  
-For any questions or contributions, feel free to reach out via email or submit a **pull request**. 🚀  
 
 ---
