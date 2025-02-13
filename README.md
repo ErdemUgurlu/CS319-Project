@@ -47,8 +47,3 @@ TAs can **track schedules and workloads** through a provided **Excel file**.
 ---
 
 
-### 🔧 **Installation**  
-```bash
-git clone https://github.com/your-repo-link.git
-cd ta-management-system
-pip install -r requirements.txt
