@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:8000/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8000/api';
 
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -105,6 +105,28 @@ export const taskAPI = {
   // Update task status
   updateStatus: (id, status) => 
     api.post(`/tasks/${id}/update_status/`, { status }),
+};
+
+export const proctoringAPI = {
+  getDepartments: () => api.get('/departments/'),
+  
+  getAvailableTAs: (courseId) => 
+    api.get(`/proctor-assignments/available_tas/?course_id=${courseId}`),
+  
+  assignProctor: (examId, data) => 
+    api.post(`/proctor-assignments/`, { exam: examId, ...data }),
+  
+  requestCrossDepartment: (examId, data) => 
+    api.post(`/proctor-assignments/${examId}/request_cross_department/`, data),
+  
+  getCrossDepartmentRequests: () => 
+    api.get('/cross-department-requests/'),
+  
+  approveCrossDepartmentRequest: (requestId) => 
+    api.post(`/cross-department-requests/${requestId}/approve/`),
+  
+  rejectCrossDepartmentRequest: (requestId) => 
+    api.post(`/cross-department-requests/${requestId}/reject/`),
 };
 
 export default api; 

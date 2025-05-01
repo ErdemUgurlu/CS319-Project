@@ -1,6 +1,22 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Department(models.Model):
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=10, unique=True)
+
+    def __str__(self):
+        return f"{self.code} - {self.name}"
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    is_authorized_staff = models.BooleanField(default=False)
+    is_dean_office = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.department.name}"
+
 class Course(models.Model):
     code = models.CharField(max_length=10)  # Örn: CS319
     name = models.CharField(max_length=100)
@@ -78,18 +94,41 @@ class ProctorAssignment(models.Model):
         ('assigned', 'Assigned'),
         ('confirmed', 'Confirmed'),
         ('declined', 'Declined'),
-        ('swapped', 'Swapped')
+        ('swapped', 'Swapped'),
+        ('pending_cross_department', 'Pending Cross-Department Assignment'),
+        ('approved_cross_department', 'Approved Cross-Department Assignment'),
+        ('rejected_cross_department', 'Rejected Cross-Department Assignment')
     ]
 
     exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
-    proctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proctor_assignments')
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='assigned')
+    proctor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='proctor_assignments', null=True, blank=True)
+    status = models.CharField(max_length=30, choices=STATUS_CHOICES, default='assigned')
     assigned_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_proctors')
+    target_department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True, related_name='cross_department_assignments')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.proctor.username} - {self.exam}"
+        return f"{self.exam} - {self.proctor.username if self.proctor else 'Pending Assignment'}"
+
+class CrossDepartmentAssignmentRequest(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected')
+    ]
+
+    proctor_assignment = models.ForeignKey(ProctorAssignment, on_delete=models.CASCADE, related_name='cross_department_requests')
+    requesting_department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='sent_requests')
+    target_department = models.ForeignKey(Department, on_delete=models.CASCADE, related_name='received_requests')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_cross_department_requests')
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_cross_department_requests')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cross-department request: {self.requesting_department.code} → {self.target_department.code}"
 
 class SwapRequest(models.Model):
     STATUS_CHOICES = [
