@@ -1,0 +1,2260 @@
+INFO 2025-05-03 03:25:14,663 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 03:25:49,445 basehttp "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-05-03 03:25:49,463 basehttp "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4193
+INFO 2025-05-03 03:25:49,508 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-05-03 03:25:49,510 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-05-03 03:25:49,511 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-05-03 03:25:49,513 basehttp "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-05-03 03:25:49,514 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-05-03 03:25:49,515 basehttp "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-05-03 03:25:49,995 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2025-05-03 03:25:57,105 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4367
+INFO 2025-05-03 03:26:05,420 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4384
+INFO 2025-05-03 03:26:14,781 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4384
+INFO 2025-05-03 03:26:14,794 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:14,794 basehttp "GET /static/admin/css/login.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:14,795 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:14,795 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:14,795 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:14,795 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:14,929 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:29,393 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4384
+INFO 2025-05-03 03:26:34,158 basehttp "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-05-03 03:26:34,167 basehttp "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4193
+INFO 2025-05-03 03:26:49,554 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4384
+INFO 2025-05-03 03:26:49,570 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:49,571 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:49,571 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:49,572 basehttp "GET /static/admin/css/login.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:49,572 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:49,574 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:26:49,710 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:29:38,575 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 03:29:43,193 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 03:30:22,870 basehttp "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-05-03 03:30:22,890 basehttp "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4193
+INFO 2025-05-03 03:30:22,938 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-05-03 03:30:22,938 basehttp "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-05-03 03:30:22,939 basehttp "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-05-03 03:30:22,940 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-05-03 03:30:22,941 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-05-03 03:30:22,947 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-05-03 03:30:23,420 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+WARNING 2025-05-03 03:30:23,470 log Not Found: /favicon.ico
+WARNING 2025-05-03 03:30:23,471 basehttp "GET /favicon.ico HTTP/1.1" 404 4034
+INFO 2025-05-03 03:30:31,555 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-05-03 03:30:31,568 basehttp "GET /admin/ HTTP/1.1" 200 11615
+INFO 2025-05-03 03:30:31,579 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-05-03 03:30:31,758 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-05-03 03:30:31,758 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-05-03 03:30:50,519 basehttp "GET /admin/accounts/auditlog/add/ HTTP/1.1" 200 15987
+INFO 2025-05-03 03:30:50,542 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-05-03 03:30:50,543 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-05-03 03:30:50,543 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-05-03 03:30:50,544 basehttp "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-05-03 03:30:50,550 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-05-03 03:30:50,558 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-05-03 03:30:50,563 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-05-03 03:30:50,565 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-05-03 03:30:50,567 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 03:30:50,571 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-05-03 03:30:50,573 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-05-03 03:30:50,574 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-05-03 03:30:50,681 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-05-03 03:30:50,682 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-05-03 03:30:54,936 basehttp "GET /admin/ HTTP/1.1" 200 11615
+INFO 2025-05-03 03:30:57,061 basehttp "GET /admin/accounts/classroom/add/ HTTP/1.1" 200 13557
+INFO 2025-05-03 03:30:57,079 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 03:31:00,387 basehttp "GET /admin/ HTTP/1.1" 200 11615
+INFO 2025-05-03 03:31:30,466 basehttp code 400, message Bad request version ('¡\x163,\x17Ô\x00*jj\x13\x01\x13\x02\x13\x03À,À+Ì©À0À/Ì¨À')
+ERROR 2025-05-03 03:31:30,466 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+INFO 2025-05-03 03:31:30,468 basehttp code 400, message Bad request version ('ú!Ð\x13¼\x97\x80.\x95ÿ\x9f£»\x86\x00,ºº\x13\x01\x13\x02\x13\x03À,À+Ì©À0À/Ì¨À')
+ERROR 2025-05-03 03:31:30,469 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+INFO 2025-05-03 03:31:30,470 basehttp code 400, message Bad HTTP/0.9 request type ('\x16\x03\x01\x00}\x01\x00\x00y\x03\x01Ö%\xadéÔ')
+ERROR 2025-05-03 03:31:30,470 basehttp You're accessing the development server over HTTPS, but it only supports HTTP.
+INFO 2025-05-03 03:33:05,065 basehttp "GET /admin/accounts/weeklyschedule/add/ HTTP/1.1" 200 16250
+INFO 2025-05-03 03:33:05,090 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,090 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,092 basehttp "GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+INFO 2025-05-03 03:33:05,094 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,099 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,103 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,107 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,108 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,108 basehttp "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+INFO 2025-05-03 03:33:05,109 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,110 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,113 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,117 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,118 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,118 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,120 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,120 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,122 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 03:33:05,287 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,287 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,288 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,291 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,291 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-05-03 03:33:05,295 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-05-03 03:33:05,313 basehttp "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+INFO 2025-05-03 03:33:07,964 basehttp "GET /admin/accounts/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 9278
+INFO 2025-05-03 03:33:07,983 basehttp "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+INFO 2025-05-03 03:33:07,988 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 03:33:08,130 basehttp "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+INFO 2025-05-03 03:47:24,315 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-03 03:47:24,553 basehttp "POST /api/token/ HTTP/1.1" 200 483
+WARNING 2025-05-03 03:50:37,610 log Unauthorized: /api/token/
+WARNING 2025-05-03 03:50:37,610 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-03 03:50:37,613 basehttp "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+ERROR 2025-05-03 03:50:37,635 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-03 03:50:37,638 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 113699
+WARNING 2025-05-03 03:50:48,519 log Unauthorized: /api/token/
+WARNING 2025-05-03 03:50:48,520 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-03 03:52:46,110 log Unauthorized: /api/token/
+WARNING 2025-05-03 03:52:46,110 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-03 03:52:53,006 basehttp "POST /api/token/ HTTP/1.1" 200 483
+INFO 2025-05-03 03:53:51,651 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 03:53:52,089 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 03:54:03,737 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 03:54:04,059 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 03:54:12,538 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 03:54:12,866 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 03:54:24,435 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/urls.py changed, reloading.
+INFO 2025-05-03 03:54:24,747 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 03:54:30,544 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 04:20:49,601 basehttp "GET /admin/accounts/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 9278
+INFO 2025-05-03 04:20:49,625 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,626 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,628 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,629 basehttp "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,630 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,631 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,633 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,634 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,635 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,636 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,637 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,637 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,640 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,641 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,642 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,644 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 04:20:49,840 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,841 basehttp "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:20:49,841 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:21:15,618 basehttp "POST /admin/accounts/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 9665
+INFO 2025-05-03 04:21:15,633 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 04:21:29,074 basehttp "POST /admin/accounts/user/add/?_to_field=id&_popup=1 HTTP/1.1" 200 370
+INFO 2025-05-03 04:21:29,091 basehttp "GET /static/admin/js/popup_response.js HTTP/1.1" 200 532
+INFO 2025-05-03 04:21:42,046 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+INFO 2025-05-03 04:21:42,046 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+WARNING 2025-05-03 04:21:42,055 log Not Found: /api/tasks/
+WARNING 2025-05-03 04:21:42,055 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 04:21:42,059 log Not Found: /api/tasks/
+WARNING 2025-05-03 04:21:42,059 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 04:22:28,008 log Not Found: /api/tasks/
+WARNING 2025-05-03 04:22:28,009 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 04:22:28,013 log Not Found: /api/tasks/
+WARNING 2025-05-03 04:22:28,014 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 04:23:08,137 basehttp "GET /admin/ HTTP/1.1" 200 12030
+INFO 2025-05-03 04:23:08,153 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:23:08,154 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:23:08,156 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:23:08,334 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 04:23:08,334 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+ERROR 2025-05-03 04:23:16,566 log Internal Server Error: /admin/accounts/user/3/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-03 04:23:16,568 basehttp "GET /admin/accounts/user/3/change/ HTTP/1.1" 500 162037
+INFO 2025-05-03 04:23:20,184 basehttp "GET /admin/ HTTP/1.1" 200 12030
+ERROR 2025-05-03 04:23:24,084 log Internal Server Error: /admin/accounts/user/3/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-03 04:23:24,086 basehttp "GET /admin/accounts/user/3/change/ HTTP/1.1" 500 162037
+INFO 2025-05-03 04:23:32,152 basehttp "GET /admin/ HTTP/1.1" 200 12030
+INFO 2025-05-03 04:23:35,680 basehttp "GET /admin/accounts/student/add/ HTTP/1.1" 200 15257
+INFO 2025-05-03 04:23:35,695 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 04:23:35,700 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 04:23:48,406 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10490
+INFO 2025-05-03 04:23:58,437 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 17195
+INFO 2025-05-03 04:23:58,454 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 04:33:32,367 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 04:33:47,754 basehttp "POST /api/token/ HTTP/1.1" 200 750
+WARNING 2025-05-03 04:33:51,702 log Not Found: /api/tasks/
+WARNING 2025-05-03 04:33:51,702 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 04:33:51,706 log Not Found: /api/tasks/
+WARNING 2025-05-03 04:33:51,706 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 04:36:14,061 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 17524
+INFO 2025-05-03 04:36:14,084 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,085 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,087 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,090 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,092 basehttp "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,093 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,094 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,095 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,096 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,096 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,097 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,097 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,100 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,101 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,102 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,104 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,106 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 04:36:14,463 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,463 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,464 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,466 basehttp "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:14,475 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:32,976 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+ERROR 2025-05-03 04:36:33,008 log Internal Server Error: /admin/accounts/user/4/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-03 04:36:33,009 basehttp "GET /admin/accounts/user/4/change/ HTTP/1.1" 500 162570
+INFO 2025-05-03 04:36:53,319 basehttp "GET /admin HTTP/1.1" 301 0
+INFO 2025-05-03 04:36:53,336 basehttp "GET /admin/ HTTP/1.1" 200 12663
+INFO 2025-05-03 04:36:53,354 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:53,504 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 04:36:53,504 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+WARNING 2025-05-03 04:37:37,558 log Not Found: /api/tasks/
+WARNING 2025-05-03 04:37:37,558 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 04:37:37,564 log Not Found: /api/tasks/
+WARNING 2025-05-03 04:37:37,564 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:10:38,234 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:10:38,235 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:10:38,245 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:10:38,245 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:12:59,401 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:12:59,402 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:12:59,408 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:12:59,409 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:14:20,920 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:14:20,921 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:14:20,924 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:14:20,925 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:14:22,233 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:14:22,234 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:14:22,238 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:14:22,238 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:14:24,038 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:14:24,038 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:14:24,043 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:14:24,044 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:14:36,977 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:14:36,978 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:14:36,983 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:14:36,983 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:16:33,740 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:16:33,741 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:16:33,747 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:16:33,747 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:20:56,981 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:20:56,982 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:20:56,987 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:20:56,987 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:20:59,730 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:20:59,731 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 09:20:59,736 log Not Found: /api/tasks/
+WARNING 2025-05-03 09:20:59,736 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 10:22:45,284 basehttp "POST /api/token/ HTTP/1.1" 200 753
+WARNING 2025-05-03 10:23:07,557 log Not Found: /api/tasks/
+WARNING 2025-05-03 10:23:07,557 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 10:23:07,562 log Not Found: /api/tasks/
+WARNING 2025-05-03 10:23:07,562 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 11:08:07,743 basehttp "POST /api/token/ HTTP/1.1" 200 753
+WARNING 2025-05-03 11:08:08,956 log Not Found: /api/tasks/
+WARNING 2025-05-03 11:08:08,957 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 11:08:08,961 log Not Found: /api/tasks/
+WARNING 2025-05-03 11:08:08,961 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 11:08:21,858 basehttp "POST /api/token/ HTTP/1.1" 200 753
+INFO 2025-05-03 11:08:32,121 basehttp "POST /api/token/ HTTP/1.1" 200 739
+WARNING 2025-05-03 11:08:49,623 log Not Found: /api/tasks/
+WARNING 2025-05-03 11:08:49,624 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 11:08:49,629 log Not Found: /api/tasks/
+WARNING 2025-05-03 11:08:49,629 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 11:11:00,091 basehttp "GET /admin/ HTTP/1.1" 200 12405
+INFO 2025-05-03 11:11:00,109 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:00,111 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:00,111 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:00,111 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:00,112 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:00,113 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:00,475 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:00,477 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:00,477 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:01,380 basehttp "GET /admin/ HTTP/1.1" 200 12405
+WARNING 2025-05-03 11:11:04,843 log Not Found: /
+WARNING 2025-05-03 11:11:04,844 basehttp "GET / HTTP/1.1" 404 3983
+INFO 2025-05-03 11:11:08,791 basehttp "GET /admin/ HTTP/1.1" 200 12405
+INFO 2025-05-03 11:11:13,490 basehttp "GET /admin/accounts/weeklyschedule/add/ HTTP/1.1" 200 16327
+INFO 2025-05-03 11:11:13,513 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,517 basehttp "GET /static/admin/js/calendar.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,520 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,522 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,522 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,523 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,524 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,525 basehttp "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,529 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,530 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,533 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,534 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,543 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:11:13,672 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,673 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,683 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:13,732 basehttp "GET /static/admin/img/icon-clock.svg HTTP/1.1" 304 0
+INFO 2025-05-03 11:11:30,611 basehttp "POST /admin/accounts/weeklyschedule/add/ HTTP/1.1" 200 16583
+INFO 2025-05-03 11:11:30,628 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:11:36,602 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:11:36,644 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:11:37,111 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:11:37,111 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:11:45,684 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:11:45,687 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:11:46,077 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:11:46,077 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:12:42,672 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:12:42,675 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:12:43,095 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:12:43,096 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:12:51,627 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:12:51,636 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:12:51,969 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:12:51,969 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:19:06,107 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:19:06,107 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:19:06,745 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:19:06,745 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:19:24,692 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:19:24,694 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:19:25,393 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:19:25,394 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:19:41,526 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:19:41,531 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:19:41,978 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:19:41,979 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:20:34,535 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:20:34,536 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:20:34,959 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:20:34,959 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:20:55,819 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:20:55,821 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 11:20:56,162 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:20:56,163 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:21:10,844 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:21:10,845 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:21:11,269 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:21:11,269 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:21:29,045 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:21:29,048 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:21:29,477 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:21:29,478 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:21:48,350 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:21:48,353 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:21:48,783 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:21:48,783 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:22:07,607 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:22:07,611 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:22:08,049 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:22:08,049 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:22:22,842 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:22:22,848 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:22:23,183 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:22:23,183 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:22:36,828 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-03 11:22:36,829 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-03 11:22:37,168 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:22:37,168 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-03 11:27:07,405 log Bad Request: /api/accounts/register/
+WARNING 2025-05-03 11:27:07,406 basehttp "POST /api/accounts/register/ HTTP/1.1" 400 91
+ERROR 2025-05-03 11:27:12,611 log Internal Server Error: /api/accounts/register/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 194, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 65, in create
+    'verification_url': f"{settings.FRONTEND_URL}/verify-email/{token}",
+                           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/conf/__init__.py", line 83, in __getattr__
+    val = getattr(_wrapped, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Settings' object has no attribute 'FRONTEND_URL'
+ERROR 2025-05-03 11:27:12,615 basehttp "POST /api/accounts/register/ HTTP/1.1" 500 103541
+INFO 2025-05-03 11:27:21,401 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 11:27:21,425 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 11:27:21,847 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:27:21,847 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-03 11:27:35,409 log Bad Request: /api/accounts/register/
+WARNING 2025-05-03 11:27:35,410 basehttp "POST /api/accounts/register/ HTTP/1.1" 400 58
+INFO 2025-05-03 11:27:41,603 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 11:27:41,644 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 11:27:42,049 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:27:42,049 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:28:27,819 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:28:27,820 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:28:28,149 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:28:28,149 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:28:47,033 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:28:47,035 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:28:47,366 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:28:47,366 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:28:58,976 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-03 11:28:58,977 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-03 11:28:59,357 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:28:59,358 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:29:46,808 basehttp "GET /admin/ HTTP/1.1" 200 12405
+INFO 2025-05-03 11:29:50,958 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 19859
+INFO 2025-05-03 11:29:50,978 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-03 11:29:50,989 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-05-03 11:29:50,989 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-05-03 11:29:50,992 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:29:51,109 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-05-03 11:29:51,109 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-05-03 11:29:51,118 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-05-03 11:29:51,118 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-05-03 11:31:23,909 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:31:23,911 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:31:24,336 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:31:24,336 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:31:34,973 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-03 11:31:34,991 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-03 11:31:35,315 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:31:35,328 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:31:51,004 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:31:51,009 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:31:51,334 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:31:51,335 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:32:03,973 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-03 11:32:03,973 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-03 11:32:04,311 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:32:04,312 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:32:16,020 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:32:16,028 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:32:16,353 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:32:16,353 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:32:33,975 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 19859
+INFO 2025-05-03 11:32:33,999 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+ERROR 2025-05-03 11:32:49,850 log Internal Server Error: /admin/accounts/user/3/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-03 11:32:49,852 basehttp "GET /admin/accounts/user/3/change/ HTTP/1.1" 500 162051
+INFO 2025-05-03 11:32:55,373 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 19859
+INFO 2025-05-03 11:32:57,696 basehttp "GET /admin/ HTTP/1.1" 200 12405
+INFO 2025-05-03 11:33:01,460 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 19859
+INFO 2025-05-03 11:33:01,481 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+ERROR 2025-05-03 11:33:04,292 log Internal Server Error: /admin/accounts/user/1/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-03 11:33:04,294 basehttp "GET /admin/accounts/user/1/change/ HTTP/1.1" 500 162015
+INFO 2025-05-03 11:33:06,012 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 19859
+INFO 2025-05-03 11:33:09,791 basehttp "GET /admin/accounts/user/?o=-1 HTTP/1.1" 200 20251
+INFO 2025-05-03 11:33:09,812 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:33:11,008 basehttp "GET /admin/accounts/user/?o=1 HTTP/1.1" 200 20215
+INFO 2025-05-03 11:33:11,029 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+ERROR 2025-05-03 11:33:12,337 log Internal Server Error: /admin/accounts/user/1/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-03 11:33:12,339 basehttp "GET /admin/accounts/user/1/change/?_changelist_filters=o%3D1 HTTP/1.1" 500 162946
+INFO 2025-05-03 11:33:14,046 basehttp "GET /admin/accounts/user/?o=1 HTTP/1.1" 200 20215
+INFO 2025-05-03 11:33:52,520 basehttp "GET /admin/accounts/auditlog/ HTTP/1.1" 200 14139
+INFO 2025-05-03 11:33:52,541 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:33:54,105 basehttp "GET /admin/accounts/auditlog/add/ HTTP/1.1" 200 15987
+INFO 2025-05-03 11:33:54,127 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:34:02,359 basehttp "GET /admin/accounts/student/ HTTP/1.1" 200 12590
+INFO 2025-05-03 11:34:02,382 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:34:04,667 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 13401
+INFO 2025-05-03 11:34:04,685 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:34:06,581 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 19859
+INFO 2025-05-03 11:34:06,602 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:34:12,293 basehttp "GET /admin/accounts/user/?_facets=True HTTP/1.1" 200 20690
+INFO 2025-05-03 11:34:12,313 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:34:12,455 basehttp "GET /static/admin/img/icon-hidelink.svg HTTP/1.1" 200 784
+INFO 2025-05-03 11:34:25,711 basehttp "GET /admin/ HTTP/1.1" 200 12405
+INFO 2025-05-03 11:35:36,918 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 19859
+INFO 2025-05-03 11:35:36,938 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:36:48,737 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 11897
+INFO 2025-05-03 11:36:48,917 basehttp "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+INFO 2025-05-03 11:36:52,379 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-03 11:36:52,392 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 17904
+INFO 2025-05-03 11:36:52,409 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-03 11:40:01,927 log Method Not Allowed: /api/accounts/register/
+WARNING 2025-05-03 11:40:01,928 basehttp "GET /api/accounts/register/ HTTP/1.1" 405 15739
+INFO 2025-05-03 11:40:01,948 basehttp "GET /static/rest_framework/css/bootstrap-tweaks.css HTTP/1.1" 200 3426
+INFO 2025-05-03 11:40:01,948 basehttp "GET /static/rest_framework/css/default.css HTTP/1.1" 200 1152
+INFO 2025-05-03 11:40:01,952 basehttp "GET /static/rest_framework/css/prettify.css HTTP/1.1" 200 817
+INFO 2025-05-03 11:40:01,955 basehttp "GET /static/rest_framework/js/csrf.js HTTP/1.1" 200 1793
+INFO 2025-05-03 11:40:01,957 basehttp "GET /static/rest_framework/js/ajax-form.js HTTP/1.1" 200 3796
+INFO 2025-05-03 11:40:01,962 basehttp "GET /static/rest_framework/js/prettify-min.js HTTP/1.1" 200 13632
+INFO 2025-05-03 11:40:01,962 basehttp "GET /static/rest_framework/js/default.js HTTP/1.1" 200 1268
+INFO 2025-05-03 11:40:01,963 basehttp "GET /static/rest_framework/css/bootstrap.min.css HTTP/1.1" 200 121457
+INFO 2025-05-03 11:40:01,963 basehttp "GET /static/rest_framework/js/load-ajax-form.js HTTP/1.1" 200 59
+INFO 2025-05-03 11:40:01,966 basehttp "GET /static/rest_framework/js/bootstrap.min.js HTTP/1.1" 200 39680
+INFO 2025-05-03 11:40:01,967 basehttp "GET /static/rest_framework/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2025-05-03 11:40:02,203 basehttp "GET /static/rest_framework/img/grid.png HTTP/1.1" 200 1458
+WARNING 2025-05-03 11:40:33,035 log Bad Request: /api/accounts/register/
+WARNING 2025-05-03 11:40:33,036 basehttp "POST /api/accounts/register/ HTTP/1.1" 400 16060
+WARNING 2025-05-03 11:40:49,795 log Bad Request: /api/accounts/register/
+WARNING 2025-05-03 11:40:49,796 basehttp "POST /api/accounts/register/ HTTP/1.1" 400 16060
+WARNING 2025-05-03 11:41:00,425 log Bad Request: /api/accounts/register/
+WARNING 2025-05-03 11:41:00,425 basehttp "POST /api/accounts/register/ HTTP/1.1" 400 16067
+WARNING 2025-05-03 11:41:11,559 log Bad Request: /api/accounts/register/
+WARNING 2025-05-03 11:41:11,560 basehttp "POST /api/accounts/register/ HTTP/1.1" 400 15978
+ERROR 2025-05-03 11:41:19,483 log Internal Server Error: /api/accounts/register/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 194, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 65, in create
+    'verification_url': f"{settings.FRONTEND_URL}/verify-email/{token}",
+                           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/conf/__init__.py", line 83, in __getattr__
+    val = getattr(_wrapped, name)
+          ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Settings' object has no attribute 'FRONTEND_URL'
+ERROR 2025-05-03 11:41:19,487 basehttp "POST /api/accounts/register/ HTTP/1.1" 500 108674
+WARNING 2025-05-03 11:43:51,262 log Not Found: /
+WARNING 2025-05-03 11:43:51,263 basehttp "GET / HTTP/1.1" 404 3983
+INFO 2025-05-03 11:43:54,836 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 18481
+INFO 2025-05-03 11:43:56,142 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 18481
+INFO 2025-05-03 11:43:59,370 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 18481
+INFO 2025-05-03 11:43:59,391 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:44:00,211 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 18481
+INFO 2025-05-03 11:44:00,231 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:44:00,883 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 18481
+INFO 2025-05-03 11:44:00,902 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:44:04,848 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 18481
+INFO 2025-05-03 11:46:08,977 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:46:08,978 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 11:46:09,424 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:46:09,424 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:46:26,215 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:46:26,215 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:46:26,551 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:46:26,552 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:46:40,199 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:46:40,203 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 11:46:40,612 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:46:40,612 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:47:37,679 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+WARNING 2025-05-03 11:47:37,887 log Unauthorized: /api/token/
+WARNING 2025-05-03 11:47:37,887 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-03 11:47:46,086 log Unauthorized: /api/token/
+WARNING 2025-05-03 11:47:46,086 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-03 11:48:00,471 basehttp "POST /api/token/ HTTP/1.1" 200 739
+INFO 2025-05-03 11:49:18,030 basehttp "GET /admin/accounts/user/?o=5.1 HTTP/1.1" 200 19217
+INFO 2025-05-03 11:49:18,065 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:49:19,747 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 19253
+INFO 2025-05-03 11:49:19,773 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 11:50:51,440 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/admin.py changed, reloading.
+INFO 2025-05-03 11:50:51,445 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/admin.py changed, reloading.
+INFO 2025-05-03 11:50:51,859 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:50:51,859 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:51:08,762 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 11:51:08,763 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 11:51:09,108 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:51:09,108 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:51:10,421 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 11:51:10,423 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 11:51:10,759 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:51:10,759 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:51:16,488 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 11:51:29,656 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21024
+INFO 2025-05-03 11:51:29,680 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+ERROR 2025-05-03 11:51:44,892 log Internal Server Error: /admin/accounts/user/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 2057, in changelist_view
+    response = self.response_action(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1686, in response_action
+    response = func(self, request, queryset)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/admin.py", line 43, in approve_users
+    html_message = render_to_string('email/account_approved_email.html', context)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: email/account_approved_email.html
+ERROR 2025-05-03 11:51:44,894 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 500 134437
+INFO 2025-05-03 11:51:48,294 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21024
+INFO 2025-05-03 11:51:56,614 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 302 0
+INFO 2025-05-03 11:51:56,629 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21166
+INFO 2025-05-03 11:51:56,648 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-03 11:52:19,905 log Unauthorized: /api/token/
+WARNING 2025-05-03 11:52:19,905 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-03 11:52:39,485 log Unauthorized: /api/token/
+WARNING 2025-05-03 11:52:39,485 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-03 11:55:44,641 basehttp "POST /api/token/ HTTP/1.1" 200 750
+WARNING 2025-05-03 11:55:55,555 log Not Found: /api/tasks/
+WARNING 2025-05-03 11:55:55,555 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 11:55:55,562 log Not Found: /api/tasks/
+WARNING 2025-05-03 11:55:55,563 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 13:28:57,287 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 11566
+INFO 2025-05-03 13:28:57,310 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,311 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,311 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,316 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,317 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,318 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,318 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,319 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,321 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,323 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,323 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,324 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,325 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,510 basehttp "GET /static/admin/js/cancel.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,510 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:57,518 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:59,062 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 302 0
+INFO 2025-05-03 13:28:59,075 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 20281
+INFO 2025-05-03 13:28:59,094 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:59,095 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:59,096 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:59,100 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 13:28:59,253 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:59,253 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:59,264 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:59,265 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-05-03 13:28:59,265 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-03 13:35:08,560 basehttp "OPTIONS /api/accounts/register/ HTTP/1.1" 200 0
+ERROR 2025-05-03 13:35:08,932 log Internal Server Error: /api/accounts/register/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 194, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 70, in create
+    html_message = render_to_string('email/temp_password_email.html', context)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: email/temp_password_email.html
+ERROR 2025-05-03 13:35:08,934 basehttp "POST /api/accounts/register/ HTTP/1.1" 500 112822
+INFO 2025-05-03 13:35:14,681 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21024
+INFO 2025-05-03 13:35:14,710 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 13:35:19,388 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 302 0
+INFO 2025-05-03 13:35:19,404 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21149
+INFO 2025-05-03 13:35:19,422 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 13:35:19,573 basehttp "GET /static/admin/img/icon-alert.svg HTTP/1.1" 200 504
+INFO 2025-05-03 13:35:25,019 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 11566
+INFO 2025-05-03 13:35:26,837 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 302 0
+INFO 2025-05-03 13:35:26,861 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 20281
+INFO 2025-05-03 13:35:26,876 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+ERROR 2025-05-03 13:35:31,757 log Internal Server Error: /api/accounts/register/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 194, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 70, in create
+    html_message = render_to_string('email/temp_password_email.html', context)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: email/temp_password_email.html
+ERROR 2025-05-03 13:35:31,758 basehttp "POST /api/accounts/register/ HTTP/1.1" 500 112822
+WARNING 2025-05-03 13:36:43,680 log Unauthorized: /api/token/
+WARNING 2025-05-03 13:36:43,681 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-03 13:37:54,925 log Not Found: /api
+WARNING 2025-05-03 13:37:54,927 basehttp "GET /api HTTP/1.1" 404 4010
+WARNING 2025-05-03 13:37:55,471 log Not Found: /favicon.ico
+WARNING 2025-05-03 13:37:55,471 basehttp "GET /favicon.ico HTTP/1.1" 404 4034
+INFO 2025-05-03 13:38:06,891 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21024
+INFO 2025-05-03 13:38:06,919 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 13:38:14,324 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 11566
+INFO 2025-05-03 13:38:15,534 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 302 0
+INFO 2025-05-03 13:38:15,549 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 20281
+INFO 2025-05-03 13:38:15,566 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 13:38:49,722 basehttp "OPTIONS /api/accounts/register/ HTTP/1.1" 200 0
+ERROR 2025-05-03 13:38:50,043 log Internal Server Error: /api/accounts/register/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 194, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 70, in create
+    html_message = render_to_string('email/temp_password_email.html', context)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/template/loader.py", line 61, in render_to_string
+    template = get_template(template_name, using=using)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/template/loader.py", line 19, in get_template
+    raise TemplateDoesNotExist(template_name, chain=chain)
+django.template.exceptions.TemplateDoesNotExist: email/temp_password_email.html
+ERROR 2025-05-03 13:38:50,045 basehttp "POST /api/accounts/register/ HTTP/1.1" 500 112822
+INFO 2025-05-03 13:39:42,595 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+WARNING 2025-05-03 13:39:42,843 log Unauthorized: /api/token/
+WARNING 2025-05-03 13:39:42,844 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-03 13:40:14,473 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:40:14,473 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:40:14,987 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:40:14,987 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:41:49,200 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:41:49,203 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:41:49,605 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:41:49,605 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:43:00,357 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21024
+INFO 2025-05-03 13:43:00,379 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 13:43:04,926 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 11566
+INFO 2025-05-03 13:43:06,457 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 302 0
+INFO 2025-05-03 13:43:06,472 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 20281
+INFO 2025-05-03 13:43:06,489 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-03 13:43:18,211 log Unauthorized: /api/token/
+WARNING 2025-05-03 13:43:18,211 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-03 13:53:44,138 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:53:44,146 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:53:44,604 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:53:44,605 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:53:53,186 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:53:53,188 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:53:53,561 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:53:53,562 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:54:29,790 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 13:54:29,792 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 13:54:30,239 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:54:30,239 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:54:45,966 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 13:54:45,969 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 13:54:46,321 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:54:46,322 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:54:54,791 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 13:54:54,808 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 13:54:55,248 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:54:55,248 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:55:27,534 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:55:27,539 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 13:55:27,958 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:55:27,958 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 13:56:51,655 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 20147
+INFO 2025-05-03 13:56:51,684 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-03 13:56:54,744 log Bad Request: /api/accounts/register/
+WARNING 2025-05-03 13:56:54,745 basehttp "POST /api/accounts/register/ HTTP/1.1" 400 77
+INFO 2025-05-03 13:57:01,797 basehttp "POST /api/accounts/register/ HTTP/1.1" 201 145
+INFO 2025-05-03 13:59:12,650 basehttp "POST /api/token/ HTTP/1.1" 200 753
+INFO 2025-05-03 14:01:22,649 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 14:01:22,650 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 14:01:23,127 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:01:23,127 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:02:06,675 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 14:02:06,677 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 14:02:07,080 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:02:07,081 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:02:24,856 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 14:02:24,857 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 14:02:25,269 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:02:25,269 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:02:35,931 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 14:02:35,931 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 14:02:36,262 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:02:36,262 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 14:03:30,658 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21026
+INFO 2025-05-03 14:03:30,684 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 14:03:34,498 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 302 0
+INFO 2025-05-03 14:03:34,512 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21151
+INFO 2025-05-03 14:03:34,531 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 14:03:39,583 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 11568
+INFO 2025-05-03 14:03:41,323 basehttp "POST /admin/accounts/user/?o=-5.1 HTTP/1.1" 302 0
+INFO 2025-05-03 14:03:41,335 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 20281
+INFO 2025-05-03 14:03:41,352 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 14:17:17,113 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 20147
+INFO 2025-05-03 14:17:17,140 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 14:18:23,197 basehttp "POST /api/accounts/register/ HTTP/1.1" 201 144
+INFO 2025-05-03 14:18:59,242 basehttp "POST /api/token/ HTTP/1.1" 200 753
+INFO 2025-05-03 14:19:17,688 basehttp "GET /admin/accounts/user/?o=-5.1 HTTP/1.1" 200 21026
+INFO 2025-05-03 14:19:17,715 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 14:32:14,936 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+INFO 2025-05-03 14:32:14,941 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+WARNING 2025-05-03 14:32:14,945 log Not Found: /api/tasks/
+WARNING 2025-05-03 14:32:14,945 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 14:32:14,948 log Not Found: /api/tasks/
+WARNING 2025-05-03 14:32:14,948 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 15:03:04,442 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/models.py changed, reloading.
+INFO 2025-05-03 15:03:04,443 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/models.py changed, reloading.
+INFO 2025-05-03 15:03:04,937 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:03:04,937 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:03:24,852 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/models.py changed, reloading.
+INFO 2025-05-03 15:03:24,855 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/models.py changed, reloading.
+INFO 2025-05-03 15:03:25,240 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:03:25,240 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:04:59,102 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/views.py changed, reloading.
+INFO 2025-05-03 15:04:59,109 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/views.py changed, reloading.
+INFO 2025-05-03 15:04:59,620 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:04:59,621 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:05:14,298 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/urls.py changed, reloading.
+INFO 2025-05-03 15:05:14,299 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/urls.py changed, reloading.
+INFO 2025-05-03 15:05:14,704 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:05:14,704 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:06:08,556 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/utils.py changed, reloading.
+INFO 2025-05-03 15:06:08,557 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/utils.py changed, reloading.
+INFO 2025-05-03 15:06:09,017 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:06:09,017 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:13:47,685 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 17949
+INFO 2025-05-03 15:13:47,707 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,708 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,710 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,713 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,714 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,715 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,716 basehttp "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,717 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,721 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,722 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,725 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,726 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,727 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,728 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,729 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,730 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:47,737 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:13:48,031 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:48,032 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:48,033 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:48,035 basehttp "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:13:48,046 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 15:14:41,000 basehttp "POST /api/token/ HTTP/1.1" 200 753
+INFO 2025-05-03 15:14:59,034 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 20181
+INFO 2025-05-03 15:14:59,053 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-03 15:14:59,054 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:14:59,055 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-05-03 15:14:59,060 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:14:59,248 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:14:59,248 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-05-03 15:14:59,260 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 15:14:59,260 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-03 15:14:59,260 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-05-03 15:18:15,271 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 15:18:15,273 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 15:18:15,780 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:18:15,780 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:25:07,913 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 17949
+INFO 2025-05-03 15:25:07,940 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:26:24,701 basehttp "POST /api/accounts/register/ HTTP/1.1" 201 144
+INFO 2025-05-03 15:30:00,574 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21017
+INFO 2025-05-03 15:30:00,603 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:30:19,078 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 11562
+INFO 2025-05-03 15:30:19,245 basehttp "GET /static/admin/js/cancel.js HTTP/1.1" 304 0
+INFO 2025-05-03 15:30:20,376 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-03 15:30:20,388 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 20315
+INFO 2025-05-03 15:30:20,405 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:30:35,009 basehttp "GET /admin/accounts/student/add/ HTTP/1.1" 200 15260
+INFO 2025-05-03 15:30:35,029 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:30:35,203 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-03 15:30:36,741 basehttp "GET /admin/accounts/auditlog/ HTTP/1.1" 200 16689
+INFO 2025-05-03 15:30:36,759 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:30:38,788 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 17949
+INFO 2025-05-03 15:30:38,809 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:33:02,096 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 18331
+INFO 2025-05-03 15:33:02,122 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:33:28,524 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 18487
+INFO 2025-05-03 15:33:28,549 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:33:48,907 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 18331
+INFO 2025-05-03 15:33:48,926 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:34:04,401 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 18475
+INFO 2025-05-03 15:34:04,419 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:34:37,217 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 18331
+INFO 2025-05-03 15:34:37,235 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:34:58,123 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 18334
+INFO 2025-05-03 15:34:58,147 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:35:27,619 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 18264
+INFO 2025-05-03 15:35:27,639 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:35:43,170 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+ERROR 2025-05-03 15:35:43,204 log Internal Server Error: /admin/accounts/user/13/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-03 15:35:43,207 basehttp "GET /admin/accounts/user/13/change/ HTTP/1.1" 500 164251
+INFO 2025-05-03 15:35:59,287 basehttp "POST /api/token/ HTTP/1.1" 200 862
+WARNING 2025-05-03 15:36:09,116 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:36:09,116 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 15:36:09,121 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:36:09,122 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 15:36:17,202 basehttp "GET /admin/ HTTP/1.1" 200 15343
+INFO 2025-05-03 15:36:17,223 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-03 15:36:17,660 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-05-03 15:36:20,560 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21019
+INFO 2025-05-03 15:36:20,583 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:37:24,322 basehttp "POST /api/token/ HTTP/1.1" 200 867
+INFO 2025-05-03 15:37:42,543 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-03 15:37:42,567 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21171
+INFO 2025-05-03 15:37:42,597 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 15:37:59,745 basehttp "POST /api/token/ HTTP/1.1" 200 865
+WARNING 2025-05-03 15:38:07,451 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:38:07,452 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 15:38:07,459 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:38:07,459 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 15:51:16,651 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/views.py changed, reloading.
+INFO 2025-05-03 15:51:16,655 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/views.py changed, reloading.
+INFO 2025-05-03 15:51:17,185 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:51:17,185 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:51:37,031 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/serializers.py changed, reloading.
+INFO 2025-05-03 15:51:37,031 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/serializers.py changed, reloading.
+INFO 2025-05-03 15:51:37,390 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:51:37,390 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:51:38,717 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/serializers.py changed, reloading.
+INFO 2025-05-03 15:51:38,717 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/serializers.py changed, reloading.
+INFO 2025-05-03 15:51:39,081 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:51:39,081 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:52:46,383 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/views.py changed, reloading.
+INFO 2025-05-03 15:52:46,798 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:52:47,081 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/views.py changed, reloading.
+INFO 2025-05-03 15:52:47,385 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:52:55,836 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/serializers.py changed, reloading.
+INFO 2025-05-03 15:52:56,304 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:52:56,322 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/serializers.py changed, reloading.
+INFO 2025-05-03 15:52:56,775 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 15:56:09,688 basehttp "POST /api/token/ HTTP/1.1" 200 865
+INFO 2025-05-03 15:56:13,729 basehttp "OPTIONS /api/api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-03 15:56:13,729 basehttp "OPTIONS /api/api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+WARNING 2025-05-03 15:56:13,739 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 15:56:13,740 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4103
+WARNING 2025-05-03 15:56:13,751 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 15:56:13,752 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4103
+WARNING 2025-05-03 15:56:23,796 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:56:23,797 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 15:56:23,804 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:56:23,804 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 15:56:26,186 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:56:26,186 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 15:56:26,190 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:56:26,191 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 15:56:43,686 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:56:43,687 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+WARNING 2025-05-03 15:56:43,691 log Not Found: /api/tasks/
+WARNING 2025-05-03 15:56:43,692 basehttp "GET /api/tasks/ HTTP/1.1" 404 3878
+INFO 2025-05-03 16:02:44,708 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/urls.py changed, reloading.
+INFO 2025-05-03 16:02:45,098 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:02:45,302 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/urls.py changed, reloading.
+INFO 2025-05-03 16:02:45,611 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:02:55,523 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 16:02:55,854 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:02:56,008 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 16:02:56,327 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:02:57,184 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 16:02:57,496 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:04:09,449 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 16:04:09,502 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 16:04:09,859 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:04:09,860 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:05:23,310 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-03 16:05:23,525 basehttp "POST /api/token/ HTTP/1.1" 200 865
+INFO 2025-05-03 16:05:26,363 basehttp "OPTIONS /api/api/workload/summary/ HTTP/1.1" 200 0
+INFO 2025-05-03 16:05:26,364 basehttp "OPTIONS /api/api/workload/summary/ HTTP/1.1" 200 0
+WARNING 2025-05-03 16:05:26,372 log Not Found: /api/api/workload/summary/
+WARNING 2025-05-03 16:05:26,372 basehttp "GET /api/api/workload/summary/ HTTP/1.1" 404 4232
+WARNING 2025-05-03 16:05:26,375 log Not Found: /api/api/workload/summary/
+WARNING 2025-05-03 16:05:26,376 basehttp "GET /api/api/workload/summary/ HTTP/1.1" 404 4232
+WARNING 2025-05-03 16:06:19,139 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:06:19,139 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:06:19,148 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:06:19,148 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:06:23,770 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 16:06:23,770 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 16:06:23,776 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 16:06:23,776 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 16:06:37,859 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:06:37,860 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:06:37,865 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:06:37,865 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+INFO 2025-05-03 16:09:33,080 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/duties/models.py changed, reloading.
+INFO 2025-05-03 16:09:33,084 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/duties/models.py changed, reloading.
+INFO 2025-05-03 16:09:33,784 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:09:33,786 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:10:14,154 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/duties/views.py changed, reloading.
+INFO 2025-05-03 16:10:14,154 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/duties/views.py changed, reloading.
+INFO 2025-05-03 16:10:14,588 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:10:14,588 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:10:21,119 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/duties/views.py changed, reloading.
+INFO 2025-05-03 16:10:21,126 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/duties/views.py changed, reloading.
+INFO 2025-05-03 16:10:21,492 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:10:21,497 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:10:22,774 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/duties/views.py changed, reloading.
+INFO 2025-05-03 16:10:22,774 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/duties/views.py changed, reloading.
+INFO 2025-05-03 16:10:23,131 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:10:23,131 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:27:50,317 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:28:37,477 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:28:51,221 basehttp "POST /api/token/ HTTP/1.1" 200 865
+INFO 2025-05-03 16:28:54,467 basehttp "OPTIONS /api/api/workload/workloads/my_workload/ HTTP/1.1" 200 0
+INFO 2025-05-03 16:28:54,469 basehttp "OPTIONS /api/api/workload/workloads/my_workload/ HTTP/1.1" 200 0
+WARNING 2025-05-03 16:28:54,476 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:28:54,476 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 16:28:54,480 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:28:54,480 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 16:28:56,771 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:28:56,772 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 16:28:56,778 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:28:56,779 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 16:29:02,185 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:29:02,185 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:29:02,190 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:29:02,191 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:29:04,645 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 16:29:04,646 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 16:29:04,651 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 16:29:04,651 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 16:31:21,608 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:31:21,609 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:31:21,626 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:31:21,627 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+INFO 2025-05-03 16:33:02,167 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-03 16:33:02,607 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:33:13,142 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 16:33:13,525 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:33:15,887 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-03 16:33:16,209 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:33:22,637 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 16:33:23,070 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:33:24,389 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 16:33:24,700 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:33:31,116 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 16:33:31,458 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-03 16:35:52,665 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:35:52,666 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:35:52,670 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:35:52,671 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:35:55,390 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:35:55,390 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 16:35:55,394 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:35:55,394 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+INFO 2025-05-03 16:38:27,441 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+INFO 2025-05-03 16:38:27,462 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-03 16:43:06,241 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-03 16:43:06,245 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+ERROR 2025-05-03 16:43:09,428 log Internal Server Error: /api/accounts/weekly-schedule/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 507, in perform_create
+    description=f"Weekly schedule created for {self.request.user.day}",
+                                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'day'
+ERROR 2025-05-03 16:43:09,430 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 500 104627
+ERROR 2025-05-03 16:43:12,918 log Internal Server Error: /api/accounts/weekly-schedule/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 507, in perform_create
+    description=f"Weekly schedule created for {self.request.user.day}",
+                                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'day'
+ERROR 2025-05-03 16:43:12,920 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 500 104629
+ERROR 2025-05-03 16:43:18,647 log Internal Server Error: /api/accounts/weekly-schedule/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 507, in perform_create
+    description=f"Weekly schedule created for {self.request.user.day}",
+                                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'day'
+ERROR 2025-05-03 16:43:18,649 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 500 104627
+INFO 2025-05-03 16:43:22,728 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+INFO 2025-05-03 16:43:22,729 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+WARNING 2025-05-03 16:43:22,734 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:43:22,735 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:43:22,741 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:43:22,741 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:43:24,994 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:43:24,995 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:43:25,000 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:43:25,000 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+INFO 2025-05-03 16:43:28,650 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 388
+INFO 2025-05-03 16:43:28,657 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 388
+ERROR 2025-05-03 16:43:31,814 log Internal Server Error: /api/accounts/weekly-schedule/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 507, in perform_create
+    description=f"Weekly schedule created for {self.request.user.day}",
+                                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'day'
+ERROR 2025-05-03 16:43:31,815 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 500 104627
+ERROR 2025-05-03 16:45:47,153 log Internal Server Error: /api/accounts/weekly-schedule/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 507, in perform_create
+    description=f"Weekly schedule created for {self.request.user.day}",
+                                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'day'
+ERROR 2025-05-03 16:45:47,154 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 500 104627
+INFO 2025-05-03 16:45:49,624 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 612
+INFO 2025-05-03 16:45:49,636 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 612
+ERROR 2025-05-03 16:45:51,628 log Internal Server Error: /api/accounts/weekly-schedule/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 507, in perform_create
+    description=f"Weekly schedule created for {self.request.user.day}",
+                                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'day'
+ERROR 2025-05-03 16:45:51,630 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 500 104627
+INFO 2025-05-03 16:46:14,411 basehttp "POST /api/token/ HTTP/1.1" 200 865
+WARNING 2025-05-03 16:46:15,195 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:46:15,196 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:46:15,201 log Not Found: /api/tasks/
+WARNING 2025-05-03 16:46:15,201 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 16:46:16,916 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:46:16,917 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 16:46:16,922 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:46:16,922 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 16:46:20,028 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 16:46:20,028 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 16:46:20,034 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 16:46:20,034 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+INFO 2025-05-03 16:46:24,217 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 724
+INFO 2025-05-03 16:46:24,222 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 724
+ERROR 2025-05-03 16:46:27,493 log Internal Server Error: /api/accounts/weekly-schedule/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 507, in perform_create
+    description=f"Weekly schedule created for {self.request.user.day}",
+                                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'day'
+ERROR 2025-05-03 16:46:27,494 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 500 104627
+INFO 2025-05-03 16:48:06,083 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 836
+INFO 2025-05-03 16:48:06,097 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 836
+ERROR 2025-05-03 16:48:08,521 log Internal Server Error: /api/accounts/weekly-schedule/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/generics.py", line 246, in post
+    return self.create(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/mixins.py", line 19, in create
+    self.perform_create(serializer)
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 507, in perform_create
+    description=f"Weekly schedule created for {self.request.user.day}",
+                                               ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'User' object has no attribute 'day'
+ERROR 2025-05-03 16:48:08,522 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 500 104627
+INFO 2025-05-03 16:48:12,095 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 16:48:12,506 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:48:14,883 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 16:48:15,196 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:48:26,699 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 16:48:27,215 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:48:34,361 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 16:49:07,333 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 111
+INFO 2025-05-03 16:49:10,757 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1060
+INFO 2025-05-03 16:49:10,775 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1060
+INFO 2025-05-03 16:49:13,462 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 16:49:23,891 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 16:49:50,572 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1287
+INFO 2025-05-03 16:49:50,578 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1287
+WARNING 2025-05-03 16:49:58,952 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:49:58,952 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 16:49:58,956 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 16:49:58,956 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+INFO 2025-05-03 16:50:57,030 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1287
+INFO 2025-05-03 16:50:57,045 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1287
+INFO 2025-05-03 16:50:59,461 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 16:51:11,448 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1400
+INFO 2025-05-03 16:51:55,301 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1400
+INFO 2025-05-03 16:51:55,306 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1400
+INFO 2025-05-03 16:51:58,701 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 16:51:58,741 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1513
+INFO 2025-05-03 16:52:05,617 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1513
+INFO 2025-05-03 16:52:05,622 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1513
+INFO 2025-05-03 16:54:44,550 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1513
+WARNING 2025-05-03 18:34:34,725 log Unauthorized: /api/accounts/weekly-schedule/
+WARNING 2025-05-03 18:34:34,726 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 401 172
+INFO 2025-05-03 18:34:34,729 basehttp "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+ERROR 2025-05-03 18:34:34,764 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-03 18:34:34,767 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 116638
+INFO 2025-05-03 18:34:42,792 basehttp "POST /api/token/ HTTP/1.1" 200 865
+INFO 2025-05-03 18:34:44,890 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1513
+INFO 2025-05-03 18:34:44,896 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1513
+INFO 2025-05-03 18:34:47,158 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 18:34:47,197 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1626
+INFO 2025-05-03 18:34:50,623 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1626
+INFO 2025-05-03 18:34:50,629 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1626
+INFO 2025-05-03 18:34:54,629 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 18:34:54,678 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1739
+INFO 2025-05-03 18:35:31,572 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 18:35:31,611 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1852
+INFO 2025-05-03 18:35:41,815 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-03 18:35:42,309 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 18:37:00,126 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1852
+INFO 2025-05-03 18:38:37,748 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-03 18:38:37,784 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1966
+INFO 2025-05-03 18:38:39,826 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1966
+INFO 2025-05-03 18:38:39,838 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 1966
+INFO 2025-05-03 18:38:42,723 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-03 18:38:42,770 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:38:43,750 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:38:44,313 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:38:44,552 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:38:44,706 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:38:44,887 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:38:45,080 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:38:45,237 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:38:45,445 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:40:12,104 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:40:28,100 basehttp "OPTIONS /api/schedule/my-schedule/ HTTP/1.1" 200 0
+WARNING 2025-05-03 18:40:28,106 log Not Found: /api/schedule/my-schedule/
+WARNING 2025-05-03 18:40:28,106 basehttp "GET /api/schedule/my-schedule/ HTTP/1.1" 404 4232
+INFO 2025-05-03 18:40:44,108 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:41:03,114 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:41:18,106 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:49:06,593 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:49:07,502 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:49:07,986 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:49:08,140 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:49:08,281 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2080
+INFO 2025-05-03 18:49:11,340 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 18:49:11,390 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2193
+INFO 2025-05-03 18:49:17,169 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2193
+INFO 2025-05-03 18:49:17,181 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2193
+INFO 2025-05-03 18:49:19,428 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 18:49:19,484 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2306
+INFO 2025-05-03 18:51:05,087 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2306
+INFO 2025-05-03 18:51:18,091 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2306
+INFO 2025-05-03 18:51:33,125 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-03 18:51:33,179 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:51:37,407 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:51:54,127 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:52:04,085 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:52:16,337 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:52:16,835 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:52:19,117 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:52:19,142 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:52:22,306 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 18:52:22,371 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:53:36,581 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:53:38,305 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 108
+INFO 2025-05-03 18:53:38,360 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:53:42,502 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 116
+INFO 2025-05-03 18:53:42,555 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:53:44,970 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:53:45,477 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:53:59,550 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:54:11,152 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:54:15,692 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:54:16,877 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:54:17,623 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:55:58,153 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:12,622 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:12,640 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:13,732 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:16,662 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 18:56:16,718 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:17,993 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:18,543 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:18,925 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:35,292 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-03 18:56:35,494 basehttp "POST /api/token/ HTTP/1.1" 200 865
+INFO 2025-05-03 18:56:36,361 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 18:56:36,368 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:11:43,067 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:11:58,091 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:11:58,104 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:12:08,093 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:12:08,106 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:13:29,588 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:13:29,598 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:13:35,014 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 19:13:35,071 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+WARNING 2025-05-03 19:13:37,833 log Not Found: /api/logout/
+WARNING 2025-05-03 19:13:37,834 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-03 19:13:46,225 basehttp "POST /api/token/ HTTP/1.1" 200 865
+INFO 2025-05-03 19:13:46,254 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:13:46,273 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:13:52,422 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:13:52,435 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:13:53,708 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:15:40,071 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:15:40,076 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:16:01,072 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:16:01,077 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:17:00,067 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:17:00,073 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:17:22,076 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:17:22,085 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:19:18,738 basehttp "OPTIONS /api/accounts/profile/ HTTP/1.1" 200 0
+WARNING 2025-05-03 19:19:18,745 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:19:18,745 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+INFO 2025-05-03 19:19:22,178 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 19:19:22,231 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+WARNING 2025-05-03 19:19:23,356 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:19:23,356 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+INFO 2025-05-03 19:19:25,645 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 19:19:25,689 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+WARNING 2025-05-03 19:19:27,286 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:19:27,286 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+INFO 2025-05-03 19:21:01,060 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:21:01,066 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:21:16,079 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:21:16,089 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:21:45,691 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 19:21:46,101 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 19:21:58,384 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:21:58,396 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:21:58,759 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 19:21:59,179 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 19:22:01,739 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-03 19:22:01,793 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+WARNING 2025-05-03 19:22:02,872 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:22:02,872 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+INFO 2025-05-03 19:22:04,019 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+WARNING 2025-05-03 19:22:05,485 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:22:05,486 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+INFO 2025-05-03 19:22:06,134 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+INFO 2025-05-03 19:22:39,301 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 19:22:39,352 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+WARNING 2025-05-03 19:22:40,421 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:22:40,421 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+INFO 2025-05-03 19:22:41,377 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+WARNING 2025-05-03 19:22:42,135 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:22:42,135 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+INFO 2025-05-03 19:22:42,992 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2362
+WARNING 2025-05-03 19:23:37,903 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:23:37,903 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+WARNING 2025-05-03 19:23:38,469 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 19:23:38,470 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+INFO 2025-05-03 19:25:16,652 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 19:25:24,343 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 19:25:33,865 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-03 19:28:07,624 log Not Found: /
+WARNING 2025-05-03 19:28:07,625 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-03 19:35:59,219 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 19:36:20,040 basehttp "GET /admin/ HTTP/1.1" 200 17532
+INFO 2025-05-03 19:36:20,048 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-03 19:36:20,048 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-03 19:36:20,049 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-03 19:36:20,427 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-03 19:36:20,427 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-03 19:36:20,431 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-03 19:36:20,432 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-05-03 19:36:20,435 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-05-03 19:36:20,436 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-05-03 19:36:20,437 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-05-03 19:36:28,686 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22900
+INFO 2025-05-03 19:36:28,706 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-05-03 19:36:28,708 basehttp "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-05-03 19:36:28,712 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-05-03 19:36:28,712 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-05-03 19:36:28,716 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-05-03 19:36:28,716 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-05-03 19:36:28,720 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-05-03 19:36:28,721 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-05-03 19:36:28,725 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-05-03 19:36:28,727 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 19:36:28,728 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-05-03 19:36:28,729 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-05-03 19:36:28,815 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-05-03 19:36:28,816 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-05-03 19:36:28,828 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-05-03 19:36:28,828 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-05-03 19:36:28,829 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+ERROR 2025-05-03 19:36:40,744 log Internal Server Error: /admin/accounts/user/11/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-03 19:36:40,747 basehttp "GET /admin/accounts/user/11/change/ HTTP/1.1" 500 163770
+INFO 2025-05-03 19:36:42,457 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22900
+INFO 2025-05-03 19:36:46,945 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 31927
+INFO 2025-05-03 19:36:46,965 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 19:37:06,589 basehttp "POST /admin/accounts/weeklyschedule/ HTTP/1.1" 200 19108
+INFO 2025-05-03 19:37:06,600 basehttp "GET /static/admin/js/cancel.js HTTP/1.1" 200 884
+INFO 2025-05-03 19:37:10,912 basehttp "POST /admin/accounts/weeklyschedule/ HTTP/1.1" 302 0
+INFO 2025-05-03 19:37:10,922 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 14794
+INFO 2025-05-03 19:37:10,937 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 19:37:46,831 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22900
+INFO 2025-05-03 19:37:46,852 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
