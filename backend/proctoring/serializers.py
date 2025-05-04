@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Exam, ExamRoom, ProctorAssignment, SwapRequest, ProctorConstraint
-from accounts.models import User
+from accounts.models import User, Section
 
 
 class UserMinimalSerializer(serializers.ModelSerializer):
@@ -11,6 +11,33 @@ class UserMinimalSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'full_name', 'academic_level')
+
+
+class SectionMinimalSerializer(serializers.ModelSerializer):
+    """Minimal serializer for Section model."""
+    
+    course = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Section
+        fields = ('id', 'section_number', 'course')
+    
+    def get_course(self, obj):
+        return {
+            'id': obj.course.id,
+            'code': obj.course.code,
+            'title': obj.course.title
+        }
+
+
+class ExamSerializer(serializers.ModelSerializer):
+    """Serializer for Exam model."""
+    
+    section = SectionMinimalSerializer(read_only=True)
+    
+    class Meta:
+        model = Exam
+        fields = ('id', 'title', 'date', 'start_time', 'end_time', 'section')
 
 
 class ExamRoomSerializer(serializers.ModelSerializer):
@@ -30,6 +57,7 @@ class ProctorAssignmentSerializer(serializers.ModelSerializer):
     proctor = UserMinimalSerializer(read_only=True)
     previous_proctor = UserMinimalSerializer(read_only=True)
     exam_room = ExamRoomSerializer(read_only=True)
+    exam = ExamSerializer(read_only=True)
     
     class Meta:
         model = ProctorAssignment
@@ -127,4 +155,4 @@ class SwapRequestCreateSerializer(serializers.ModelSerializer):
         )
         
         # Further processing will happen in the view
-        return swap_request 
+        return swap_request

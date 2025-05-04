@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, Classroom, WeeklySchedule
+    Section, TAAssignment, Classroom, WeeklySchedule, InstructorTAAssignment
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -18,7 +18,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'password', 'password_confirm', 'first_name', 'last_name', 
-                  'role', 'phone', 'department', 'iban', 'academic_level')
+                  'role', 'phone', 'department', 'iban', 'academic_level', 'employment_type')
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
@@ -27,6 +27,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'department': {'required': True},
             'iban': {'required': False},
             'academic_level': {'required': False},
+            'employment_type': {'required': False},
         }
     
     def validate(self, attrs):
@@ -45,6 +46,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         # Validate academic_level for TAs
         if attrs['role'] == 'TA' and attrs.get('academic_level') == 'NOT_APPLICABLE':
             raise serializers.ValidationError({"academic_level": "Teaching Assistants must specify their academic level."})
+        
+        # Validate employment_type for TAs
+        if attrs['role'] == 'TA' and ('employment_type' not in attrs or attrs.get('employment_type') == 'NOT_APPLICABLE'):
+            raise serializers.ValidationError({"employment_type": "Teaching Assistants must specify their employment type (Full-Time or Part-Time)."})
         
         return attrs
     
@@ -66,6 +71,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             department=validated_data['department'],
             iban=validated_data.get('iban', ''),
             academic_level=validated_data.get('academic_level', User.AcademicLevel.NOT_APPLICABLE),
+            employment_type=validated_data.get('employment_type', User.EmploymentType.NOT_APPLICABLE),
             is_active=True,
             is_approved=False,  # Require staff approval
             email_verified=False,  # Require email verification
@@ -97,12 +103,13 @@ class UserProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(read_only=True)
     role_display = serializers.CharField(source='get_role_display', read_only=True)
     academic_level_display = serializers.CharField(source='get_academic_level_display', read_only=True)
+    employment_type_display = serializers.CharField(source='get_employment_type_display', read_only=True)
     
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'full_name', 'role', 'role_display',
-                  'phone', 'iban', 'academic_level', 'academic_level_display', 'is_approved', 
-                  'email_verified', 'date_joined', 'last_login')
+                  'phone', 'iban', 'academic_level', 'academic_level_display', 'employment_type',
+                  'employment_type_display', 'is_approved', 'email_verified', 'date_joined', 'last_login')
         read_only_fields = ('id', 'email', 'role', 'is_approved', 'email_verified', 
                             'date_joined', 'last_login')
 
@@ -113,7 +120,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     """
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'phone', 'iban', 'academic_level')
+        fields = ('first_name', 'last_name', 'phone', 'iban', 'academic_level', 'employment_type')
 
 
 class UserListSerializer(serializers.ModelSerializer):
@@ -136,13 +143,14 @@ class UserDetailSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(read_only=True)
     role_display = serializers.CharField(source='get_role_display', read_only=True)
     academic_level_display = serializers.CharField(source='get_academic_level_display', read_only=True)
+    employment_type_display = serializers.CharField(source='get_employment_type_display', read_only=True)
     
     class Meta:
         model = User
         fields = ('id', 'email', 'username', 'first_name', 'last_name', 'full_name', 
                   'role', 'role_display', 'phone', 'iban', 'academic_level', 
-                  'academic_level_display', 'is_approved', 'email_verified', 
-                  'is_active', 'is_staff', 'date_joined', 'last_login')
+                  'academic_level_display', 'employment_type', 'employment_type_display', 
+                  'is_approved', 'email_verified', 'is_active', 'is_staff', 'date_joined', 'last_login')
         read_only_fields = ('id', 'email', 'username', 'date_joined', 'last_login')
 
 
@@ -296,6 +304,7 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         token['is_approved'] = user.is_approved
         token['email_verified'] = user.email_verified
+        token['department'] = user.department  # Add department info to token
 
         return token
 
@@ -346,3 +355,55 @@ class AdminCreateStaffSerializer(serializers.ModelSerializer):
         )
         
         return user 
+
+
+class InstructorTAAssignmentSerializer(serializers.ModelSerializer):
+    """Serializer for the InstructorTAAssignment model."""
+    
+    instructor_name = serializers.SerializerMethodField()
+    ta_name = serializers.SerializerMethodField()
+    department_name = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = InstructorTAAssignment
+        fields = ('id', 'instructor', 'ta', 'assigned_at', 'department',
+                  'instructor_name', 'ta_name', 'department_name')
+        read_only_fields = ('assigned_at',)
+    
+    def get_instructor_name(self, obj):
+        return obj.instructor.full_name if obj.instructor else None
+    
+    def get_ta_name(self, obj):
+        return obj.ta.full_name if obj.ta else None
+    
+    def get_department_name(self, obj):
+        return obj.department.name if obj.department else None
+    
+    def validate(self, data):
+        # Ensure the instructor is actually an instructor
+        if data.get('instructor') and data['instructor'].role != 'INSTRUCTOR':
+            raise serializers.ValidationError({"instructor": "Selected user is not an instructor"})
+        
+        # Ensure the TA is actually a TA
+        if data.get('ta') and data['ta'].role != 'TA':
+            raise serializers.ValidationError({"ta": "Selected user is not a TA"})
+        
+        # Check for existing assignment to prevent duplicates
+        if InstructorTAAssignment.objects.filter(
+            instructor=data.get('instructor'),
+            ta=data.get('ta')
+        ).exists():
+            raise serializers.ValidationError(
+                {"non_field_errors": "This TA is already assigned to this instructor"}
+            )
+        
+        return data
+
+
+class TADetailSerializer(serializers.ModelSerializer):
+    full_name = serializers.CharField(read_only=True)
+    department_name = serializers.CharField(source='department.name', read_only=True)
+    
+    class Meta:
+        model = User
+        fields = ('id', 'email', 'full_name', 'department', 'department_name', 'academic_level', 'employment_type') 

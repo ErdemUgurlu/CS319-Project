@@ -184,12 +184,16 @@ SIMPLE_JWT = {
 
 # Email Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Development: Print emails to console
 EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP sunucusu
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'erdemcs319@gmail.com'  # Google e-posta adresi burada olacak
 EMAIL_HOST_PASSWORD = 'ownn kubg qsuc epzs'  # Google'dan alınan uygulama şifresi burada olacak
 DEFAULT_FROM_EMAIL = 'erdemcs319@gmail.com'  # E-posta gönderimi için kullanılacak adres
+
+# IMPORTANT: Email templates should be in backend/templates/email/ directory
+# e.g. backend/templates/email/account_verification_email.html
 
 
 # Internationalization

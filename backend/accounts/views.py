@@ -17,7 +17,7 @@ import logging
 from . import serializers
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, WeeklySchedule, AuditLog
+    Section, TAAssignment, WeeklySchedule, AuditLog, InstructorTAAssignment
 )
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.password_validation import validate_password
@@ -33,6 +33,13 @@ import secrets
 import string
 import datetime
 from .permissions import IsEmailVerifiedOrExempt
+from .serializers import (
+    UserProfileSerializer, UserListSerializer, UserDetailSerializer,
+    ChangePasswordSerializer, UserRegistrationSerializer, UserUpdateSerializer,
+    WeeklyScheduleSerializer, StudentSerializer, DepartmentSerializer, CourseSerializer,
+    SectionSerializer, TAAssignmentSerializer, ClassroomSerializer,
+    CustomTokenObtainPairSerializer, InstructorTAAssignmentSerializer, TADetailSerializer
+)
 
 logger = logging.getLogger(__name__)
 
@@ -1003,3 +1010,335 @@ class ReactivateUserView(APIView):
                 {'error': f'An error occurred: {str(e)}'},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+
+class MyTAsListView(generics.ListAPIView):
+    """API endpoint for instructors to view their assigned TAs."""
+    serializer_class = InstructorTAAssignmentSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        if user.role != 'INSTRUCTOR':
+            return InstructorTAAssignment.objects.none()
+        
+        return InstructorTAAssignment.objects.filter(instructor=user)
+
+
+class AvailableTAsListView(generics.ListAPIView):
+    """API endpoint for instructors to view unassigned TAs in their department."""
+    serializer_class = TADetailSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        # Debug log to check user role
+        logger.debug(f"User requesting available TAs: {user.email}, role: {user.role}")
+        
+        # Change back to 'INSTRUCTOR' role 
+        if user.role != 'INSTRUCTOR':
+            logger.debug(f"User {user.email} is not an instructor, returning empty queryset")
+            return User.objects.none()
+        
+        # Get IDs of assigned TAs
+        assigned_ta_ids = InstructorTAAssignment.objects.values_list('ta_id', flat=True)
+        logger.debug(f"Assigned TA IDs: {list(assigned_ta_ids)}")
+        
+        # Return all available TAs regardless of department
+        # This allows instructors to see TAs from all departments
+        available_tas = User.objects.filter(
+            role='TA',
+            # department=user.department,  # Removed department filter
+            is_approved=True,
+            is_active=True
+        ).exclude(id__in=assigned_ta_ids)
+        
+        logger.debug(f"Available TAs count: {available_tas.count()}")
+        # Log available TAs for debugging
+        for ta in available_tas:
+            logger.debug(f"Available TA: {ta.email}, department: {ta.department}")
+        
+        return available_tas
+    
+    def list(self, request, *args, **kwargs):
+        """Override list method to add debug info in response"""
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        # Get debug information
+        user = request.user
+        assigned_tas = InstructorTAAssignment.objects.filter(instructor=user)
+        assigned_ta_ids = assigned_tas.values_list('ta_id', flat=True)
+        all_tas = User.objects.filter(role='TA', is_approved=True, is_active=True)
+        
+        # Add debug info
+        debug_info = {
+            "request_user": user.email,
+            "request_user_role": user.role,
+            "assigned_ta_count": assigned_tas.count(),
+            "all_active_tas_count": all_tas.count(),
+            "available_tas_count": queryset.count(),
+            "all_tas": [{"id": ta.id, "email": ta.email} for ta in all_tas],
+            "assigned_tas": [{"id": ta.ta.id, "email": ta.ta.email} for ta in assigned_tas]
+        }
+        
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "results": serializer.data,
+            "debug_info": debug_info
+        })
+
+
+class AssignTAView(APIView):
+    """API endpoint for instructors to assign a TA to themselves."""
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        if request.user.role != 'INSTRUCTOR':
+            return Response(
+                {"error": "Only instructors can assign TAs."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        ta_id = request.data.get('ta_id')
+        if not ta_id:
+            return Response(
+                {"error": "TA ID is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            ta = User.objects.get(id=ta_id, role='TA')
+        except User.DoesNotExist:
+            return Response(
+                {"error": "TA not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Removed department check to allow cross-department assignments
+        # if ta.department != request.user.department:
+        #    return Response(
+        #        {"error": "You can only assign TAs from your own department."},
+        #        status=status.HTTP_403_FORBIDDEN
+        #    )
+        
+        # Check if TA is already assigned to another instructor
+        if InstructorTAAssignment.objects.filter(ta=ta).exists():
+            return Response(
+                {"error": "This TA is already assigned to an instructor."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Get the Department object instead of using the code string
+            instructor_department = Department.objects.get(code=request.user.department)
+            
+            # Create the assignment with the Department object
+            assignment = InstructorTAAssignment.objects.create(
+                instructor=request.user,
+                ta=ta,
+                department=instructor_department
+            )
+            
+            serializer = InstructorTAAssignmentSerializer(assignment)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Department.DoesNotExist:
+            return Response(
+                {"error": f"Department with code '{request.user.department}' not found."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except Exception as e:
+            logger.error(f"Error assigning TA: {str(e)}")
+            return Response(
+                {"error": f"Failed to assign TA: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+
+class RemoveTAView(APIView):
+    """API endpoint for instructors to remove a TA assignment."""
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        if request.user.role != 'INSTRUCTOR':
+            return Response(
+                {"error": "Only instructors can remove TA assignments."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        assignment_id = request.data.get('assignment_id')
+        if not assignment_id:
+            return Response(
+                {"error": "Assignment ID is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            assignment = InstructorTAAssignment.objects.get(
+                id=assignment_id,
+                instructor=request.user
+            )
+        except InstructorTAAssignment.DoesNotExist:
+            return Response(
+                {"error": "Assignment not found or you don't have permission to remove it."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Delete the assignment
+        assignment.delete()
+        
+        return Response(
+            {"message": "TA assignment removed successfully."},
+            status=status.HTTP_200_OK
+        )
+
+
+class AllTAsListView(generics.ListAPIView):
+    """API endpoint for getting all active and approved TAs (for task assignment)."""
+    serializer_class = TADetailSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        # Debug log to check user role
+        logger.debug(f"User requesting all TAs: {user.email}, role: {user.role}")
+        
+        # Check if user has permission to view TAs
+        if user.role not in ['INSTRUCTOR', 'STAFF', 'ADMIN']:
+            logger.debug(f"User {user.email} does not have permission to view all TAs")
+            return User.objects.none()
+        
+        # Get all active and approved TAs
+        all_tas = User.objects.filter(
+            role='TA',
+            is_approved=True,
+            is_active=True
+        )
+        
+        logger.debug(f"All TAs count: {all_tas.count()}")
+        
+        # Add instructor's assigned TAs information
+        if user.role == 'INSTRUCTOR':
+            assigned_tas = InstructorTAAssignment.objects.filter(instructor=user).values_list('ta_id', flat=True)
+            logger.debug(f"Instructor {user.email} has {len(assigned_tas)} assigned TAs")
+        
+        return all_tas
+    
+    def list(self, request, *args, **kwargs):
+        """Override list method to add debug info in response"""
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        # Get debug information
+        user = request.user
+        
+        # Add debug info
+        debug_info = {
+            "request_user": user.email,
+            "request_user_role": user.role,
+            "all_tas_count": queryset.count(),
+        }
+        
+        # Add instructor specific debug info
+        if user.role == 'INSTRUCTOR':
+            instructor_tas = InstructorTAAssignment.objects.filter(instructor=user)
+            debug_info["assigned_ta_count"] = instructor_tas.count()
+            debug_info["assigned_tas"] = [{"id": ta.ta.id, "email": ta.ta.email} for ta in instructor_tas]
+        
+        serializer = self.get_serializer(queryset, many=True)
+        return Response({
+            "results": serializer.data,
+            "debug_info": debug_info
+        })
+
+
+class PendingApprovalUsersView(generics.ListAPIView):
+    """API endpoint for staff to view users pending approval in their department."""
+    serializer_class = UserListSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        
+        # Only staff and instructors can view pending approval users
+        if user.role not in ['STAFF', 'ADMIN', 'INSTRUCTOR']:
+            return User.objects.none()
+        
+        # Admins can see all pending users
+        if user.role == 'ADMIN':
+            return User.objects.filter(is_approved=False)
+        
+        # Staff and instructors can only see pending users from their department
+        return User.objects.filter(
+            is_approved=False,
+            department=user.department
+        )
+
+
+class InstructorTAAssignmentView(APIView):
+    """API endpoint for managing TA assignments to instructors"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Get all TA assignments for the current instructor"""
+        if request.user.role != 'INSTRUCTOR' and request.user.role != 'ADMIN':
+            return Response({"error": "Only instructors can view their TA assignments"}, 
+                          status=status.HTTP_403_FORBIDDEN)
+        
+        if request.user.role == 'INSTRUCTOR':
+            # Instructors can only see their own assignments
+            assignments = InstructorTAAssignment.objects.filter(instructor=request.user)
+        else:
+            # Admins can see all assignments
+            assignments = InstructorTAAssignment.objects.all()
+            
+        serializer = InstructorTAAssignmentSerializer(assignments, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        """Create a new TA assignment to the current instructor"""
+        if request.user.role != 'INSTRUCTOR' and request.user.role != 'ADMIN':
+            return Response({"error": "Only instructors can assign TAs"}, 
+                          status=status.HTTP_403_FORBIDDEN)
+        
+        data = request.data.copy()
+        
+        # If instructor is making the request, use their ID
+        if request.user.role == 'INSTRUCTOR':
+            data['instructor'] = request.user.id
+        
+        serializer = InstructorTAAssignmentSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request):
+        """Remove a TA assignment"""
+        if request.user.role != 'INSTRUCTOR' and request.user.role != 'ADMIN':
+            return Response({"error": "Only instructors can remove TA assignments"}, 
+                          status=status.HTTP_403_FORBIDDEN)
+        
+        ta_id = request.data.get('ta')
+        if not ta_id:
+            return Response({"error": "TA ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # For security, instructors can only remove their own TA assignments
+        if request.user.role == 'INSTRUCTOR':
+            try:
+                assignment = InstructorTAAssignment.objects.get(instructor=request.user, ta_id=ta_id)
+                assignment.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            except InstructorTAAssignment.DoesNotExist:
+                return Response({"error": "Assignment not found"}, status=status.HTTP_404_NOT_FOUND)
+        else:
+            # Admins can remove any assignment
+            instructor_id = request.data.get('instructor')
+            if not instructor_id:
+                return Response({"error": "Instructor ID is required for admin deletions"}, 
+                              status=status.HTTP_400_BAD_REQUEST)
+            
+            try:
+                assignment = InstructorTAAssignment.objects.get(instructor_id=instructor_id, ta_id=ta_id)
+                assignment.delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            except InstructorTAAssignment.DoesNotExist:
+                return Response({"error": "Assignment not found"}, status=status.HTTP_404_NOT_FOUND)

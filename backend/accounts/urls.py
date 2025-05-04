@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 app_name = 'accounts'
@@ -13,7 +13,7 @@ urlpatterns = [
     path('set-password-after-approval/', views.SetPasswordAfterApprovalView.as_view(), name='set_password_after_approval'),
     
     # User profile endpoints
-    path('profile/', views.UserProfileView.as_view(), name='profile'),
+    path('profile/', views.UserProfileView.as_view(), name='user_profile'),
     path('profile/update/', views.UpdateUserProfileView.as_view(), name='update_profile'),
     
     # Admin/Staff only endpoints
@@ -38,4 +38,17 @@ urlpatterns = [
     path('sections/<int:pk>/', views.SectionDetailView.as_view(), name='section_detail'),
     path('ta-assignments/', views.TAAssignmentListCreateView.as_view(), name='ta_assignment_list_create'),
     path('ta-assignments/<int:pk>/', views.TAAssignmentDetailView.as_view(), name='ta_assignment_detail'),
+    
+    # User approve list - for staff to approve users from their department
+    path('users/pending/', views.PendingApprovalUsersView.as_view(), name='pending_approval_users'),
+    
+    # Instructor-TA management endpoints
+    path('instructor/tas/', views.MyTAsListView.as_view(), name='my_tas'),
+    path('instructor/available-tas/', views.AvailableTAsListView.as_view(), name='available_tas'),
+    path('instructor/assign-ta/', views.AssignTAView.as_view(), name='assign_ta'),
+    path('instructor/remove-ta/', views.RemoveTAView.as_view(), name='remove_ta'),
+    path('instructor/tas/', views.InstructorTAAssignmentView.as_view(), name='instructor-tas'),
+    
+    # New endpoint for Task component to get all TAs
+    path('tas/', views.AllTAsListView.as_view(), name='all_tas'),
 ] 

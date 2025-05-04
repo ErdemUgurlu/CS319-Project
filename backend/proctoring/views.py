@@ -60,6 +60,7 @@ class SwapRequestCreateView(generics.CreateAPIView):
         
         # Set the requesting proctor
         swap_request.requesting_proctor = self.request.user
+        swap_request.is_auto_swap = True  # Mark as automatic swap
         swap_request.save()
         
         # Process the swap request
@@ -91,53 +92,169 @@ class SwapRequestCreateView(generics.CreateAPIView):
         else:
             return Response({
                 'error': result['message'],
-                'swap_request_id': result['swap_request'].id if 'swap_request' in result else None,
+                'swap_request_id': result['swap_request'].id,
                 'details': result.get('details', {})
             }, status=status.HTTP_400_BAD_REQUEST)
 
 
+class AcceptExistingSwapView(APIView):
+    """
+    API endpoint for TAs to accept an existing swap request.
+    """
+    permission_classes = [IsAuthenticated, IsTA]
+    
+    @transaction.atomic
+    def post(self, request, swap_request_id):
+        try:
+            # Get the swap request
+            swap_request = SwapRequest.objects.get(id=swap_request_id)
+            
+            # Check if the request is already processed
+            if swap_request.status != 'PENDING':
+                return Response({
+                    'error': 'This swap request has already been processed'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check if the current user is the requested proctor
+            if swap_request.requested_proctor.id != request.user.id:
+                return Response({
+                    'error': 'You are not the requested proctor for this swap'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Process the swap request
+            result = process_swap_request(swap_request)
+            
+            # Send email notifications
+            if result['success']:
+                send_swap_notification_emails(swap_request, success=True)
+            else:
+                send_swap_notification_emails(swap_request, success=False)
+            
+            if result['success']:
+                return Response({
+                    'message': result['message'],
+                    'swap_request_id': swap_request.id,
+                    'details': result.get('details', {})
+                }, status=status.HTTP_200_OK)
+            else:
+                return Response({
+                    'error': result['message'],
+                    'swap_request_id': swap_request.id,
+                    'details': result.get('details', {})
+                }, status=status.HTTP_400_BAD_REQUEST)
+                
+        except SwapRequest.DoesNotExist:
+            return Response({
+                'error': 'Swap request not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 class EligibleProctorsView(APIView):
     """
-    API endpoint to get a list of eligible TAs to swap with for a specific assignment.
+    API endpoint to get a list of eligible TAs for a proctor swap.
     """
     permission_classes = [IsAuthenticated, IsTA]
     
     def get(self, request, assignment_id):
         try:
-            assignment = ProctorAssignment.objects.get(
-                id=assignment_id, 
-                proctor=request.user
-            )
+            # Get the assignment
+            assignment = ProctorAssignment.objects.get(id=assignment_id)
+            
+            # Check if the current user is the assigned proctor
+            if assignment.proctor.id != request.user.id:
+                return Response({
+                    'error': 'You can only view eligible TAs for your own assignments'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Get all TAs
+            tas = User.objects.filter(role='TA')
+            
+            # Check eligibility for each TA
+            eligible_tas = []
+            
+            for ta in tas:
+                # Skip the current proctor
+                if ta.id == request.user.id:
+                    continue
+                
+                is_eligible, details = check_ta_eligibility(ta, assignment.exam, assignment)
+                
+                eligible_tas.append({
+                    'id': ta.id,
+                    'email': ta.email,
+                    'full_name': ta.full_name,
+                    'academic_level': ta.academic_level,
+                    'is_eligible': is_eligible,
+                    'details': details
+                })
+            
+            return Response(eligible_tas)
+            
         except ProctorAssignment.DoesNotExist:
-            raise Http404("Assignment not found or you don't have permission")
-        
-        # Check 3-hour rule
-        exam_datetime = timezone.make_aware(
-            timezone.datetime.combine(assignment.exam.date, assignment.exam.start_time)
-        )
-        if exam_datetime - timezone.now() < timezone.timedelta(hours=3):
-            return Response(
-                {"error": "Cannot swap assignments less than 3 hours before the exam"},
-                status=status.HTTP_400_BAD_REQUEST
+            return Response({
+                'error': 'Assignment not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ConfirmAssignmentView(APIView):
+    """
+    API endpoint for TAs to confirm their proctoring assignments.
+    """
+    permission_classes = [IsAuthenticated, IsTA]
+    
+    def post(self, request, assignment_id):
+        try:
+            # Get the assignment
+            assignment = ProctorAssignment.objects.get(id=assignment_id)
+            
+            # Check if the current user is the assigned proctor
+            if assignment.proctor.id != request.user.id:
+                return Response({
+                    'error': 'You can only confirm your own assignments'
+                }, status=status.HTTP_403_FORBIDDEN)
+            
+            # Check if the assignment is already confirmed
+            if assignment.status != 'ASSIGNED':
+                return Response({
+                    'error': f'This assignment is already in {assignment.get_status_display()} status'
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update the assignment
+            assignment.status = 'CONFIRMED'
+            assignment.confirmation_date = timezone.now()
+            assignment.save()
+            
+            # Log the confirmation
+            AuditLog.objects.create(
+                user=request.user,
+                action='confirm_proctoring',
+                object_type='ProctorAssignment',
+                object_id=assignment.id,
+                description=f"Proctor {request.user.email} confirmed assignment for {assignment.exam.title}"
             )
-        
-        # Get all TAs
-        tas = User.objects.filter(role='TA', is_active=True).exclude(id=request.user.id)
-        
-        # Find eligible TAs
-        eligible_tas = []
-        for ta in tas:
-            from .utils import check_ta_eligibility
-            is_eligible, details = check_ta_eligibility(ta, assignment.exam, assignment)
             
-            # Add eligibility info to serialized data
-            ta_data = serializers.UserMinimalSerializer(ta).data
-            ta_data['is_eligible'] = is_eligible
-            ta_data['details'] = details
-            
-            eligible_tas.append(ta_data)
-        
-        return Response(eligible_tas)
+            return Response({
+                'message': 'Assignment confirmed successfully',
+                'assignment_id': assignment.id,
+                'status': assignment.status
+            }, status=status.HTTP_200_OK)
+                
+        except ProctorAssignment.DoesNotExist:
+            return Response({
+                'error': 'Assignment not found'
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class SwapHistoryView(generics.ListAPIView):

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Proctoring Assignment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .exam-details {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-left: 4px solid #003366;
+        }
+        .upcoming-assignments {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f0f0;
+        }
+        .assignment-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            margin: 15px 0;
+            padding: 10px 20px;
+            background-color: #003366;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>New Proctoring Assignment</h2>
+    </div>
+    
+    <div class="content">
+        <p>Hello {{ new_ta }},</p>
+        
+        <p>You have been <strong>assigned as a proctor</strong> for the following exam through an automatic swap:</p>
+        
+        <div class="exam-details">
+            <h3>Exam Details:</h3>
+            <p><strong>Course:</strong> {{ course_code }} - Section {{ section_number }}</p>
+            <p><strong>Exam:</strong> {{ exam_title }}</p>
+            <p><strong>Date:</strong> {{ exam_date }}</p>
+            <p><strong>Time:</strong> {{ exam_time }}</p>
+            <p><strong>Location:</strong> {{ exam_location }}</p>
+        </div>
+        
+        <p>This assignment was transferred from <strong>{{ original_ta }}</strong> as of {{ swap_timestamp }}.</p>
+        
+        <p>
+            <strong>Reason for swap:</strong><br>
+            {{ swap_reason }}
+        </p>
+        
+        <p>This proctoring assignment is now your responsibility. Please ensure that you are present at the exam location at least 15 minutes before the scheduled start time. The workload has been added to your records.</p>
+        
+        <a href="http://ta-management.bilkent.edu.tr/my-proctorings" class="button">View My Proctoring Assignments</a>
+        
+        {% if upcoming_assignments %}
+        <div class="upcoming-assignments">
+            <h3>Your Updated Proctoring Schedule:</h3>
+            {% for assignment in upcoming_assignments %}
+            <div class="assignment-item">
+                <p><strong>{{ assignment.title }}</strong> ({{ assignment.course }} - Section {{ assignment.section }})</p>
+                <p>{{ assignment.date }}, {{ assignment.time }}</p>
+                <p>Location: {{ assignment.location }}</p>
+                <p>Status: {{ assignment.status }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated message from the Bilkent TA Management System.</p>
+        <p>If you have any questions, please contact your department staff.</p>
+    </div>
+</body>
+</html> 

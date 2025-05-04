@@ -7,15 +7,16 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
-from .models import WorkloadPolicy, TAWorkload, WorkloadActivity
+from .models import WorkloadPolicy, TAWorkload, WorkloadActivity, WorkloadRecord, WorkloadManualAdjustment
 from .serializers import (
     WorkloadPolicySerializer, 
     TAWorkloadSerializer, 
     WorkloadActivitySerializer,
     TAWorkloadDetailSerializer,
-    WorkloadSummarySerializer
+    WorkloadSummarySerializer,
+    WorkloadManualAdjustmentSerializer
 )
-from accounts.models import User
+from accounts.models import User, InstructorTAAssignment
 
 
 class IsStaffOrInstructor(permissions.BasePermission):
@@ -201,3 +202,246 @@ class WorkloadSummaryView(APIView):
         
         serializer = WorkloadSummarySerializer(summary)
         return Response(serializer.data)
+
+
+class InstructorTAWorkloadPermission(permissions.BasePermission):
+    """
+    Custom permission to only allow instructors to view/edit workloads of their assigned TAs.
+    """
+    def has_permission(self, request, view):
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            return False
+        
+        # Staff and admin can do anything
+        if request.user.is_staff or request.user.role == 'ADMIN':
+            return True
+            
+        # Only instructors can proceed
+        if request.user.role != 'INSTRUCTOR':
+            return False
+        
+        # For detail view, check if ta_id is provided
+        ta_id = request.query_params.get('ta_id') or request.data.get('ta_id')
+        if not ta_id:
+            return False
+            
+        # Check if this TA is assigned to this instructor
+        is_assigned = InstructorTAAssignment.objects.filter(
+            instructor=request.user,
+            ta_id=ta_id
+        ).exists()
+        
+        return is_assigned
+
+
+class TAWorkloadSummaryView(APIView):
+    """
+    API endpoint for instructors to view workload summary for their TAs.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        if request.user.role != 'INSTRUCTOR':
+            return Response(
+                {"error": "Only instructors can view TA workloads."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get all TAs assigned to this instructor
+        assigned_tas = InstructorTAAssignment.objects.filter(
+            instructor=request.user
+        ).values_list('ta_id', flat=True)
+        
+        # Get workload info for each TA
+        workloads = []
+        for ta_id in assigned_tas:
+            try:
+                ta = User.objects.get(id=ta_id)
+                
+                # Get the current workload
+                try:
+                    workload = TAWorkload.objects.get(
+                        ta=ta,
+                        academic_term='Spring 2024'  # Should be dynamic or from settings
+                    )
+                    
+                    # Get the manual adjustments
+                    manual_adjustments = WorkloadManualAdjustment.objects.filter(
+                        ta=ta
+                    ).aggregate(total=Sum('hours'))['total'] or 0
+                    
+                    # Get completed tasks
+                    task_hours = WorkloadRecord.objects.filter(
+                        user=ta
+                    ).aggregate(total=Sum('hours'))['total'] or 0
+                    
+                    workloads.append({
+                        'ta_id': ta.id,
+                        'ta_name': ta.full_name,
+                        'email': ta.email,
+                        'employment_type': ta.employment_type,
+                        'current_weekly_hours': workload.current_weekly_hours,
+                        'max_weekly_hours': workload.max_weekly_hours,
+                        'is_overloaded': workload.is_overloaded,
+                        'total_assigned_hours': workload.total_assigned_hours,
+                        'manual_adjustments': manual_adjustments,
+                        'completed_task_hours': task_hours,
+                        'academic_level': ta.academic_level
+                    })
+                except TAWorkload.DoesNotExist:
+                    # No workload record exists
+                    workloads.append({
+                        'ta_id': ta.id,
+                        'ta_name': ta.full_name,
+                        'email': ta.email,
+                        'employment_type': ta.employment_type,
+                        'current_weekly_hours': 0,
+                        'max_weekly_hours': 20,  # Default
+                        'is_overloaded': False,
+                        'total_assigned_hours': 0,
+                        'manual_adjustments': 0,
+                        'completed_task_hours': 0,
+                        'academic_level': ta.academic_level
+                    })
+            except User.DoesNotExist:
+                pass
+        
+        return Response(workloads)
+
+
+class ManualWorkloadAdjustmentView(APIView):
+    """
+    API endpoint for instructors to manually adjust TA workloads.
+    """
+    permission_classes = [IsAuthenticated, InstructorTAWorkloadPermission]
+    
+    def post(self, request):
+        ta_id = request.data.get('ta_id')
+        hours = request.data.get('hours')
+        reason = request.data.get('reason')
+        
+        if not ta_id or hours is None or not reason:
+            return Response(
+                {"error": "TA ID, hours, and reason are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            hours = float(hours)
+        except ValueError:
+            return Response(
+                {"error": "Hours must be a numeric value."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        try:
+            ta = User.objects.get(id=ta_id, role='TA')
+        except User.DoesNotExist:
+            return Response(
+                {"error": "TA not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+            
+        # Create the adjustment record
+        adjustment = WorkloadManualAdjustment.objects.create(
+            ta=ta,
+            instructor=request.user,
+            hours=hours,
+            reason=reason,
+            date=timezone.now().date()
+        )
+        
+        # Update the TA's workload if it exists
+        try:
+            workload = TAWorkload.objects.get(
+                ta=ta,
+                academic_term='Spring 2024'  # Should be dynamic or from settings
+            )
+            workload.total_assigned_hours += hours
+            workload.save()
+        except TAWorkload.DoesNotExist:
+            pass
+            
+        return Response({
+            'id': adjustment.id,
+            'ta': ta.full_name,
+            'hours': hours,
+            'reason': reason,
+            'date': adjustment.date
+        }, status=status.HTTP_201_CREATED)
+        
+        
+class WorkloadAdjustmentHistoryView(APIView):
+    """
+    API endpoint for viewing workload adjustment history for a TA.
+    """
+    permission_classes = [IsAuthenticated, InstructorTAWorkloadPermission]
+    
+    def get(self, request):
+        ta_id = request.query_params.get('ta_id')
+        
+        if not ta_id:
+            return Response(
+                {"error": "TA ID is required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        adjustments = WorkloadManualAdjustment.objects.filter(
+            ta_id=ta_id
+        ).order_by('-created_at')
+        
+        result = []
+        for adj in adjustments:
+            result.append({
+                'id': adj.id,
+                'instructor': adj.instructor.full_name,
+                'hours': adj.hours,
+                'reason': adj.reason,
+                'date': adj.date,
+                'created_at': adj.created_at
+            })
+            
+        return Response(result)
+
+
+class WorkloadPolicyListCreateView(generics.ListCreateAPIView):
+    """API endpoint for listing and creating workload policies."""
+    queryset = WorkloadPolicy.objects.all()
+    serializer_class = WorkloadPolicySerializer
+    permission_classes = [IsAuthenticated]
+
+
+class WorkloadPolicyDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for retrieving, updating and deleting workload policies."""
+    queryset = WorkloadPolicy.objects.all()
+    serializer_class = WorkloadPolicySerializer
+    permission_classes = [IsAuthenticated]
+
+
+class TAWorkloadListCreateView(generics.ListCreateAPIView):
+    """API endpoint for listing and creating TA workloads."""
+    queryset = TAWorkload.objects.all()
+    serializer_class = TAWorkloadSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class TAWorkloadDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for retrieving, updating and deleting TA workloads."""
+    queryset = TAWorkload.objects.all()
+    serializer_class = TAWorkloadSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class WorkloadActivityListCreateView(generics.ListCreateAPIView):
+    """API endpoint for listing and creating workload activities."""
+    queryset = WorkloadActivity.objects.all()
+    serializer_class = WorkloadActivitySerializer
+    permission_classes = [IsAuthenticated]
+
+
+class WorkloadActivityDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API endpoint for retrieving, updating and deleting workload activities."""
+    queryset = WorkloadActivity.objects.all()
+    serializer_class = WorkloadActivitySerializer
+    permission_classes = [IsAuthenticated]

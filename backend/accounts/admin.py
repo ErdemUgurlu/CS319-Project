@@ -10,7 +10,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, Classroom, WeeklySchedule, AuditLog
+    Section, TAAssignment, Classroom, WeeklySchedule, AuditLog, InstructorTAAssignment
 )
 
 
@@ -134,9 +134,24 @@ deactivate_users.short_description = "Deactivate selected users"
 class UserAdmin(BaseUserAdmin):
     """Custom admin for the User model."""
     
+    def assigned_to_instructor(self, obj):
+        """Returns the instructor that the TA is assigned to, or 'Not Assigned' for unassigned TAs."""
+        if obj.role != 'TA':
+            return 'Not Applicable'
+        
+        try:
+            assignment = obj.assigned_to_instructor.first()
+            if assignment:
+                return assignment.instructor.full_name
+            return 'Not Assigned'
+        except:
+            return 'Not Assigned'
+    
+    assigned_to_instructor.short_description = 'Assigned To'
+    
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone', 'role', 'department', 'academic_level', 'iban')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone', 'role', 'department', 'academic_level', 'employment_type', 'iban')}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'is_approved', 'email_verified',
                        'groups', 'user_permissions'),
@@ -150,8 +165,8 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'role', 'department', 'phone'),
         }),
     )
-    list_display = ('email', 'first_name', 'last_name', 'role', 'department', 'is_approved', 'email_verified', 'is_staff', 'is_active')
-    list_filter = ('is_staff', 'is_superuser', 'is_active', 'is_approved', 'email_verified', 'role', 'department', 'academic_level')
+    list_display = ('email', 'first_name', 'last_name', 'role', 'department', 'employment_type', 'assigned_to_instructor', 'is_approved', 'email_verified', 'is_staff', 'is_active')
+    list_filter = ('is_staff', 'is_superuser', 'is_active', 'is_approved', 'email_verified', 'role', 'department', 'academic_level', 'employment_type')
     search_fields = ('email', 'first_name', 'last_name', 'phone')
     ordering = ('email',)
     actions = [approve_users, verify_emails, activate_users, deactivate_users]
@@ -161,8 +176,8 @@ class UserAdmin(BaseUserAdmin):
 class StudentAdmin(admin.ModelAdmin):
     """Admin for the Student model."""
     
-    list_display = ('student_id', 'user', 'department', 'is_ta')
-    list_filter = ('is_ta', 'department')
+    list_display = ('student_id', 'user', 'department_name', 'is_ta')
+    list_filter = ('is_ta', 'department_name')
     search_fields = ('student_id', 'user__email', 'user__first_name', 'user__last_name')
 
 
@@ -230,3 +245,14 @@ class AuditLogAdmin(admin.ModelAdmin):
     readonly_fields = ('timestamp', 'user', 'action', 'object_type', 'object_id', 
                        'description', 'ip_address', 'override_flag')
     date_hierarchy = 'timestamp'
+
+
+@admin.register(InstructorTAAssignment)
+class InstructorTAAssignmentAdmin(admin.ModelAdmin):
+    """Admin for the InstructorTAAssignment model."""
+    
+    list_display = ('instructor', 'ta', 'assigned_at', 'department')
+    list_filter = ('department', 'assigned_at')
+    search_fields = ('instructor__email', 'instructor__first_name', 'instructor__last_name', 
+                    'ta__email', 'ta__first_name', 'ta__last_name')
+    date_hierarchy = 'assigned_at'

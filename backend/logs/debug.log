@@ -2258,3 +2258,1897 @@ INFO 2025-05-03 19:37:10,922 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/
 INFO 2025-05-03 19:37:10,937 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
 INFO 2025-05-03 19:37:46,831 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22900
 INFO 2025-05-03 19:37:46,852 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-03 20:27:48,142 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+INFO 2025-05-03 20:27:48,142 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+WARNING 2025-05-03 20:27:48,155 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:27:48,156 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 20:27:48,160 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:27:48,160 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+INFO 2025-05-03 20:27:50,093 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+INFO 2025-05-03 20:27:50,093 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+WARNING 2025-05-03 20:27:50,107 log Unauthorized: /api/accounts/weekly-schedule/
+WARNING 2025-05-03 20:27:50,107 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 401 172
+WARNING 2025-05-03 20:27:50,109 log Unauthorized: /api/accounts/weekly-schedule/
+WARNING 2025-05-03 20:27:50,112 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 401 172
+ERROR 2025-05-03 20:27:50,143 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-03 20:27:50,154 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-03 20:27:50,157 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 116622
+ERROR 2025-05-03 20:27:50,158 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 116622
+INFO 2025-05-03 20:27:56,844 basehttp "POST /api/token/ HTTP/1.1" 200 865
+WARNING 2025-05-03 20:27:57,549 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:27:57,550 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 20:27:57,555 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:27:57,556 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+INFO 2025-05-03 20:28:00,862 basehttp "OPTIONS /api/api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-03 20:28:00,862 basehttp "OPTIONS /api/api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-03 20:28:00,862 basehttp "OPTIONS /api/api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-03 20:28:00,863 basehttp "OPTIONS /api/api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+WARNING 2025-05-03 20:28:00,894 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 20:28:00,897 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-03 20:28:00,897 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-03 20:28:00,898 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 20:28:00,902 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 20:28:00,905 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-03 20:28:00,905 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 20:28:00,905 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+INFO 2025-05-03 20:28:19,679 basehttp "OPTIONS /api/api/workload/workloads/my_workload/ HTTP/1.1" 200 0
+INFO 2025-05-03 20:28:19,679 basehttp "OPTIONS /api/api/workload/workloads/my_workload/ HTTP/1.1" 200 0
+WARNING 2025-05-03 20:28:19,686 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 20:28:19,686 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 20:28:19,692 log Not Found: /api/api/workload/workloads/my_workload/
+WARNING 2025-05-03 20:28:19,692 basehttp "GET /api/api/workload/workloads/my_workload/ HTTP/1.1" 404 4274
+WARNING 2025-05-03 20:28:23,471 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:28:23,471 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 20:28:23,476 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:28:23,477 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 20:28:52,685 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:28:52,685 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 20:28:52,690 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:28:52,690 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+INFO 2025-05-03 20:29:09,447 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-03 20:29:09,456 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-03 20:29:13,306 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-03 20:29:13,358 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 164
+WARNING 2025-05-03 20:29:14,631 log Forbidden: /api/accounts/profile/
+WARNING 2025-05-03 20:29:14,631 basehttp "GET /api/accounts/profile/ HTTP/1.1" 403 63
+WARNING 2025-05-03 20:29:22,268 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-03 20:29:22,271 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 20:29:22,271 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 20:29:22,272 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-03 20:29:22,278 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 20:29:22,287 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-03 20:29:22,287 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 20:29:22,290 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-03 20:29:30,915 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:29:30,916 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+WARNING 2025-05-03 20:29:30,922 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:29:30,922 basehttp "GET /api/tasks/ HTTP/1.1" 404 4034
+INFO 2025-05-03 20:29:33,738 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 164
+INFO 2025-05-03 20:29:33,745 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 164
+INFO 2025-05-03 20:31:10,606 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:32:30,773 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/serializers.py changed, reloading.
+INFO 2025-05-03 20:32:32,382 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:32:45,335 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/serializers.py changed, reloading.
+INFO 2025-05-03 20:32:46,051 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:32:55,579 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/urls.py changed, reloading.
+INFO 2025-05-03 20:32:55,960 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:33:13,489 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-03 20:33:13,905 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:34:00,995 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-03 20:34:01,431 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:34:01,968 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 164
+INFO 2025-05-03 20:34:05,959 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-03 20:34:06,014 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 278
+WARNING 2025-05-03 20:34:28,553 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:34:28,554 basehttp "GET /api/tasks/ HTTP/1.1" 404 4865
+WARNING 2025-05-03 20:34:28,559 log Not Found: /api/tasks/
+WARNING 2025-05-03 20:34:28,559 basehttp "GET /api/tasks/ HTTP/1.1" 404 4865
+WARNING 2025-05-03 20:34:31,708 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 20:34:31,713 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-03 20:34:31,713 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 20:34:31,713 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-03 20:34:31,719 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-03 20:34:31,723 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-03 20:34:31,723 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-03 20:34:31,724 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+INFO 2025-05-03 20:34:36,645 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 278
+INFO 2025-05-03 20:34:36,650 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 278
+INFO 2025-05-03 20:38:51,698 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-03 20:38:52,340 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:38:54,863 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/urls.py changed, reloading.
+INFO 2025-05-03 20:38:56,578 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:47:39,660 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/urls.py changed, reloading.
+INFO 2025-05-03 20:47:40,650 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:47:52,363 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/urls.py changed, reloading.
+INFO 2025-05-03 20:47:52,747 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:48:26,843 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-03 20:48:27,304 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:48:47,053 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/serializers.py changed, reloading.
+INFO 2025-05-03 20:48:47,703 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:49:18,957 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-03 20:49:19,343 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:50:22,877 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/utils.py changed, reloading.
+INFO 2025-05-03 20:50:23,490 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:50:30,888 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/utils.py changed, reloading.
+INFO 2025-05-03 20:50:31,199 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:50:39,554 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/utils.py changed, reloading.
+INFO 2025-05-03 20:50:39,865 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:51:07,234 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/utils.py changed, reloading.
+INFO 2025-05-03 20:51:07,808 autoreload Watching for file changes with StatReloader
+INFO 2025-05-03 20:51:54,550 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/proctoring/utils.py changed, reloading.
+INFO 2025-05-03 20:51:55,777 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 01:29:44,997 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 01:29:46,033 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 01:31:13,980 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-04 01:31:14,374 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:46:13,762 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-04 10:46:14,218 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:46:46,446 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-04 10:46:46,834 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:48:35,022 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/workload/models.py changed, reloading.
+INFO 2025-05-04 10:48:35,411 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:50:50,607 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/workload/serializers.py changed, reloading.
+INFO 2025-05-04 10:50:51,004 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:51:11,803 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/admin.py changed, reloading.
+INFO 2025-05-04 10:51:12,224 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:51:32,035 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/workload/admin.py changed, reloading.
+INFO 2025-05-04 10:51:32,402 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-04 10:52:09,408 log Not Found: /
+WARNING 2025-05-04 10:52:09,409 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-04 10:52:34,496 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-04 10:52:34,916 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:52:48,401 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:52:55,555 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:54:47,464 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:54:58,595 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-04 10:55:06,218 log Internal Server Error: /admin/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_user.employment_type
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 265, in wrapper
+    return self.admin_view(view, cacheable)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 234, in inner
+    if not self.has_permission(request):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 207, in has_permission
+    return request.user.is_active and request.user.is_staff
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/middleware.py", line 39, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/middleware.py", line 19, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/__init__.py", line 311, in get_user
+    user = backend.get_user(user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/backends.py", line 232, in get_user
+    user = UserModel._default_manager.get(pk=user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_user.employment_type
+ERROR 2025-05-04 10:55:06,221 basehttp "GET /admin/ HTTP/1.1" 500 193597
+ERROR 2025-05-04 10:55:14,837 log Internal Server Error: /admin/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_user.employment_type
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 265, in wrapper
+    return self.admin_view(view, cacheable)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 234, in inner
+    if not self.has_permission(request):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 207, in has_permission
+    return request.user.is_active and request.user.is_staff
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/functional.py", line 251, in inner
+    self._setup()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/functional.py", line 404, in _setup
+    self._wrapped = self._setupfunc()
+                    ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/middleware.py", line 39, in <lambda>
+    request.user = SimpleLazyObject(lambda: get_user(request))
+                                            ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/middleware.py", line 19, in get_user
+    request._cached_user = auth.get_user(request)
+                           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/__init__.py", line 311, in get_user
+    user = backend.get_user(user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/backends.py", line 232, in get_user
+    user = UserModel._default_manager.get(pk=user_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 629, in get
+    num = len(clone)
+          ^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 366, in __len__
+    self._fetch_all()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+              ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_user.employment_type
+ERROR 2025-05-04 10:55:14,839 basehttp "GET /admin/ HTTP/1.1" 500 193728
+INFO 2025-05-04 10:57:53,800 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 10:57:58,472 basehttp "GET /admin/ HTTP/1.1" 200 17598
+INFO 2025-05-04 10:57:58,494 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,494 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,496 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,496 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,499 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,501 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,915 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,920 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,921 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:57:58,921 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,760 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 23709
+INFO 2025-05-04 10:58:04,776 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,777 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,779 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,780 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,785 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,787 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,789 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,790 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,792 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,791 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,791 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,794 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 10:58:04,935 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,936 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,947 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,947 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:04,947 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:17,506 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 10:58:17,522 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 23834
+INFO 2025-05-04 10:58:17,542 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 10:58:17,693 basehttp "GET /static/admin/img/icon-alert.svg HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:26,414 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 14096
+INFO 2025-05-04 10:58:26,430 basehttp "GET /static/admin/js/cancel.js HTTP/1.1" 304 0
+INFO 2025-05-04 10:58:27,444 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 10:58:27,461 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21162
+INFO 2025-05-04 10:58:27,480 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 10:58:39,020 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10490
+INFO 2025-05-04 10:58:43,839 basehttp "GET /admin/ HTTP/1.1" 200 17562
+INFO 2025-05-04 10:58:48,669 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 14647
+INFO 2025-05-04 10:58:48,692 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:01:06,608 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 11:01:19,770 basehttp "OPTIONS /api/accounts/register/ HTTP/1.1" 200 0
+INFO 2025-05-04 11:01:21,721 basehttp "POST /api/accounts/register/ HTTP/1.1" 201 144
+INFO 2025-05-04 11:02:49,380 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 11:03:38,467 basehttp "GET /admin/ HTTP/1.1" 200 17562
+INFO 2025-05-04 11:03:38,476 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:38,476 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:38,476 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:39,028 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:39,028 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:39,028 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:39,034 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:39,038 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:39,038 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:39,038 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,864 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21924
+INFO 2025-05-04 11:03:41,884 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,885 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,888 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,889 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,891 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,893 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,894 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,894 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,896 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,896 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,896 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:41,903 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:03:42,087 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:42,088 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:42,099 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:42,099 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:42,099 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:45,609 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 11:03:45,624 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22049
+INFO 2025-05-04 11:03:45,646 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:03:45,815 basehttp "GET /static/admin/img/icon-alert.svg HTTP/1.1" 200 504
+INFO 2025-05-04 11:03:50,384 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 13448
+INFO 2025-05-04 11:03:50,401 basehttp "GET /static/admin/js/cancel.js HTTP/1.1" 304 0
+INFO 2025-05-04 11:03:51,617 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 11:03:51,630 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21161
+INFO 2025-05-04 11:03:51,650 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:04:09,879 basehttp "POST /api/accounts/register/ HTTP/1.1" 201 144
+INFO 2025-05-04 11:05:06,844 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-04 11:05:07,261 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 11:05:29,002 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-04 11:05:29,216 basehttp "POST /api/token/ HTTP/1.1" 200 867
+WARNING 2025-05-04 11:05:47,017 log Not Found: /api/logout/
+WARNING 2025-05-04 11:05:47,017 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 11:05:59,881 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 11:06:10,973 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21926
+INFO 2025-05-04 11:06:10,996 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:06:15,554 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 13449
+INFO 2025-05-04 11:06:16,944 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 11:06:16,960 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21161
+INFO 2025-05-04 11:06:17,057 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:06:35,894 basehttp "POST /api/accounts/register/ HTTP/1.1" 201 144
+INFO 2025-05-04 11:07:04,236 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 21926
+INFO 2025-05-04 11:07:04,251 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:08:55,717 basehttp "POST /api/accounts/register/ HTTP/1.1" 201 144
+INFO 2025-05-04 11:09:15,959 basehttp "POST /api/token/ HTTP/1.1" 200 849
+INFO 2025-05-04 11:09:24,990 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22815
+INFO 2025-05-04 11:09:25,015 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:09:51,473 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 11:09:51,497 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22967
+INFO 2025-05-04 11:09:51,520 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:14:37,446 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/permissions.py changed, reloading.
+INFO 2025-05-04 11:14:37,880 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 11:17:42,797 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-04 11:17:43,212 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 11:19:29,686 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-04 11:19:30,088 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 11:20:49,410 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-04 11:20:49,410 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-04 11:20:49,439 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 313
+INFO 2025-05-04 11:20:49,449 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 313
+INFO 2025-05-04 11:21:03,026 basehttp "OPTIONS /api/accounts/users/16/approve/ HTTP/1.1" 200 0
+INFO 2025-05-04 11:21:04,678 basehttp "POST /api/accounts/users/16/approve/ HTTP/1.1" 200 138
+INFO 2025-05-04 11:21:08,305 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22815
+INFO 2025-05-04 11:21:08,334 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:22:51,430 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 11:22:51,437 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 11:22:52,422 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 11:22:52,435 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 11:22:53,182 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 11:22:53,203 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 11:25:19,249 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 11:25:19,255 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 11:26:00,987 basehttp "OPTIONS /api/api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-04 11:26:00,991 basehttp "OPTIONS /api/api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-04 11:26:00,992 basehttp "OPTIONS /api/api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-04 11:26:00,994 basehttp "OPTIONS /api/api/proctoring/swap-history/ HTTP/1.1" 200 0
+WARNING 2025-05-04 11:26:00,997 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-04 11:26:01,000 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-04 11:26:01,002 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-04 11:26:01,002 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-04 11:26:01,010 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-04 11:26:01,018 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-04 11:26:01,019 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-04 11:26:01,019 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-04 11:26:13,948 log Not Found: /api/logout/
+WARNING 2025-05-04 11:26:13,948 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 11:26:21,675 basehttp "POST /api/token/ HTTP/1.1" 200 913
+INFO 2025-05-04 11:26:25,904 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+INFO 2025-05-04 11:26:25,906 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+INFO 2025-05-04 11:26:25,912 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 11:26:25,919 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 11:26:28,327 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-04 11:26:28,381 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 164
+INFO 2025-05-04 11:26:32,190 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 164
+INFO 2025-05-04 11:26:32,199 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 164
+INFO 2025-05-04 11:26:40,317 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 16760
+INFO 2025-05-04 11:26:40,354 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 11:27:15,482 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 112
+INFO 2025-05-04 11:27:15,531 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 277
+INFO 2025-05-04 11:28:20,845 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 277
+INFO 2025-05-04 11:28:20,851 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 277
+INFO 2025-05-04 11:28:34,860 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 277
+INFO 2025-05-04 11:28:34,870 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 277
+INFO 2025-05-04 11:28:53,848 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 277
+INFO 2025-05-04 11:28:53,854 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 277
+INFO 2025-05-04 12:25:22,169 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-04 12:25:22,659 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 12:25:30,760 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-04 12:25:31,077 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 391
+INFO 2025-05-04 12:25:33,748 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 391
+INFO 2025-05-04 12:25:33,762 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 391
+INFO 2025-05-04 12:25:36,019 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-04 12:25:36,331 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 505
+WARNING 2025-05-04 12:27:14,633 log Unauthorized: /api/accounts/weekly-schedule/
+WARNING 2025-05-04 12:27:14,634 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 401 172
+INFO 2025-05-04 12:27:14,642 basehttp "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+ERROR 2025-05-04 12:27:14,673 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-04 12:27:14,676 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 116886
+INFO 2025-05-04 12:36:34,362 basehttp "POST /api/token/ HTTP/1.1" 200 913
+WARNING 2025-05-04 13:48:52,028 log Unauthorized: /api/accounts/weekly-schedule/
+WARNING 2025-05-04 13:48:52,029 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 401 172
+WARNING 2025-05-04 13:48:52,032 log Unauthorized: /api/accounts/weekly-schedule/
+WARNING 2025-05-04 13:48:52,034 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 401 172
+ERROR 2025-05-04 13:48:52,070 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-04 13:48:52,081 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-04 13:48:52,083 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 116886
+ERROR 2025-05-04 13:48:52,084 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 116886
+INFO 2025-05-04 13:48:54,228 basehttp "POST /api/token/ HTTP/1.1" 200 913
+INFO 2025-05-04 13:48:55,476 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 505
+INFO 2025-05-04 13:48:55,484 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 505
+INFO 2025-05-04 13:48:57,759 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-04 13:48:58,775 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 619
+INFO 2025-05-04 13:49:03,559 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 18860
+INFO 2025-05-04 13:49:03,588 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 13:49:11,901 basehttp "POST /admin/accounts/weeklyschedule/ HTTP/1.1" 200 14296
+INFO 2025-05-04 13:49:13,214 basehttp "POST /admin/accounts/weeklyschedule/ HTTP/1.1" 302 0
+INFO 2025-05-04 13:49:13,225 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 14793
+INFO 2025-05-04 13:49:13,250 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 13:49:59,637 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 13:51:46,640 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 13:51:53,650 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 13:52:12,635 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 13:52:19,631 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 13:52:32,291 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 13:52:32,298 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-04 13:52:35,222 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 113
+INFO 2025-05-04 13:52:35,457 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 165
+INFO 2025-05-04 13:52:35,738 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 165
+WARNING 2025-05-04 13:52:51,511 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-04 13:52:51,514 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-04 13:52:51,515 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-04 13:52:51,515 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-04 13:52:51,523 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-04 13:52:51,527 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-04 13:52:51,527 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-04 13:52:51,528 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+INFO 2025-05-04 14:01:44,409 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:01:44,838 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:03:35,585 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:03:35,992 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:03:49,565 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/serializers.py changed, reloading.
+INFO 2025-05-04 14:03:50,190 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:04:02,693 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/serializers.py changed, reloading.
+INFO 2025-05-04 14:04:03,241 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:04:10,627 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 14:04:10,954 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:04:18,504 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 14:04:18,836 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:04:40,573 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/permissions.py changed, reloading.
+INFO 2025-05-04 14:04:40,906 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:06:09,586 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:06:10,045 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:06:27,916 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:06:28,634 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:09:14,617 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:09:15,045 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:12:32,969 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/serializers.py changed, reloading.
+INFO 2025-05-04 14:12:35,278 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:12:36,684 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+INFO 2025-05-04 14:12:36,686 basehttp "OPTIONS /api/tasks/ HTTP/1.1" 200 0
+WARNING 2025-05-04 14:12:36,699 log Not Found: /api/tasks/
+WARNING 2025-05-04 14:12:36,700 basehttp "GET /api/tasks/ HTTP/1.1" 404 4865
+WARNING 2025-05-04 14:12:36,718 log Not Found: /api/tasks/
+WARNING 2025-05-04 14:12:36,719 basehttp "GET /api/tasks/ HTTP/1.1" 404 4865
+INFO 2025-05-04 14:13:38,429 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 14:13:38,803 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:31:12,234 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/workload/models.py changed, reloading.
+INFO 2025-05-04 14:31:12,636 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:32:00,313 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 22815
+INFO 2025-05-04 14:32:00,338 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,338 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,339 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,341 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,344 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,345 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,348 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,349 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,349 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,350 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,352 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,354 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,356 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,357 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,358 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,360 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,363 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:32:00,763 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,763 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,771 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,789 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,790 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,795 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:00,795 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:32:09,588 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-04 14:32:09,801 basehttp "POST /api/token/ HTTP/1.1" 200 894
+INFO 2025-05-04 14:32:12,914 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 14:32:12,920 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-04 14:32:30,148 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:32:30,551 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:32:55,282 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 19830
+INFO 2025-05-04 14:32:55,310 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-05-04 14:32:55,310 basehttp "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 200 663
+INFO 2025-05-04 14:32:55,311 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-05-04 14:32:55,313 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:32:55,472 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-05-04 14:32:55,472 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-05-04 14:32:55,474 basehttp "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 200 1480
+INFO 2025-05-04 14:33:33,114 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 20206
+INFO 2025-05-04 14:33:33,133 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:33:47,709 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 20139
+INFO 2025-05-04 14:33:47,729 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:34:01,709 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+ERROR 2025-05-04 14:34:01,744 log Internal Server Error: /admin/accounts/user/18/change/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 312, in __new__
+    fields = fields_for_model(
+             ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/forms/models.py", line 207, in fields_for_model
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+                ^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/auth/admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 842, in get_form
+    raise FieldError(
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-04 14:34:01,747 basehttp "GET /admin/accounts/user/18/change/ HTTP/1.1" 500 164729
+WARNING 2025-05-04 14:34:10,114 log Not Found: /api/logout/
+WARNING 2025-05-04 14:34:10,115 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 14:34:18,798 basehttp "POST /api/token/ HTTP/1.1" 200 907
+INFO 2025-05-04 14:34:35,420 basehttp "GET /admin/ HTTP/1.1" 200 17838
+INFO 2025-05-04 14:34:35,441 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-04 14:34:35,882 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:34:35,882 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 304 0
+INFO 2025-05-04 14:34:37,774 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 23695
+INFO 2025-05-04 14:34:37,798 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:34:45,488 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 14:34:45,514 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 23847
+INFO 2025-05-04 14:34:45,536 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-04 14:34:54,166 log Not Found: /api/logout/
+WARNING 2025-05-04 14:34:54,167 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 14:34:55,186 basehttp "POST /api/token/ HTTP/1.1" 200 905
+WARNING 2025-05-04 14:34:58,331 log Not Found: /api/tasks/
+WARNING 2025-05-04 14:34:58,331 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+WARNING 2025-05-04 14:34:58,337 log Not Found: /api/tasks/
+WARNING 2025-05-04 14:34:58,338 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+INFO 2025-05-04 14:35:19,872 basehttp "GET /admin/accounts/department/ HTTP/1.1" 200 13646
+INFO 2025-05-04 14:35:19,895 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:35:21,061 basehttp "GET /admin/accounts/section/ HTTP/1.1" 200 14550
+INFO 2025-05-04 14:35:21,082 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:35:22,142 basehttp "GET /admin/accounts/student/ HTTP/1.1" 200 14481
+INFO 2025-05-04 14:35:22,163 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:35:23,963 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 15282
+INFO 2025-05-04 14:35:23,980 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:38:42,665 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:38:43,105 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:38:58,871 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/models.py changed, reloading.
+INFO 2025-05-04 14:38:59,313 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:39:11,025 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/workload/models.py changed, reloading.
+INFO 2025-05-04 14:39:11,339 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:39:44,629 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 14:39:44,956 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:40:13,100 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 14:40:13,479 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:41:28,710 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 14:41:29,035 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:41:38,444 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-04 14:41:38,758 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:41:51,403 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 14:41:51,728 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:42:13,532 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 14:42:13,845 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:42:48,124 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 14:42:48,432 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:42:57,851 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-04 14:42:58,162 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:43:15,776 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-04 14:43:16,103 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:44:09,875 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:44:10,281 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:44:35,273 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:44:35,583 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:45:40,656 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:45:40,974 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:45:57,772 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/models.py changed, reloading.
+INFO 2025-05-04 14:45:58,086 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:47:19,597 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 14:48:26,387 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 24560
+INFO 2025-05-04 14:48:26,411 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-04 14:49:11,796 log Not Found: /api/tasks/
+WARNING 2025-05-04 14:49:11,797 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+WARNING 2025-05-04 14:49:11,815 log Not Found: /api/tasks/
+WARNING 2025-05-04 14:49:11,816 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+INFO 2025-05-04 14:49:12,921 basehttp "OPTIONS /api/accounts/tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 14:49:12,922 basehttp "OPTIONS /api/accounts/tas/ HTTP/1.1" 200 0
+WARNING 2025-05-04 14:49:12,925 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 14:49:12,926 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 14:49:12,930 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 14:49:12,930 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+INFO 2025-05-04 14:50:44,376 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 24560
+INFO 2025-05-04 14:50:44,403 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:50:47,921 basehttp "GET /admin/workload/taworkload/ HTTP/1.1" 200 14535
+INFO 2025-05-04 14:50:47,951 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 14:50:50,617 basehttp "GET /admin/accounts/auditlog/ HTTP/1.1" 200 39692
+INFO 2025-05-04 14:50:50,637 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-04 14:59:56,553 log Not Found: /api/tasks/
+WARNING 2025-05-04 14:59:56,554 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+WARNING 2025-05-04 14:59:56,558 log Not Found: /api/tasks/
+WARNING 2025-05-04 14:59:56,558 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+INFO 2025-05-04 15:06:09,326 basehttp "OPTIONS /api/api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-04 15:06:09,331 basehttp "OPTIONS /api/api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-04 15:06:09,331 basehttp "OPTIONS /api/api/proctoring/swap-history/ HTTP/1.1" 200 0
+WARNING 2025-05-04 15:06:09,338 log Not Found: /api/api/proctoring/my-proctorings/
+INFO 2025-05-04 15:06:09,338 basehttp "OPTIONS /api/api/proctoring/swap-history/ HTTP/1.1" 200 0
+WARNING 2025-05-04 15:06:09,342 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-04 15:06:09,342 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-04 15:06:09,344 log Not Found: /api/api/proctoring/my-proctorings/
+WARNING 2025-05-04 15:06:09,345 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-04 15:06:09,345 basehttp "GET /api/api/proctoring/my-proctorings/ HTTP/1.1" 404 4259
+WARNING 2025-05-04 15:06:09,349 log Not Found: /api/api/proctoring/swap-history/
+WARNING 2025-05-04 15:06:09,349 basehttp "GET /api/api/proctoring/swap-history/ HTTP/1.1" 404 4253
+WARNING 2025-05-04 15:06:11,491 log Not Found: /api/tasks/
+WARNING 2025-05-04 15:06:11,492 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+WARNING 2025-05-04 15:06:11,497 log Not Found: /api/tasks/
+WARNING 2025-05-04 15:06:11,497 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+INFO 2025-05-04 15:11:44,993 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 15:11:44,993 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 15:11:44,994 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 15:11:44,997 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 15:11:45,020 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:11:45,023 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:11:45,027 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:11:45,029 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:12:08,149 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:12:08,151 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:12:08,159 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:12:08,164 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:14:46,772 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:14:46,774 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:14:46,784 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:14:46,786 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:15:54,558 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 24560
+INFO 2025-05-04 15:15:54,587 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 15:16:22,866 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 15:16:22,885 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 24702
+INFO 2025-05-04 15:16:22,907 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 15:16:29,111 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:16:29,113 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:16:29,116 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:16:29,121 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:16:29,982 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:16:29,985 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:16:29,988 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:16:29,991 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+WARNING 2025-05-04 15:41:45,824 log Not Found: /api/logout/
+WARNING 2025-05-04 15:41:45,825 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 15:41:47,401 basehttp "POST /api/token/ HTTP/1.1" 200 905
+INFO 2025-05-04 15:41:47,443 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:41:47,450 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:41:47,455 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:41:47,458 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+WARNING 2025-05-04 15:41:53,396 log Not Found: /api/tasks/
+WARNING 2025-05-04 15:41:53,396 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+WARNING 2025-05-04 15:41:53,401 log Not Found: /api/tasks/
+WARNING 2025-05-04 15:41:53,402 basehttp "GET /api/tasks/ HTTP/1.1" 404 5459
+WARNING 2025-05-04 15:41:55,801 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 15:41:55,802 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 15:41:55,807 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 15:41:55,807 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+INFO 2025-05-04 15:45:25,582 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-04 15:45:26,464 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:45:51,737 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/admin.py changed, reloading.
+INFO 2025-05-04 15:45:52,110 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:45:56,848 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 25084
+INFO 2025-05-04 15:45:56,874 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 15:46:06,993 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/admin.py changed, reloading.
+INFO 2025-05-04 15:46:07,313 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:46:16,840 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 15:46:17,420 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:46:26,969 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-04 15:46:27,360 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:46:41,544 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:46:41,546 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:46:41,550 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:46:41,554 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:46:47,841 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 25529
+INFO 2025-05-04 15:46:47,857 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 15:47:02,412 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:47:02,413 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:47:02,422 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:47:02,424 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 205
+INFO 2025-05-04 15:47:44,604 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:47:46,626 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:47:46,627 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 511
+INFO 2025-05-04 15:47:46,636 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:47:46,637 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 511
+INFO 2025-05-04 15:48:09,876 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 31220
+INFO 2025-05-04 15:48:09,892 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 15:48:28,058 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:48:28,060 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 511
+INFO 2025-05-04 15:48:28,064 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:48:28,067 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 511
+INFO 2025-05-04 15:50:25,969 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 15:50:26,345 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:50:44,124 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 15:50:44,438 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:50:53,146 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-04 15:51:29,981 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 15:51:29,982 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 15:51:29,988 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 15:51:29,989 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+INFO 2025-05-04 15:53:45,824 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 15:53:46,224 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:53:47,596 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 15:53:47,936 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:54:18,048 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 15:54:18,363 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:54:24,578 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:54:29,838 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:54:29,846 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 15:54:29,849 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:54:29,863 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 15:54:42,344 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 15:54:42,669 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:54:56,274 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 15:54:56,590 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 15:56:27,445 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:56:27,446 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 15:56:27,456 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 15:56:27,458 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 15:58:54,917 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-04 16:01:22,328 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 16:01:22,329 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 16:01:22,334 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 16:01:22,334 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+INFO 2025-05-04 16:01:25,146 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:01:25,149 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:01:25,162 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:01:25,165 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:01:28,025 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:01:28,027 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:01:28,036 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:01:28,041 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:36:13,683 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 16:38:31,716 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:38:31,716 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:38:31,746 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:38:31,750 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+WARNING 2025-05-04 16:39:07,205 log Unauthorized: /api/token/
+WARNING 2025-05-04 16:39:07,205 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-04 16:39:07,216 log Unauthorized: /api/tasks/my-tasks/
+WARNING 2025-05-04 16:39:07,216 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 401 107
+WARNING 2025-05-04 16:39:10,281 log Unauthorized: /api/token/
+WARNING 2025-05-04 16:39:10,281 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-04 16:39:14,088 log Unauthorized: /api/tasks/my-tasks/
+WARNING 2025-05-04 16:39:14,095 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 401 58
+INFO 2025-05-04 16:39:26,950 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:39:26,955 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:44:25,144 basehttp "OPTIONS /api/accounts/tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:44:25,144 basehttp "OPTIONS /api/accounts/tas/ HTTP/1.1" 200 0
+WARNING 2025-05-04 16:44:25,155 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 16:44:25,155 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 16:44:25,160 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 16:44:25,160 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 16:44:26,736 log Not Found: /api/logout/
+WARNING 2025-05-04 16:44:26,737 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 16:44:27,958 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:44:28,198 basehttp "POST /api/token/ HTTP/1.1" 200 905
+INFO 2025-05-04 16:44:28,249 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:44:28,255 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:44:32,208 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:44:32,210 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:44:32,213 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:44:32,213 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:44:32,217 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:44:32,219 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:44:32,225 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:44:32,228 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:46:37,256 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:46:37,259 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:46:37,265 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:46:37,268 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:48:17,458 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 16:48:33,175 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:48:33,175 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:48:33,177 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-04 16:48:33,178 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+WARNING 2025-05-04 16:48:33,183 log Forbidden: /api/proctoring/my-proctorings/
+INFO 2025-05-04 16:48:33,187 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+WARNING 2025-05-04 16:48:33,188 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-04 16:48:33,197 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-04 16:48:33,197 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-04 16:48:33,197 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:49:37,568 basehttp "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-05-04 16:49:37,594 basehttp "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4193
+INFO 2025-05-04 16:49:37,620 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-05-04 16:49:37,628 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-05-04 16:49:37,630 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-05-04 16:49:37,634 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-05-04 16:49:37,638 basehttp "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-05-04 16:49:37,638 basehttp "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-05-04 16:49:38,131 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+WARNING 2025-05-04 16:49:38,218 log Not Found: /favicon.ico
+WARNING 2025-05-04 16:49:38,218 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+INFO 2025-05-04 16:49:44,652 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-05-04 16:49:44,668 basehttp "GET /admin/ HTTP/1.1" 200 18314
+INFO 2025-05-04 16:49:44,684 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-05-04 16:49:44,859 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-05-04 16:49:44,860 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-05-04 16:49:44,860 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-05-04 16:49:52,769 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 31220
+INFO 2025-05-04 16:49:52,789 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-05-04 16:49:52,791 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-05-04 16:49:52,793 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-05-04 16:49:52,796 basehttp "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-05-04 16:49:52,800 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-05-04 16:49:52,806 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-05-04 16:49:52,806 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-05-04 16:49:52,810 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 16:49:52,812 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-05-04 16:49:52,814 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-05-04 16:49:52,818 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-05-04 16:49:52,821 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-05-04 16:49:52,938 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+INFO 2025-05-04 16:49:52,938 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-05-04 16:49:52,958 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-05-04 16:49:52,958 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-05-04 16:49:52,959 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+WARNING 2025-05-04 16:52:00,241 log Bad Request: /api/token/
+WARNING 2025-05-04 16:52:00,242 basehttp "POST /api/token/ HTTP/1.1" 400 107
+WARNING 2025-05-04 16:52:00,256 log Unauthorized: /api/accounts/instructor/available-tas/
+WARNING 2025-05-04 16:52:00,257 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 401 107
+WARNING 2025-05-04 16:52:03,015 log Bad Request: /api/token/
+WARNING 2025-05-04 16:52:03,015 basehttp "POST /api/token/ HTTP/1.1" 400 107
+WARNING 2025-05-04 16:52:06,240 log Bad Request: /api/token/
+WARNING 2025-05-04 16:52:06,240 basehttp "POST /api/token/ HTTP/1.1" 400 107
+WARNING 2025-05-04 16:52:09,103 log Bad Request: /api/token/
+WARNING 2025-05-04 16:52:09,103 basehttp "POST /api/token/ HTTP/1.1" 400 107
+WARNING 2025-05-04 16:52:11,778 log Unauthorized: /api/token/
+WARNING 2025-05-04 16:52:11,779 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-04 16:52:16,743 log Unauthorized: /api/token/
+WARNING 2025-05-04 16:52:16,743 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-04 16:52:20,485 log Unauthorized: /api/token/
+WARNING 2025-05-04 16:52:20,485 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-04 16:52:24,441 log Unauthorized: /api/token/
+WARNING 2025-05-04 16:52:24,441 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-04 16:52:39,546 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-04 16:52:39,572 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 31362
+INFO 2025-05-04 16:52:39,621 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 16:52:54,082 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 16:52:54,497 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 16:53:29,850 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 16:53:30,157 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 16:54:39,545 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+INFO 2025-05-04 16:54:39,546 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:54:39,555 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:54:39,557 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 650
+WARNING 2025-05-04 16:57:03,934 log Bad Request: /api/token/
+WARNING 2025-05-04 16:57:03,935 basehttp "POST /api/token/ HTTP/1.1" 400 107
+WARNING 2025-05-04 16:57:03,946 log Unauthorized: /api/accounts/instructor/available-tas/
+WARNING 2025-05-04 16:57:03,946 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 401 107
+INFO 2025-05-04 16:57:38,521 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 16:57:38,913 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 16:58:21,288 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:58:21,289 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 1071
+INFO 2025-05-04 16:58:21,314 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:58:21,320 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 1071
+INFO 2025-05-04 16:58:25,460 basehttp "OPTIONS /api/accounts/instructor/assign-ta/ HTTP/1.1" 200 0
+ERROR 2025-05-04 16:58:25,497 log Internal Server Error: /api/accounts/instructor/assign-ta/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 1132, in post
+    assignment = InstructorTAAssignment.objects.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 288, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'CS'": "InstructorTAAssignment.department" must be a "Department" instance.
+ERROR 2025-05-04 16:58:25,500 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 500 113247
+ERROR 2025-05-04 16:58:26,838 log Internal Server Error: /api/accounts/instructor/assign-ta/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 1132, in post
+    assignment = InstructorTAAssignment.objects.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 288, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'CS'": "InstructorTAAssignment.department" must be a "Department" instance.
+ERROR 2025-05-04 16:58:26,840 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 500 113247
+ERROR 2025-05-04 16:58:27,301 log Internal Server Error: /api/accounts/instructor/assign-ta/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 1132, in post
+    assignment = InstructorTAAssignment.objects.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 288, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'CS'": "InstructorTAAssignment.department" must be a "Department" instance.
+ERROR 2025-05-04 16:58:27,302 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 500 113247
+ERROR 2025-05-04 16:58:27,451 log Internal Server Error: /api/accounts/instructor/assign-ta/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 1132, in post
+    assignment = InstructorTAAssignment.objects.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 288, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'CS'": "InstructorTAAssignment.department" must be a "Department" instance.
+ERROR 2025-05-04 16:58:27,453 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 500 113247
+ERROR 2025-05-04 16:58:27,583 log Internal Server Error: /api/accounts/instructor/assign-ta/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 1132, in post
+    assignment = InstructorTAAssignment.objects.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 288, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'CS'": "InstructorTAAssignment.department" must be a "Department" instance.
+ERROR 2025-05-04 16:58:27,584 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 500 113247
+ERROR 2025-05-04 16:58:27,715 log Internal Server Error: /api/accounts/instructor/assign-ta/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 1132, in post
+    assignment = InstructorTAAssignment.objects.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 288, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'CS'": "InstructorTAAssignment.department" must be a "Department" instance.
+ERROR 2025-05-04 16:58:27,716 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 500 113247
+ERROR 2025-05-04 16:58:27,869 log Internal Server Error: /api/accounts/instructor/assign-ta/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 1132, in post
+    assignment = InstructorTAAssignment.objects.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 288, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'CS'": "InstructorTAAssignment.department" must be a "Department" instance.
+ERROR 2025-05-04 16:58:27,870 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 500 113247
+INFO 2025-05-04 16:58:40,839 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:58:40,861 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 1071
+INFO 2025-05-04 16:58:40,861 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 16:58:40,877 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 1071
+ERROR 2025-05-04 16:58:44,110 log Internal Server Error: /api/accounts/instructor/assign-ta/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py", line 1132, in post
+    assignment = InstructorTAAssignment.objects.create(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 661, in create
+    obj = self.model(**kwargs)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 545, in __init__
+    _setattr(self, field.name, rel_obj)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/fields/related_descriptors.py", line 288, in __set__
+    raise ValueError(
+ValueError: Cannot assign "'CS'": "InstructorTAAssignment.department" must be a "Department" instance.
+ERROR 2025-05-04 16:58:44,112 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 500 113247
+INFO 2025-05-04 16:59:55,344 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 16:59:55,717 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:00:14,616 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 218
+INFO 2025-05-04 17:00:14,632 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:00:14,636 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:00:18,989 basehttp "OPTIONS /api/accounts/instructor/remove-ta/ HTTP/1.1" 200 0
+INFO 2025-05-04 17:00:18,998 basehttp "POST /api/accounts/instructor/remove-ta/ HTTP/1.1" 200 49
+INFO 2025-05-04 17:00:19,012 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:00:19,016 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 1071
+INFO 2025-05-04 17:00:21,332 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 218
+INFO 2025-05-04 17:00:21,347 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:00:21,351 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:00:23,202 basehttp "OPTIONS /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 0
+INFO 2025-05-04 17:00:23,202 basehttp "OPTIONS /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 0
+INFO 2025-05-04 17:00:23,230 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 280
+INFO 2025-05-04 17:00:23,239 basehttp "OPTIONS /api/workload/instructor/adjustment-history/?ta_id=16 HTTP/1.1" 200 0
+INFO 2025-05-04 17:00:23,245 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 280
+INFO 2025-05-04 17:00:23,246 basehttp "GET /api/workload/instructor/adjustment-history/?ta_id=16 HTTP/1.1" 200 2
+INFO 2025-05-04 17:00:23,251 basehttp "GET /api/workload/instructor/adjustment-history/?ta_id=16 HTTP/1.1" 200 2
+INFO 2025-05-04 17:00:36,717 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:00:36,725 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:00:36,736 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:00:36,744 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:00:43,268 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:00:43,274 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:00:43,279 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:00:43,286 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:00:48,364 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:00:48,374 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+WARNING 2025-05-04 17:00:49,583 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 17:00:49,584 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 17:00:49,595 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 17:00:49,596 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 17:27:49,449 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-04 17:27:49,450 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-04 17:27:49,454 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+WARNING 2025-05-04 17:27:49,459 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-04 17:27:49,463 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-04 17:27:49,464 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:28:13,099 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:28:13,105 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:28:13,110 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:28:13,114 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:28:24,408 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:28:24,413 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+WARNING 2025-05-04 17:28:25,852 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 17:28:25,852 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 17:28:25,860 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 17:28:25,860 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+INFO 2025-05-04 17:28:44,361 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:28:44,374 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 270
+INFO 2025-05-04 17:28:44,377 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:28:44,390 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 967
+INFO 2025-05-04 17:28:48,246 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 217
+INFO 2025-05-04 17:28:48,259 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 488
+INFO 2025-05-04 17:28:48,263 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 861
+INFO 2025-05-04 17:29:14,078 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:29:14,083 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+WARNING 2025-05-04 17:29:15,633 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 17:29:15,633 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+WARNING 2025-05-04 17:29:15,657 log Not Found: /api/accounts/tas/
+WARNING 2025-05-04 17:29:15,657 basehttp "GET /api/accounts/tas/ HTTP/1.1" 404 12806
+INFO 2025-05-04 17:36:57,652 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 17:36:58,078 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:38:26,851 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-04 17:38:27,150 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:38:47,858 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 17:38:48,149 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:38:53,663 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 17:39:43,456 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:39:43,462 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:39:48,302 basehttp "GET /api/accounts/tas/ HTTP/1.1" 200 1134
+INFO 2025-05-04 17:39:48,311 basehttp "GET /api/accounts/tas/ HTTP/1.1" 200 1134
+INFO 2025-05-04 17:39:51,814 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:39:51,826 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:39:55,645 basehttp "GET /api/accounts/tas/ HTTP/1.1" 200 1134
+INFO 2025-05-04 17:39:55,658 basehttp "GET /api/accounts/tas/ HTTP/1.1" 200 1134
+INFO 2025-05-04 17:40:16,593 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 861
+INFO 2025-05-04 17:40:16,593 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 488
+INFO 2025-05-04 17:40:16,601 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 488
+INFO 2025-05-04 17:40:16,606 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 861
+INFO 2025-05-04 17:40:19,348 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 217
+INFO 2025-05-04 17:40:19,362 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:40:19,365 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 755
+INFO 2025-05-04 17:40:27,375 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:40:27,380 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:40:28,452 basehttp "GET /api/accounts/tas/ HTTP/1.1" 200 1181
+INFO 2025-05-04 17:40:28,467 basehttp "GET /api/accounts/tas/ HTTP/1.1" 200 1181
+INFO 2025-05-04 17:41:56,750 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 17:41:57,171 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-04 17:45:01,685 log Not Found: /api/logout/
+WARNING 2025-05-04 17:45:01,687 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 17:45:03,436 basehttp "POST /api/token/ HTTP/1.1" 200 902
+INFO 2025-05-04 17:45:03,509 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:45:03,513 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:45:05,849 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:45:05,854 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:46:21,082 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:46:21,089 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:46:24,139 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:46:24,144 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:46:52,786 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:46:52,791 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:47:17,773 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:47:17,785 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:47:39,157 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:47:39,181 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+WARNING 2025-05-04 17:49:24,906 log Bad Request: /api/token/
+WARNING 2025-05-04 17:49:24,906 basehttp "POST /api/token/ HTTP/1.1" 400 107
+WARNING 2025-05-04 17:49:24,917 log Unauthorized: /api/accounts/instructor/tas/
+WARNING 2025-05-04 17:49:24,917 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 401 107
+WARNING 2025-05-04 17:49:28,339 log Bad Request: /api/token/
+WARNING 2025-05-04 17:49:28,339 basehttp "POST /api/token/ HTTP/1.1" 400 107
+INFO 2025-05-04 17:50:35,158 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:50:35,175 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:50:36,564 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:50:36,570 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:53:23,385 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:53:23,398 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:53:24,757 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:53:24,770 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:53:24,774 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 17:53:24,784 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 17:53:35,868 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:53:35,875 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 755
+INFO 2025-05-04 17:53:35,879 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:53:35,884 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 755
+INFO 2025-05-04 17:57:26,657 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:57:26,660 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:57:27,935 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 17:57:27,939 basehttp "OPTIONS /api/workload/ta-workloads/ HTTP/1.1" 200 0
+WARNING 2025-05-04 17:57:27,944 log Not Found: /api/workload/ta-workloads/
+WARNING 2025-05-04 17:57:27,945 basehttp "GET /api/workload/ta-workloads/ HTTP/1.1" 404 14502
+INFO 2025-05-04 17:57:27,948 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+WARNING 2025-05-04 17:57:27,993 log Not Found: /api/workload/ta-workloads/
+WARNING 2025-05-04 17:57:27,994 basehttp "GET /api/workload/ta-workloads/ HTTP/1.1" 404 14502
+INFO 2025-05-04 17:57:40,476 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+WARNING 2025-05-04 17:57:40,481 log Not Found: /api/workload/ta-workloads/
+WARNING 2025-05-04 17:57:40,481 basehttp "GET /api/workload/ta-workloads/ HTTP/1.1" 404 14502
+INFO 2025-05-04 17:57:40,487 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+WARNING 2025-05-04 17:57:40,524 log Not Found: /api/workload/ta-workloads/
+WARNING 2025-05-04 17:57:40,525 basehttp "GET /api/workload/ta-workloads/ HTTP/1.1" 404 14502
+INFO 2025-05-04 17:58:07,617 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:58:07,623 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 17:58:09,583 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+WARNING 2025-05-04 17:58:09,589 log Not Found: /api/workload/ta-workloads/
+WARNING 2025-05-04 17:58:09,590 basehttp "GET /api/workload/ta-workloads/ HTTP/1.1" 404 14502
+INFO 2025-05-04 17:58:09,595 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+WARNING 2025-05-04 17:58:09,635 log Not Found: /api/workload/ta-workloads/
+WARNING 2025-05-04 17:58:09,635 basehttp "GET /api/workload/ta-workloads/ HTTP/1.1" 404 14502
+INFO 2025-05-04 18:01:12,348 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:01:12,353 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:01:15,833 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:01:15,840 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:01:15,843 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:01:15,849 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+WARNING 2025-05-04 18:01:35,137 log Method Not Allowed: /api/tasks/my-tasks/
+WARNING 2025-05-04 18:01:35,143 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 405 41
+WARNING 2025-05-04 18:01:36,552 log Method Not Allowed: /api/tasks/my-tasks/
+WARNING 2025-05-04 18:01:36,553 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 405 41
+WARNING 2025-05-04 18:01:37,178 log Method Not Allowed: /api/tasks/my-tasks/
+WARNING 2025-05-04 18:01:37,178 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 405 41
+WARNING 2025-05-04 18:01:37,979 log Method Not Allowed: /api/tasks/my-tasks/
+WARNING 2025-05-04 18:01:37,979 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 405 41
+WARNING 2025-05-04 18:01:51,200 log Method Not Allowed: /api/tasks/my-tasks/
+WARNING 2025-05-04 18:01:51,201 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 405 41
+INFO 2025-05-04 18:02:17,691 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 755
+INFO 2025-05-04 18:02:17,698 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:02:17,708 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:02:17,710 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 755
+INFO 2025-05-04 18:02:20,857 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 203
+INFO 2025-05-04 18:02:20,872 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 910
+INFO 2025-05-04 18:02:20,876 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 659
+INFO 2025-05-04 18:02:23,339 basehttp "POST /api/accounts/instructor/remove-ta/ HTTP/1.1" 200 49
+INFO 2025-05-04 18:02:23,355 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:02:23,358 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 755
+INFO 2025-05-04 18:03:29,621 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:03:29,625 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:03:31,070 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:03:31,081 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:03:31,084 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:03:31,090 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+WARNING 2025-05-04 18:03:38,293 log Method Not Allowed: /api/tasks/my-tasks/
+WARNING 2025-05-04 18:03:38,293 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 405 41
+WARNING 2025-05-04 18:04:33,372 log Method Not Allowed: /api/tasks/my-tasks/
+WARNING 2025-05-04 18:04:33,373 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 405 41
+INFO 2025-05-04 18:04:41,733 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:04:42,016 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:05:29,622 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:05:59,569 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 426
+INFO 2025-05-04 18:06:08,201 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:06:08,211 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:06:08,217 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:06:08,229 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:06:14,670 basehttp "OPTIONS /api/tasks/task/1/ HTTP/1.1" 200 0
+WARNING 2025-05-04 18:06:14,679 log Method Not Allowed: /api/tasks/task/1/
+WARNING 2025-05-04 18:06:14,680 basehttp "DELETE /api/tasks/task/1/ HTTP/1.1" 405 43
+WARNING 2025-05-04 18:06:17,207 log Method Not Allowed: /api/tasks/task/1/
+WARNING 2025-05-04 18:06:17,207 basehttp "DELETE /api/tasks/task/1/ HTTP/1.1" 405 43
+INFO 2025-05-04 18:06:18,191 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:06:18,197 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:06:18,278 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:06:18,287 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:06:50,087 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 449
+WARNING 2025-05-04 18:07:08,131 log Method Not Allowed: /api/tasks/task/1/
+WARNING 2025-05-04 18:07:08,131 basehttp "DELETE /api/tasks/task/1/ HTTP/1.1" 405 43
+WARNING 2025-05-04 18:07:14,877 log Method Not Allowed: /api/tasks/task/1/
+WARNING 2025-05-04 18:07:14,877 basehttp "DELETE /api/tasks/task/1/ HTTP/1.1" 405 43
+WARNING 2025-05-04 18:07:23,759 log Not Found: /api/logout/
+WARNING 2025-05-04 18:07:23,760 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 18:07:27,362 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-04 18:07:27,424 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:07:27,428 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:07:31,262 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:07:31,268 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:15:51,208 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:15:51,217 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:16:05,133 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:16:05,154 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:17:25,776 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:17:25,780 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:17:27,841 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:17:27,860 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+WARNING 2025-05-04 18:17:29,988 log Not Found: /api/logout/
+WARNING 2025-05-04 18:17:29,989 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 18:17:36,458 basehttp "POST /api/token/ HTTP/1.1" 200 902
+INFO 2025-05-04 18:17:36,520 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 928
+INFO 2025-05-04 18:17:36,526 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 928
+INFO 2025-05-04 18:17:38,357 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:17:38,376 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:17:38,377 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:17:38,402 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:18:06,460 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 435
+WARNING 2025-05-04 18:18:14,126 log Not Found: /api/logout/
+WARNING 2025-05-04 18:18:14,126 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 18:18:17,715 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-04 18:18:17,792 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:18:17,799 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+WARNING 2025-05-04 18:18:31,209 log Not Found: /api/logout/
+WARNING 2025-05-04 18:18:31,210 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 18:18:36,700 basehttp "POST /api/token/ HTTP/1.1" 200 902
+INFO 2025-05-04 18:18:36,792 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1364
+INFO 2025-05-04 18:18:36,797 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1364
+INFO 2025-05-04 18:18:44,974 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:18:44,985 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 755
+INFO 2025-05-04 18:18:44,990 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:18:44,995 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 755
+INFO 2025-05-04 18:18:55,762 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1364
+INFO 2025-05-04 18:18:55,787 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1364
+INFO 2025-05-04 18:18:56,661 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:18:56,670 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:18:56,674 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:18:56,686 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:19:02,230 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 415
+INFO 2025-05-04 18:19:06,977 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1780
+INFO 2025-05-04 18:19:06,999 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1780
+INFO 2025-05-04 18:19:47,255 basehttp "GET /admin/password_change/ HTTP/1.1" 200 13889
+INFO 2025-05-04 18:19:47,288 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-05-04 18:19:47,410 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-05-04 18:20:00,261 basehttp "POST /admin/password_change/ HTTP/1.1" 302 0
+INFO 2025-05-04 18:20:00,267 basehttp "GET /admin/password_change/done/ HTTP/1.1" 200 12083
+INFO 2025-05-04 18:20:28,561 basehttp "GET /admin/ HTTP/1.1" 200 18314
+WARNING 2025-05-04 18:20:57,994 log Unauthorized: /api/tasks/my-tasks/
+WARNING 2025-05-04 18:20:57,995 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 401 107
+INFO 2025-05-04 18:21:11,798 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:21:12,073 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:21:24,666 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1780
+INFO 2025-05-04 18:21:24,680 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1780
+INFO 2025-05-04 18:23:37,168 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:23:37,188 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:23:37,192 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:23:37,198 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:26:10,030 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1780
+INFO 2025-05-04 18:26:10,062 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 1780
+INFO 2025-05-04 18:26:13,481 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:26:13,501 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:26:13,502 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:26:13,515 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:26:34,003 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 423
+INFO 2025-05-04 18:26:37,434 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2204
+INFO 2025-05-04 18:26:37,450 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2204
+INFO 2025-05-04 18:26:52,679 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:26:53,726 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:26:54,666 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2204
+INFO 2025-05-04 18:26:54,679 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2204
+INFO 2025-05-04 18:27:03,928 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:27:04,350 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:30:13,211 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:30:13,613 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:30:33,483 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:30:33,863 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:30:50,629 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/serializers.py changed, reloading.
+INFO 2025-05-04 18:30:51,011 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:30:57,507 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/serializers.py changed, reloading.
+INFO 2025-05-04 18:30:57,822 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:31:02,430 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:33:26,395 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:33:26,409 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 706
+INFO 2025-05-04 18:33:26,414 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:33:26,422 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 18:33:35,659 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 415
+INFO 2025-05-04 18:33:35,691 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2620
+INFO 2025-05-04 18:33:38,995 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2620
+INFO 2025-05-04 18:33:39,034 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2620
+WARNING 2025-05-04 18:33:41,877 log Not Found: /api/logout/
+WARNING 2025-05-04 18:33:41,878 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 18:33:44,743 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-04 18:33:44,826 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:33:44,831 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:33:50,626 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:33:50,631 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:43:13,527 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-04 18:43:13,548 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+WARNING 2025-05-04 18:43:15,813 log Not Found: /api/logout/
+WARNING 2025-05-04 18:43:15,814 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-04 18:43:19,143 basehttp "POST /api/token/ HTTP/1.1" 200 902
+INFO 2025-05-04 18:43:19,265 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2620
+INFO 2025-05-04 18:43:19,283 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2620
+INFO 2025-05-04 18:43:23,340 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 15806
+INFO 2025-05-04 18:43:23,366 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 18:45:29,056 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 20216
+INFO 2025-05-04 18:45:29,086 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 18:45:41,521 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/views.py changed, reloading.
+INFO 2025-05-04 18:45:41,971 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:45:53,819 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/serializers.py changed, reloading.
+INFO 2025-05-04 18:45:54,150 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:46:00,605 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-04 18:46:00,952 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:48:08,368 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 15806
+INFO 2025-05-04 18:48:08,405 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 18:48:13,754 basehttp "GET /admin/workload/taworkload/ HTTP/1.1" 200 15408
+INFO 2025-05-04 18:48:13,774 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 18:48:15,083 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 31223
+INFO 2025-05-04 18:48:15,100 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 18:48:16,416 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 17286
+INFO 2025-05-04 18:48:16,440 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 18:48:19,338 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 15806
+INFO 2025-05-04 18:48:19,358 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 18:49:06,725 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/admin.py changed, reloading.
+INFO 2025-05-04 18:49:07,120 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:50:03,002 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:50:03,418 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:50:15,046 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:50:15,438 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:50:23,989 autoreload /Users/erdemugurlu/Bilkent-TA-Mangement-System/backend/tasks/views.py changed, reloading.
+INFO 2025-05-04 18:50:24,422 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 18:50:27,241 basehttp "GET /admin/accounts/auditlog/ HTTP/1.1" 200 43276
+INFO 2025-05-04 18:50:27,275 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 19:00:55,237 basehttp "GET /admin/ HTTP/1.1" 200 20601
+INFO 2025-05-04 19:01:55,090 autoreload Watching for file changes with StatReloader
+INFO 2025-05-04 19:02:04,181 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-04 19:02:04,182 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-04 19:02:04,238 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2620
+INFO 2025-05-04 19:02:04,271 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2620
+INFO 2025-05-04 19:02:07,211 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 19:02:07,212 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-04 19:02:07,227 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 639
+INFO 2025-05-04 19:02:07,246 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 19:02:07,250 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 639
+INFO 2025-05-04 19:02:07,316 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 836
+INFO 2025-05-04 19:02:16,750 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 415
+INFO 2025-05-04 19:02:16,775 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 3036
+INFO 2025-05-04 19:02:20,704 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 3036
+INFO 2025-05-04 19:02:20,720 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 3036
+INFO 2025-05-04 19:02:32,208 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 17566
+INFO 2025-05-04 19:02:32,231 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 19:02:33,903 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 17566
+INFO 2025-05-04 19:02:33,917 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 19:02:34,664 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 17566
+INFO 2025-05-04 19:02:34,683 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-04 19:02:35,315 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 17566
+INFO 2025-05-04 19:02:35,333 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342

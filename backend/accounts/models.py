@@ -62,6 +62,12 @@ class User(AbstractUser):
         IE = 'IE', _('Industrial Engineering')
         OTHER = 'OTHER', _('Other')
     
+    # Employment type choices for TAs
+    class EmploymentType(models.TextChoices):
+        FULL_TIME = 'FULL_TIME', _('Full-Time')
+        PART_TIME = 'PART_TIME', _('Part-Time')
+        NOT_APPLICABLE = 'NOT_APPLICABLE', _('Not Applicable')
+    
     # Redefining the username to make it optional
     username = models.CharField(max_length=150, unique=True, null=True, blank=True)
     
@@ -85,6 +91,12 @@ class User(AbstractUser):
         max_length=20, 
         choices=AcademicLevel.choices, 
         default=AcademicLevel.NOT_APPLICABLE
+    )
+    employment_type = models.CharField(
+        max_length=20,
+        choices=EmploymentType.choices,
+        default=EmploymentType.NOT_APPLICABLE,
+        help_text=_("Employment type affects workload requirement: Full-time requires twice the workload of part-time")
     )
     
     # Approval and verification fields
@@ -112,6 +124,11 @@ class User(AbstractUser):
         if not self.username:
             # Create a username based on email
             self.username = self.email.split('@')[0]
+        
+        # Set employment_type to NOT_APPLICABLE for non-TA users
+        if self.role != 'TA' and self.employment_type != self.EmploymentType.NOT_APPLICABLE:
+            self.employment_type = self.EmploymentType.NOT_APPLICABLE
+        
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -128,7 +145,7 @@ class Student(models.Model):
     
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
     student_id = models.CharField(max_length=20, unique=True)
-    department = models.CharField(max_length=100)
+    department_name = models.CharField(max_length=100)
     is_ta = models.BooleanField(default=False)
     
     def __str__(self):
@@ -263,3 +280,34 @@ class AuditLog(models.Model):
     
     def __str__(self):
         return f"{self.timestamp} - {self.user} - {self.action} - {self.object_type}"
+
+
+# TA-Instructor ilişkisi için yeni model
+class InstructorTAAssignment(models.Model):
+    """Model for tracking which TAs are assigned to which instructors."""
+    instructor = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='assigned_tas',
+        limit_choices_to={'role': 'INSTRUCTOR'}
+    )
+    ta = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='assigned_to_instructor',
+        limit_choices_to={'role': 'TA'}
+    )
+    assigned_at = models.DateTimeField(auto_now_add=True)
+    department = models.ForeignKey(
+        Department,
+        on_delete=models.CASCADE,
+        related_name='instructor_ta_assignments'
+    )
+    
+    class Meta:
+        unique_together = ('instructor', 'ta')
+        verbose_name = "Instructor-TA Assignment"
+        verbose_name_plural = "Instructor-TA Assignments"
+    
+    def __str__(self):
+        return f"{self.instructor.full_name} -> {self.ta.full_name}"

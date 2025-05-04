@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from accounts.models import User, Section
 
 
@@ -14,33 +15,49 @@ class Task(models.Model):
         ('REJECTED', 'Rejected'),
     ]
     
+    PRIORITY_CHOICES = [
+        ('LOW', 'Low'),
+        ('MEDIUM', 'Medium'),
+        ('HIGH', 'High'),
+        ('URGENT', 'Urgent'),
+    ]
+    
     title = models.CharField(max_length=200)
     description = models.TextField()
     creator = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
         related_name='created_tasks',
-        limit_choices_to={'role': 'INSTRUCTOR'}
+        limit_choices_to={'role': 'INSTRUCTOR'},
+        null=True,
+        blank=True
     )
     assignee = models.ForeignKey(
         User, 
         on_delete=models.CASCADE, 
         related_name='assigned_tasks',
-        limit_choices_to={'role': 'TA'}
+        limit_choices_to={'role': 'TA'},
+        null=True,
+        blank=True
     )
     section = models.ForeignKey(
         Section,
         on_delete=models.CASCADE,
-        related_name='tasks'
+        related_name='tasks',
+        null=True,
+        blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    due_date = models.DateTimeField()
+    due_date = models.DateTimeField(default=timezone.now)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='MEDIUM')
     credit_hours = models.DecimalField(max_digits=4, decimal_places=2, default=0)
     
     def __str__(self):
-        return f"{self.title} - {self.section} - {self.assignee.full_name}"
+        if self.assignee:
+            return f"{self.title} - {self.section} - {self.assignee.full_name}"
+        return f"{self.title} - {self.section} - Unassigned"
     
     class Meta:
         ordering = ['-due_date']

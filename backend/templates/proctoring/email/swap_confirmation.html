@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proctor Swap Confirmation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .exam-details {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-left: 4px solid #003366;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Proctoring Assignment Swap Confirmation</h2>
+    </div>
+    
+    <div class="content">
+        <p>Hello {{ requesting_ta }},</p>
+        
+        <p>Your request to swap your proctoring assignment has been <strong>approved and processed</strong>.</p>
+        
+        <div class="exam-details">
+            <h3>Exam Details:</h3>
+            <p><strong>Course:</strong> {{ course_code }} - Section {{ section_number }}</p>
+            <p><strong>Exam:</strong> {{ exam_title }}</p>
+            <p><strong>Date:</strong> {{ exam_date }}</p>
+            <p><strong>Time:</strong> {{ exam_time }}</p>
+            <p><strong>Location:</strong> {{ exam_location }}</p>
+        </div>
+        
+        <p>This assignment has been successfully transferred to <strong>{{ new_ta }}</strong> as of {{ swap_timestamp }}.</p>
+        
+        <p>
+            <strong>Reason for swap:</strong><br>
+            {{ swap_reason }}
+        </p>
+        
+        <p>You are no longer responsible for proctoring this exam. The workload has been adjusted accordingly in your records.</p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated message from the Bilkent TA Management System.</p>
+        <p>If you have any questions, please contact your department staff.</p>
+    </div>
+</body>
+</html> 

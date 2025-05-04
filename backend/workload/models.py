@@ -16,14 +16,22 @@ class WorkloadPolicy(models.Model):
     )
     academic_term = models.CharField(max_length=20, help_text="e.g. Fall 2023")
     
-    # Maximum hours per week
-    max_hours_phd = models.PositiveIntegerField(
+    # Maximum hours per week based on employment type and academic level
+    max_hours_phd_full_time = models.PositiveIntegerField(
         default=20,
-        help_text="Maximum weekly hours for PhD TAs"
+        help_text="Maximum weekly hours for Full-Time PhD TAs"
     )
-    max_hours_msc = models.PositiveIntegerField(
+    max_hours_phd_part_time = models.PositiveIntegerField(
+        default=10,
+        help_text="Maximum weekly hours for Part-Time PhD TAs"
+    )
+    max_hours_msc_full_time = models.PositiveIntegerField(
         default=15,
-        help_text="Maximum weekly hours for MSc TAs"
+        help_text="Maximum weekly hours for Full-Time MSc TAs"
+    )
+    max_hours_msc_part_time = models.PositiveIntegerField(
+        default=7,
+        help_text="Maximum weekly hours for Part-Time MSc TAs"
     )
     max_hours_undergrad = models.PositiveIntegerField(
         default=10,
@@ -68,6 +76,23 @@ class WorkloadPolicy(models.Model):
     
     class Meta:
         unique_together = ('department', 'academic_term')
+    
+    def get_max_hours_for_ta(self, ta):
+        """
+        Returns the appropriate maximum hours based on TA's academic level and employment type.
+        """
+        if ta.academic_level == 'PHD':
+            if ta.employment_type == 'FULL_TIME':
+                return self.max_hours_phd_full_time
+            else:  # PART_TIME
+                return self.max_hours_phd_part_time
+        elif ta.academic_level == 'MASTERS':
+            if ta.employment_type == 'FULL_TIME':
+                return self.max_hours_msc_full_time
+            else:  # PART_TIME
+                return self.max_hours_msc_part_time
+        else:  # Undergraduate or other
+            return self.max_hours_undergrad
 
 
 class TAWorkload(models.Model):
@@ -97,6 +122,12 @@ class TAWorkload(models.Model):
     max_weekly_hours = models.PositiveIntegerField(
         default=20,
         help_text="Maximum allowed weekly hours for this TA"
+    )
+    
+    # Required workload to complete (depends on employment type)
+    required_workload_hours = models.FloatField(
+        default=0.0,
+        help_text="Total hours required to complete based on employment type"
     )
     
     # Tracking fields
@@ -131,6 +162,19 @@ class TAWorkload(models.Model):
         return f"{self.ta.full_name} - {self.academic_term} ({self.current_weekly_hours}/{self.max_weekly_hours} hrs)"
     
     def save(self, *args, **kwargs):
+        # Set max_weekly_hours based on policy if available
+        if self.policy:
+            self.max_weekly_hours = self.policy.get_max_hours_for_ta(self.ta)
+        
+        # Set required_workload_hours based on employment type
+        # Full-time TAs are required to complete twice the workload of part-time TAs
+        standard_workload = 160  # Example: 160 hours per semester for part-time
+        
+        if self.ta.employment_type == 'FULL_TIME':
+            self.required_workload_hours = standard_workload * 2
+        else:  # PART_TIME or anything else
+            self.required_workload_hours = standard_workload
+        
         # Calculate if overloaded
         self.is_overloaded = self.current_weekly_hours > self.max_weekly_hours
         super().save(*args, **kwargs)
@@ -248,10 +292,73 @@ class WorkloadActivity(models.Model):
                 # Distributed across term (assumed to be 16 weeks)
                 if activity.start_date and activity.end_date:
                     weekly_hours += activity.weighted_hours / 16
-        
+                else:
+                    weekly_hours += activity.weighted_hours / 16
+                    
+        # Update workload with calculated hours
         workload.current_weekly_hours = weekly_hours
         workload.total_assigned_hours = sum(a.weighted_hours for a in activities)
         workload.save()
     
     def __str__(self):
-        return f"{self.activity_type}: {self.description} ({self.hours} hrs)"
+        return f"{self.description} - {self.hours} hrs ({self.activity_type})"
+
+
+class WorkloadRecord(models.Model):
+    """
+    Model for recording individual workload entries for tasks.
+    Used to track completed and approved task hours for TAs.
+    """
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='workload_records'
+    )
+    task = models.ForeignKey(
+        'tasks.Task',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='workload_records'
+    )
+    hours = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0.0)]
+    )
+    date = models.DateField()
+    description = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.user.full_name} - {self.description} ({self.hours} hrs)"
+
+
+class WorkloadManualAdjustment(models.Model):
+    """
+    Model for recording manual adjustments to TA workloads by instructors.
+    """
+    ta = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='workload_adjustments',
+        limit_choices_to={'role': 'TA'}
+    )
+    instructor = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='ta_workload_adjustments',
+        limit_choices_to={'role': 'INSTRUCTOR'}
+    )
+    hours = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text="Positive for addition, negative for reduction"
+    )
+    reason = models.TextField()
+    date = models.DateField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        adjustment_type = "increased" if self.hours >= 0 else "decreased"
+        return f"{self.ta.full_name}'s workload {adjustment_type} by {abs(self.hours)} hrs by {self.instructor.full_name}"

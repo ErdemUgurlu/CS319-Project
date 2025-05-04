@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proctor Assignment Change Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .exam-details {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-left: 4px solid #003366;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Proctor Assignment Change</h2>
+    </div>
+    
+    <div class="content">
+        <p>Dear Instructor,</p>
+        
+        <p>This is a notification that there has been a change in the proctoring assignment for the following exam:</p>
+        
+        <div class="exam-details">
+            <h3>Exam Details:</h3>
+            <p><strong>Course:</strong> {{ course_code }} - Section {{ section_number }}</p>
+            <p><strong>Exam:</strong> {{ exam_title }}</p>
+            <p><strong>Date:</strong> {{ exam_date }}</p>
+            <p><strong>Time:</strong> {{ exam_time }}</p>
+            <p><strong>Location:</strong> {{ exam_location }}</p>
+        </div>
+        
+        <table>
+            <tr>
+                <th>Change</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Original Proctor</td>
+                <td>{{ original_ta }}</td>
+            </tr>
+            <tr>
+                <td>New Proctor</td>
+                <td>{{ new_ta }}</td>
+            </tr>
+            <tr>
+                <td>Swap Time</td>
+                <td>{{ swap_timestamp }}</td>
+            </tr>
+            <tr>
+                <td>Reason</td>
+                <td>{{ swap_reason }}</td>
+            </tr>
+        </table>
+        
+        <p>This change was automatically processed by the system after verifying all eligibility requirements. The new TA has been notified of this assignment.</p>
+        
+        <p>No action is required from you. If you have any concerns about this change, please contact the department administration.</p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated message from the Bilkent TA Management System.</p>
+    </div>
+</body>
+</html> 

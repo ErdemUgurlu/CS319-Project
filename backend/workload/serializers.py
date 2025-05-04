@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import WorkloadPolicy, TAWorkload, WorkloadActivity
+from .models import WorkloadPolicy, TAWorkload, WorkloadActivity, WorkloadManualAdjustment
 from accounts.models import User, Department
 
 
@@ -10,7 +10,7 @@ class UserMinimalSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('id', 'email', 'full_name', 'academic_level')
+        fields = ('id', 'email', 'full_name', 'academic_level', 'employment_type')
 
 
 class DepartmentSerializer(serializers.ModelSerializer):
@@ -29,7 +29,9 @@ class WorkloadPolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkloadPolicy
         fields = ('id', 'department', 'department_details', 'academic_term', 
-                 'max_hours_phd', 'max_hours_msc', 'max_hours_undergrad',
+                 'max_hours_phd_full_time', 'max_hours_phd_part_time',
+                 'max_hours_msc_full_time', 'max_hours_msc_part_time',
+                 'max_hours_undergrad',
                  'lecture_weight', 'lab_weight', 'grading_weight', 'office_hours_weight',
                  'exam_period_multiplier', 'is_active', 'created_at', 'updated_at')
                  
@@ -92,9 +94,10 @@ class TAWorkloadSerializer(serializers.ModelSerializer):
     class Meta:
         model = TAWorkload
         fields = ('id', 'ta', 'ta_details', 'academic_term', 'department', 'department_details',
-                 'policy', 'max_weekly_hours', 'current_weekly_hours', 'total_assigned_hours',
-                 'is_overloaded', 'overload_approved', 'notes', 'created_at', 'updated_at')
-        read_only_fields = ('current_weekly_hours', 'total_assigned_hours', 'is_overloaded')
+                 'policy', 'max_weekly_hours', 'required_workload_hours', 'current_weekly_hours', 
+                 'total_assigned_hours', 'is_overloaded', 'overload_approved', 'notes', 
+                 'created_at', 'updated_at')
+        read_only_fields = ('current_weekly_hours', 'total_assigned_hours', 'is_overloaded', 'required_workload_hours')
 
 
 class TAWorkloadDetailSerializer(TAWorkloadSerializer):
@@ -114,4 +117,18 @@ class WorkloadSummarySerializer(serializers.Serializer):
     overloaded_tas = serializers.IntegerField()
     overload_percentage = serializers.FloatField()
     academic_levels = serializers.DictField()
-    activity_distribution = serializers.DictField() 
+    employment_types = serializers.DictField()
+    activity_distribution = serializers.DictField()
+
+
+class WorkloadManualAdjustmentSerializer(serializers.ModelSerializer):
+    """Serializer for manual workload adjustments."""
+    
+    instructor_name = serializers.CharField(source='instructor.full_name', read_only=True)
+    ta_name = serializers.CharField(source='ta.full_name', read_only=True)
+    
+    class Meta:
+        model = WorkloadManualAdjustment
+        fields = ('id', 'ta', 'ta_name', 'instructor', 'instructor_name', 
+                  'hours', 'reason', 'date', 'created_at')
+        read_only_fields = ('created_at',) 

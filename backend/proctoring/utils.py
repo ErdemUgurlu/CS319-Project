@@ -1,7 +1,9 @@
 from django.db import transaction
 from django.utils import timezone
-from .models import ProctorAssignment, SwapRequest, ProctorConstraint
+from .models import ProctorAssignment, SwapRequest, ProctorConstraint, Exam
 from accounts.models import User, AuditLog
+from workload.models import TAWorkload, WorkloadActivity
+import datetime
 
 
 def check_ta_eligibility(ta_user, exam, original_assignment=None):
@@ -120,6 +122,70 @@ def check_ta_eligibility(ta_user, exam, original_assignment=None):
     return result['is_eligible'], result
 
 
+def update_workload_for_swap(old_proctor, new_proctor, exam):
+    """
+    Update the workload records for both TAs when a swap occurs.
+    
+    Args:
+        old_proctor: The User object of the original proctor
+        new_proctor: The User object of the new proctor
+        exam: The Exam object being proctored
+    """
+    exam_hours = exam.duration_minutes / 60.0
+    current_term = "Fall 2023"  # This should be dynamically determined
+    
+    # Get or create workload records for both TAs
+    try:
+        old_workload = TAWorkload.objects.get(
+            ta=old_proctor,
+            academic_term=current_term,
+            department=exam.section.course.department
+        )
+    except TAWorkload.DoesNotExist:
+        # This is a fallback, but in a real system, workload records would be created
+        # when TAs are first assigned to a department
+        return
+    
+    try:
+        new_workload = TAWorkload.objects.get(
+            ta=new_proctor,
+            academic_term=current_term,
+            department=exam.section.course.department
+        )
+    except TAWorkload.DoesNotExist:
+        # This is a fallback, but in a real system, workload records would be created
+        # when TAs are first assigned to a department
+        return
+    
+    # Create or update activity for the old proctor to remove the hours
+    old_activity = WorkloadActivity.objects.filter(
+        workload=old_workload,
+        activity_type='PROCTORING',
+        description=f"Proctoring: {exam.title}",
+        start_date=exam.date
+    ).first()
+    
+    if old_activity:
+        old_activity.delete()
+        old_workload.save()  # This triggers recalculation of total hours
+    
+    # Create new activity for the new proctor
+    WorkloadActivity.objects.create(
+        workload=new_workload,
+        activity_type='PROCTORING',
+        description=f"Proctoring: {exam.title}",
+        hours=exam_hours,
+        is_recurring=False,
+        recurrence_pattern='ONCE',
+        start_date=exam.date,
+        end_date=exam.date,
+        course_code=exam.section.course.code,
+        section=exam.section.section_number
+    )
+    
+    # The save method of WorkloadActivity updates the parent workload's totals
+
+
 @transaction.atomic
 def process_swap_request(swap_request):
     """
@@ -174,8 +240,71 @@ def process_swap_request(swap_request):
         result['details'] = details
         return result
     
-    # Process the swap
+    # Process the swap - store the previous TA
     previous_proctor = original_assignment.proctor
+    new_proctor = swap_request.requested_proctor
+    
+    # Update workload for both TAs
+    try:
+        # Calculate the exam duration in hours
+        exam_duration_hours = original_assignment.exam.duration_minutes / 60.0
+        
+        # Determine the academic term from the exam date
+        exam_date = original_assignment.exam.date
+        academic_term = f"{'Fall' if exam_date.month >= 9 else 'Spring'} {exam_date.year}"
+        
+        # Retrieve or create workload records for both TAs
+        old_workload, _ = TAWorkload.objects.get_or_create(
+            ta=previous_proctor,
+            academic_term=academic_term,
+            department=original_assignment.exam.section.course.department,
+            defaults={
+                'max_weekly_hours': 20 if previous_proctor.academic_level == 'PHD' else 15
+            }
+        )
+        
+        new_workload, _ = TAWorkload.objects.get_or_create(
+            ta=new_proctor,
+            academic_term=academic_term,
+            department=original_assignment.exam.section.course.department,
+            defaults={
+                'max_weekly_hours': 20 if new_proctor.academic_level == 'PHD' else 15
+            }
+        )
+        
+        # Find and remove existing workload activity for the old proctor
+        old_activities = WorkloadActivity.objects.filter(
+            workload=old_workload,
+            activity_type='PROCTORING',
+            description__contains=f"{original_assignment.exam.title}"
+        )
+        for activity in old_activities:
+            activity.delete()
+        
+        # Create new workload activity for the new proctor
+        if exam_duration_hours > 0:
+            WorkloadActivity.objects.create(
+                workload=new_workload,
+                activity_type='PROCTORING',
+                description=f"Proctoring: {original_assignment.exam.title} (swapped in)",
+                hours=exam_duration_hours,
+                is_recurring=False,
+                recurrence_pattern='ONCE',
+                start_date=exam_date,
+                end_date=exam_date,
+                course_code=original_assignment.exam.section.course.code,
+                section=original_assignment.exam.section.section_number
+            )
+        
+        # Recalculate the workload totals
+        old_workload.save()
+        new_workload.save()
+    except ImportError:
+        # If workload module is not available, log this but continue with the swap
+        print("Workload module not available - skipping workload adjustment")
+    except Exception as e:
+        # If there's any other error, log it but continue with the swap
+        print(f"Error adjusting workload: {str(e)}")
     
     # Update the assignment
     original_assignment.previous_proctor = previous_proctor

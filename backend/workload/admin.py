@@ -13,7 +13,8 @@ class WorkloadActivityInline(admin.TabularInline):
 
 @admin.register(WorkloadPolicy)
 class WorkloadPolicyAdmin(admin.ModelAdmin):
-    list_display = ('department', 'academic_term', 'max_hours_phd', 'max_hours_msc', 
+    list_display = ('department', 'academic_term', 'max_hours_phd_full_time', 'max_hours_phd_part_time', 
+                   'max_hours_msc_full_time', 'max_hours_msc_part_time', 
                    'max_hours_undergrad', 'is_active')
     list_filter = ('department', 'academic_term', 'is_active')
     search_fields = ('department__name', 'academic_term')
@@ -21,8 +22,14 @@ class WorkloadPolicyAdmin(admin.ModelAdmin):
         (None, {
             'fields': ('department', 'academic_term', 'is_active')
         }),
-        ('Maximum Hours', {
-            'fields': ('max_hours_phd', 'max_hours_msc', 'max_hours_undergrad')
+        ('Maximum Hours - PhD', {
+            'fields': ('max_hours_phd_full_time', 'max_hours_phd_part_time')
+        }),
+        ('Maximum Hours - MSc', {
+            'fields': ('max_hours_msc_full_time', 'max_hours_msc_part_time')
+        }),
+        ('Maximum Hours - Undergrad', {
+            'fields': ('max_hours_undergrad',)
         }),
         ('Activity Weights', {
             'fields': ('lecture_weight', 'lab_weight', 'grading_weight', 'office_hours_weight')
@@ -36,16 +43,16 @@ class WorkloadPolicyAdmin(admin.ModelAdmin):
 @admin.register(TAWorkload)
 class TAWorkloadAdmin(admin.ModelAdmin):
     list_display = ('ta', 'academic_term', 'department', 'current_weekly_hours', 
-                   'max_weekly_hours', 'is_overloaded')
+                   'max_weekly_hours', 'required_workload_hours', 'is_overloaded')
     list_filter = ('academic_term', 'department', 'is_overloaded')
     search_fields = ('ta__first_name', 'ta__last_name', 'ta__email')
-    readonly_fields = ('current_weekly_hours', 'total_assigned_hours', 'is_overloaded')
+    readonly_fields = ('current_weekly_hours', 'total_assigned_hours', 'is_overloaded', 'required_workload_hours')
     fieldsets = (
         (None, {
             'fields': ('ta', 'academic_term', 'department', 'policy')
         }),
         ('Workload Information', {
-            'fields': ('max_weekly_hours', 'current_weekly_hours', 'total_assigned_hours', 'is_overloaded')
+            'fields': ('max_weekly_hours', 'required_workload_hours', 'current_weekly_hours', 'total_assigned_hours', 'is_overloaded')
         }),
         ('Overload Approval', {
             'fields': ('overload_approved', 'overload_approved_by', 'overload_approved_date')
