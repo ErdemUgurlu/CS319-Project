@@ -2,13 +2,15 @@ import os
 import django
 import random
 from datetime import timedelta
+import datetime
 
 # Set up Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ta_management_system.settings')
 django.setup()
 
 from django.utils import timezone
-from accounts.models import User, Department, InstructorTAAssignment
+from accounts.models import User, Department, InstructorTAAssignment, Course, Section
+from proctoring.models import Exam
 
 def create_test_data():
     # Create departments if they don't exist
@@ -148,6 +150,89 @@ def create_test_data():
             else:
                 print(f"TA {ta.email} already assigned to instructor {instructor.email}")
 
+def create_test_instructor_and_exam():
+    print("Creating test instructor and exam data...")
+
+    # Create department if needed
+    department, created = Department.objects.get_or_create(
+        code='CS',
+        defaults={
+            'name': 'Computer Science',
+            'faculty': 'Engineering'
+        }
+    )
+    print(f"Department: {'Created' if created else 'Already exists'}")
+
+    # Create instructor if needed
+    instructor_email = 'instructor1@bilkent.edu.tr'
+    try:
+        instructor = User.objects.get(email=instructor_email)
+        print(f"Instructor already exists: {instructor.full_name}")
+    except User.DoesNotExist:
+        instructor = User.objects.create_user(
+            email=instructor_email,
+            password='password123',
+            first_name='Test',
+            last_name='Instructor',
+            role='INSTRUCTOR',
+            department=department.code,
+            phone='+905551234567',
+            is_approved=True,
+            email_verified=True
+        )
+        print(f"Created instructor: {instructor.full_name}")
+
+    # Create course if needed
+    course, created = Course.objects.get_or_create(
+        department=department,
+        code='CS101',
+        defaults={
+            'title': 'Introduction to Computer Science',
+            'credit': 3.0
+        }
+    )
+    print(f"Course: {'Created' if created else 'Already exists'}")
+
+    # Create section if needed
+    section, created = Section.objects.get_or_create(
+        course=course,
+        section_number='1',
+        semester='FALL',
+        year=2023,
+        defaults={
+            'instructor': instructor
+        }
+    )
+    if not created and not section.instructor:
+        section.instructor = instructor
+        section.save()
+    print(f"Section: {'Created' if created else 'Already exists'}")
+
+    # Create exam if needed
+    exams = Exam.objects.filter(section=section)
+    if exams.count() == 0:
+        exam = Exam.objects.create(
+            title='Midterm Exam',
+            section=section,
+            exam_type='MIDTERM',
+            date=timezone.now().date() + datetime.timedelta(days=7),
+            start_time=timezone.now().time(),
+            end_time=(timezone.now() + datetime.timedelta(hours=2)).time(),
+            duration_minutes=120,
+            student_count=50,
+            proctor_count_needed=2,
+            room_count=1,
+            status='PENDING',
+            created_by=instructor,
+            notes='This is a test exam created for demo purposes.'
+        )
+        print(f"Created exam: {exam.title} for {exam.section}")
+    else:
+        print(f"Exams already exist for section: {exams.count()} exams")
+    
+    print("Test data creation complete")
+
 if __name__ == '__main__':
     create_test_data()
-    print("Test data creation completed!") 
+    print("Test data creation completed!")
+    create_test_instructor_and_exam() 

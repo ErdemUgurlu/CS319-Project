@@ -4957,3 +4957,1587 @@ INFO 2025-05-05 01:46:55,809 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangem
 INFO 2025-05-05 01:46:56,565 autoreload Watching for file changes with StatReloader
 INFO 2025-05-05 02:00:56,666 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\accounts\models.py changed, reloading.
 INFO 2025-05-05 02:00:58,316 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 15:12:36,778 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 15:13:11,597 log Not Found: /
+WARNING 2025-05-05 15:13:11,598 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 15:13:11,733 log Not Found: /favicon.ico
+WARNING 2025-05-05 15:13:11,733 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+WARNING 2025-05-05 15:13:13,959 log Not Found: /
+WARNING 2025-05-05 15:13:13,960 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 15:14:02,411 log Not Found: /api/logout/
+WARNING 2025-05-05 15:14:02,412 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+WARNING 2025-05-05 15:14:07,866 log Not Found: /
+WARNING 2025-05-05 15:14:07,866 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 15:14:08,803 log Not Found: /
+WARNING 2025-05-05 15:14:08,804 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 15:14:09,714 log Not Found: /
+WARNING 2025-05-05 15:14:09,715 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 15:14:15,613 log Not Found: /
+WARNING 2025-05-05 15:14:15,615 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 15:14:30,659 log Not Found: /
+WARNING 2025-05-05 15:14:30,660 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 15:14:30,798 log Not Found: /favicon.ico
+WARNING 2025-05-05 15:14:30,799 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+INFO 2025-05-05 15:15:06,344 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-05 15:15:06,961 basehttp "POST /api/token/ HTTP/1.1" 200 910
+WARNING 2025-05-05 15:15:13,904 log Not Found: /
+WARNING 2025-05-05 15:15:13,904 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 15:15:14,007 log Not Found: /favicon.ico
+WARNING 2025-05-05 15:15:14,008 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+WARNING 2025-05-05 15:15:16,203 log Not Found: /
+WARNING 2025-05-05 15:15:16,204 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-05 15:16:10,592 basehttp "GET /admin/ HTTP/1.1" 200 25001
+INFO 2025-05-05 15:16:10,607 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,607 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,608 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,608 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,609 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,610 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,616 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,627 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,628 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 304 0
+INFO 2025-05-05 15:16:10,628 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-05 15:53:41,081 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 16:12:39,136 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\models.py changed, reloading.
+INFO 2025-05-05 16:12:39,919 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 16:13:08,738 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 16:13:09,585 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 16:14:04,118 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 16:14:04,789 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 16:14:26,839 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\email_utils.py changed, reloading.
+INFO 2025-05-05 16:14:27,544 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 16:14:39,938 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\admin.py changed, reloading.
+INFO 2025-05-05 16:14:40,546 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 16:14:58,355 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-05 16:14:59,014 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 16:16:47,379 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 16:19:51,705 basehttp "GET /admin/ HTTP/1.1" 200 26465
+INFO 2025-05-05 16:19:56,802 basehttp "GET /admin/proctoring/crossdeptproctorcall/ HTTP/1.1" 200 21050
+INFO 2025-05-05 16:19:56,817 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,821 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,822 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,823 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,823 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,826 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,830 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,830 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,830 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,832 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,839 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,849 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 16:19:56,863 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-05-05 16:19:56,863 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-05 16:20:02,105 basehttp "GET /admin/proctoring/crossdeptproctorclaim/ HTTP/1.1" 200 21099
+INFO 2025-05-05 16:20:02,122 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 16:20:28,432 basehttp "GET /admin/proctoring/swaprequest/ HTTP/1.1" 200 24691
+INFO 2025-05-05 16:20:28,445 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 16:20:32,457 basehttp "GET /admin/proctoring/proctorconstraint/ HTTP/1.1" 200 21672
+INFO 2025-05-05 16:20:32,472 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 16:20:37,029 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 22904
+INFO 2025-05-05 16:20:37,078 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 16:41:29,136 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 17:27:42,497 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:06:45,624 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 18:07:15,117 log Not Found: /
+WARNING 2025-05-05 18:07:15,119 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 18:07:15,198 log Not Found: /favicon.ico
+WARNING 2025-05-05 18:07:15,200 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+INFO 2025-05-05 18:07:25,738 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:07:27,499 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-05 18:07:30,790 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:07:30,792 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:07:30,795 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:07:30,795 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+WARNING 2025-05-05 18:07:30,806 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:07:30,808 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 18:07:30,881 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:07:30,883 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:07:30,917 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 18:07:30,942 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:07:35,714 log Not Found: /
+WARNING 2025-05-05 18:07:35,714 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 18:08:35,198 log Not Found: /
+WARNING 2025-05-05 18:08:35,199 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 18:09:35,378 log Not Found: /
+WARNING 2025-05-05 18:09:35,379 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-05 18:09:38,184 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:09:38,193 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 18:09:38,206 log Forbidden: /api/proctoring/my-proctorings/
+INFO 2025-05-05 18:09:38,206 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:09:38,208 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:09:38,225 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:09:50,467 log Not Found: /
+WARNING 2025-05-05 18:09:50,467 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-05 18:10:12,820 basehttp - Broken pipe from ('127.0.0.1', 51239)
+INFO 2025-05-05 18:11:08,472 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:11:21,389 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:11:21,390 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:11:21,391 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:11:21,392 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+WARNING 2025-05-05 18:11:21,446 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:11:21,452 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 18:11:21,474 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:11:21,475 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:11:21,490 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 18:11:21,514 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 18:12:02,509 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:12:33,960 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:12:33,960 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:12:34,029 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 484
+INFO 2025-05-05 18:12:34,050 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 484
+INFO 2025-05-05 18:13:13,966 basehttp "GET /admin/ HTTP/1.1" 200 25001
+WARNING 2025-05-05 18:13:14,061 log Not Found: /favicon.ico
+WARNING 2025-05-05 18:13:14,062 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+WARNING 2025-05-05 18:13:23,590 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:13:23,594 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:13:23,606 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:13:23,617 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:13:23,620 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:13:23,629 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:17:22,155 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:17:22,159 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:17:22,165 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:17:22,166 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:17:22,167 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:17:22,176 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 18:19:21,713 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 23389
+INFO 2025-05-05 18:19:21,757 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:19:25,995 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 27729
+INFO 2025-05-05 18:19:26,012 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:19:26,034 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-05 18:19:29,393 basehttp "GET /admin/accounts/auditlog/ HTTP/1.1" 200 47396
+INFO 2025-05-05 18:19:29,413 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:19:29,444 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-05 18:19:33,029 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 27729
+WARNING 2025-05-05 18:19:54,041 log Not Found: /api/logout/
+WARNING 2025-05-05 18:19:54,042 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 18:20:03,030 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+WARNING 2025-05-05 18:20:04,645 log Unauthorized: /api/token/
+WARNING 2025-05-05 18:20:04,646 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-05 18:20:14,643 basehttp "GET /admin/accounts/student/ HTTP/1.1" 200 19577
+INFO 2025-05-05 18:20:14,661 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:20:17,349 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 36738
+INFO 2025-05-05 18:20:17,364 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:20:17,397 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+WARNING 2025-05-05 18:21:23,861 log Unauthorized: /api/token/
+WARNING 2025-05-05 18:21:23,862 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-05 18:21:42,312 basehttp "POST /api/token/ HTTP/1.1" 200 878
+INFO 2025-05-05 18:21:42,366 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:21:42,370 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:21:42,392 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:21:42,392 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:21:50,770 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:21:50,770 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:21:50,796 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:21:50,809 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:21:59,008 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:21:59,020 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:22:29,519 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 27729
+INFO 2025-05-05 18:22:29,536 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:22:53,265 basehttp "GET /admin/proctoring/swaprequest/ HTTP/1.1" 200 23643
+INFO 2025-05-05 18:22:53,283 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:22:55,827 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 20438
+INFO 2025-05-05 18:22:55,840 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:22:56,770 basehttp "GET /admin/accounts/student/ HTTP/1.1" 200 19577
+INFO 2025-05-05 18:22:56,790 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:22:57,734 basehttp "GET /admin/accounts/section/ HTTP/1.1" 200 21950
+INFO 2025-05-05 18:22:57,754 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:22:58,510 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 24788
+INFO 2025-05-05 18:22:58,524 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:03,807 basehttp "GET /admin/workload/taworkload/ HTTP/1.1" 200 19980
+INFO 2025-05-05 18:23:03,824 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:05,654 basehttp "GET /admin/auth/group/ HTTP/1.1" 200 18719
+INFO 2025-05-05 18:23:05,670 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:06,827 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 21856
+INFO 2025-05-05 18:23:06,843 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:15,029 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:23:15,040 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:23:19,737 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:23:25,146 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 114
+INFO 2025-05-05 18:23:25,417 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 166
+INFO 2025-05-05 18:23:25,675 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 166
+INFO 2025-05-05 18:23:30,199 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 114
+INFO 2025-05-05 18:23:30,469 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+INFO 2025-05-05 18:23:30,721 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+INFO 2025-05-05 18:23:38,032 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 22888
+INFO 2025-05-05 18:23:38,045 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:47,814 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 20438
+INFO 2025-05-05 18:23:47,831 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:48,787 basehttp "GET /admin/accounts/student/ HTTP/1.1" 200 19577
+INFO 2025-05-05 18:23:48,799 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:50,910 basehttp "GET /admin/accounts/classroom/ HTTP/1.1" 200 21359
+INFO 2025-05-05 18:23:50,925 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:51,468 basehttp "GET /admin/accounts/course/ HTTP/1.1" 200 21346
+INFO 2025-05-05 18:23:51,486 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:52,525 basehttp "GET /admin/accounts/department/ HTTP/1.1" 200 20768
+INFO 2025-05-05 18:23:52,543 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:53,774 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 24788
+INFO 2025-05-05 18:23:53,791 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:23:57,897 basehttp "GET /admin/proctoring/examroom/ HTTP/1.1" 200 22148
+INFO 2025-05-05 18:23:57,916 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:24:07,661 basehttp "GET /admin/workload/workloadpolicy/ HTTP/1.1" 200 19992
+INFO 2025-05-05 18:24:07,673 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:25:24,097 basehttp "GET /admin/proctoring/examroom/ HTTP/1.1" 200 22148
+INFO 2025-05-05 18:25:24,111 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:25:26,250 basehttp "GET /admin/proctoring/swaprequest/ HTTP/1.1" 200 23643
+INFO 2025-05-05 18:25:26,266 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:25:34,475 basehttp "GET /admin/proctoring/proctorconstraint/ HTTP/1.1" 200 20624
+INFO 2025-05-05 18:25:34,490 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:25:37,294 basehttp "GET /admin/tasks/taskcompletion/ HTTP/1.1" 200 18803
+INFO 2025-05-05 18:25:37,309 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:25:40,433 basehttp "GET /admin/accounts/classroom/ HTTP/1.1" 200 21359
+INFO 2025-05-05 18:25:40,453 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:25:45,173 basehttp "GET /admin/ HTTP/1.1" 200 25001
+INFO 2025-05-05 18:26:12,511 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 36738
+INFO 2025-05-05 18:26:12,532 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-05 18:26:20,976 log Not Found: /api/logout/
+WARNING 2025-05-05 18:26:20,977 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 18:26:29,184 basehttp "POST /api/token/ HTTP/1.1" 200 894
+WARNING 2025-05-05 18:26:40,197 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:26:40,201 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:26:40,219 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:26:40,220 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:26:40,223 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:26:40,245 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:26:49,806 log Not Found: /api/logout/
+WARNING 2025-05-05 18:26:49,807 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+ERROR 2025-05-05 18:26:55,948 log Internal Server Error: /admin/accounts/user/25/change/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 312, in __new__
+    fields = fields_for_model(
+        opts.model,
+    ...<11 lines>...
+        form_declared_fields=new_class.declared_fields,
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 207, in fields_for_model
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+        request, obj, change=not add, fields=flatten_fieldsets(fieldsets)
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 842, in get_form
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-05 18:26:55,962 basehttp "GET /admin/accounts/user/25/change/ HTTP/1.1" 500 170409
+INFO 2025-05-05 18:26:58,004 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 36738
+WARNING 2025-05-05 18:27:22,840 log Unauthorized: /api/token/
+WARNING 2025-05-05 18:27:22,841 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-05 18:28:04,761 log Unauthorized: /api/token/
+WARNING 2025-05-05 18:28:04,763 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-05 18:28:12,692 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 24926
+INFO 2025-05-05 18:28:12,704 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-05-05 18:28:12,708 basehttp "GET /static/admin/css/unusable_password_field.css HTTP/1.1" 304 0
+INFO 2025-05-05 18:28:12,710 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:28:12,710 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-05-05 18:28:12,711 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-05-05 18:28:12,714 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-05-05 18:28:12,722 basehttp "GET /static/admin/js/unusable_password_field.js HTTP/1.1" 304 0
+INFO 2025-05-05 18:28:47,816 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 25482
+INFO 2025-05-05 18:28:47,834 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:29:13,424 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 25303
+INFO 2025-05-05 18:29:13,441 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:29:32,142 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+ERROR 2025-05-05 18:29:32,237 log Internal Server Error: /admin/accounts/user/27/change/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 312, in __new__
+    fields = fields_for_model(
+        opts.model,
+    ...<11 lines>...
+        form_declared_fields=new_class.declared_fields,
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 207, in fields_for_model
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+        request, obj, change=not add, fields=flatten_fieldsets(fieldsets)
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 842, in get_form
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-05 18:29:32,246 basehttp "GET /admin/accounts/user/27/change/ HTTP/1.1" 500 170916
+ERROR 2025-05-05 18:29:39,747 log Internal Server Error: /admin/accounts/user/27/change/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 312, in __new__
+    fields = fields_for_model(
+        opts.model,
+    ...<11 lines>...
+        form_declared_fields=new_class.declared_fields,
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 207, in fields_for_model
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+        request, obj, change=not add, fields=flatten_fieldsets(fieldsets)
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 842, in get_form
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-05 18:29:39,756 basehttp "GET /admin/accounts/user/27/change/ HTTP/1.1" 500 170604
+INFO 2025-05-05 18:29:44,338 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 25182
+INFO 2025-05-05 18:29:47,716 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 37680
+INFO 2025-05-05 18:29:47,732 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:30:05,790 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-05 18:30:13,024 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-05 18:30:13,024 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-05 18:30:13,040 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 550
+INFO 2025-05-05 18:30:13,055 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 550
+INFO 2025-05-05 18:30:15,749 basehttp "OPTIONS /api/accounts/users/27/approve/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:30:17,933 basehttp "POST /api/accounts/users/27/approve/ HTTP/1.1" 200 132
+WARNING 2025-05-05 18:30:21,754 log Not Found: /api/logout/
+WARNING 2025-05-05 18:30:21,755 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 18:30:31,222 basehttp "POST /api/token/ HTTP/1.1" 200 897
+WARNING 2025-05-05 18:30:31,274 log Forbidden: /api/accounts/users/
+WARNING 2025-05-05 18:30:31,275 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 403 63
+WARNING 2025-05-05 18:30:31,281 log Forbidden: /api/accounts/users/
+WARNING 2025-05-05 18:30:31,281 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 403 63
+WARNING 2025-05-05 18:30:39,520 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:30:39,521 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 18:30:39,543 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:30:39,546 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:30:39,547 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 18:30:39,564 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:30:43,660 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:30:43,664 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:30:43,674 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:30:44,427 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:30:44,435 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:30:44,446 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 18:31:31,043 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:31:31,054 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:31:33,822 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:31:33,822 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:31:33,831 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:31:33,837 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:31:54,483 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:31:54,493 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:31:57,219 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:31:57,225 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:32:24,219 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:32:24,226 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:32:25,455 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:32:25,469 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:32:29,730 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:32:29,737 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:32:31,697 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:32:31,708 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:33:12,017 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:33:12,017 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:33:12,035 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:33:12,052 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 18:33:12,053 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:33:12,084 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 18:33:16,766 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:33:16,778 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 18:33:16,784 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:33:16,802 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 18:33:22,131 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:33:22,148 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:33:22,149 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 18:33:22,168 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 18:33:45,162 basehttp "OPTIONS /api/accounts/instructor/assign-ta/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:33:45,237 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 187
+INFO 2025-05-05 18:33:45,261 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 239
+INFO 2025-05-05 18:33:45,274 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 703
+INFO 2025-05-05 18:33:48,704 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 187
+INFO 2025-05-05 18:33:48,739 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 18:33:48,743 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+ERROR 2025-05-05 18:34:31,989 log Internal Server Error: /admin/accounts/user/26/change/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 840, in get_form
+    return modelform_factory(self.model, **defaults)
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 654, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+           ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 312, in __new__
+    fields = fields_for_model(
+        opts.model,
+    ...<11 lines>...
+        form_declared_fields=new_class.declared_fields,
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\forms\models.py", line 207, in fields_for_model
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1987, in change_view
+    return self.changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1840, in changeform_view
+    return self._changeform_view(request, object_id, form_url, extra_context)
+           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 1878, in _changeform_view
+    ModelForm = self.get_form(
+        request, obj, change=not add, fields=flatten_fieldsets(fieldsets)
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\auth\admin.py", line 98, in get_form
+    return super().get_form(request, obj, **defaults)
+           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 842, in get_form
+    raise FieldError(
+    ...<2 lines>...
+    )
+django.core.exceptions.FieldError: 'date_joined' cannot be specified for User model form as it is a non-editable field. Check fields/fieldsets/exclude attributes of class UserAdmin.
+ERROR 2025-05-05 18:34:31,997 basehttp "GET /admin/accounts/user/26/change/ HTTP/1.1" 500 170381
+INFO 2025-05-05 18:34:34,140 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 37674
+INFO 2025-05-05 18:34:48,658 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:34:48,668 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:34:53,281 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 18:34:53,286 basehttp "OPTIONS /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:34:53,309 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 18:34:53,312 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 547
+INFO 2025-05-05 18:34:53,327 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 547
+INFO 2025-05-05 18:35:06,409 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 18:35:06,437 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 547
+INFO 2025-05-05 18:35:06,439 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 18:35:06,472 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 547
+INFO 2025-05-05 18:35:24,362 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 27729
+INFO 2025-05-05 18:35:24,379 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-05 18:36:09,874 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:36:09,880 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:36:09,889 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:36:09,890 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:36:09,891 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:36:09,910 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:36:21,906 log Forbidden: /api/proctoring/my-proctorings/
+INFO 2025-05-05 18:36:21,907 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:36:21,907 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 18:36:21,923 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:36:21,928 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:36:21,931 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:39:57,761 log Not Found: /api/logout/
+WARNING 2025-05-05 18:39:57,762 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 18:40:04,496 basehttp "POST /api/token/ HTTP/1.1" 200 894
+INFO 2025-05-05 18:40:12,555 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:40:12,561 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:40:12,561 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:40:12,572 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:40:12,573 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:40:12,573 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 18:40:25,519 log Not Found: /api/logout/
+WARNING 2025-05-05 18:40:25,520 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 18:40:33,277 basehttp "POST /api/token/ HTTP/1.1" 200 878
+INFO 2025-05-05 18:40:34,969 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+INFO 2025-05-05 18:40:34,977 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+INFO 2025-05-05 18:43:04,277 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\accounts\views.py changed, reloading.
+INFO 2025-05-05 18:43:05,032 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:43:13,032 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\accounts\serializers.py changed, reloading.
+INFO 2025-05-05 18:43:13,689 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:43:47,253 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\tasks\views.py changed, reloading.
+INFO 2025-05-05 18:43:47,826 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:43:53,666 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\tasks\urls.py changed, reloading.
+INFO 2025-05-05 18:43:54,254 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:44:33,438 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 18:44:34,149 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:44:39,901 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-05 18:44:40,473 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:45:12,587 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\accounts\serializers.py changed, reloading.
+INFO 2025-05-05 18:45:13,210 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:45:23,514 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\leaves\admin.py changed, reloading.
+INFO 2025-05-05 18:45:24,241 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 18:46:54,929 log Not Found: /api/logout/
+WARNING 2025-05-05 18:46:54,930 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+WARNING 2025-05-05 18:47:14,566 log Unauthorized: /api/token/
+WARNING 2025-05-05 18:47:14,567 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-05 18:47:22,536 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-05 18:47:22,571 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 394
+INFO 2025-05-05 18:47:22,576 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 394
+INFO 2025-05-05 18:47:29,893 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:47:29,900 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:48:40,638 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:48:40,643 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:49:19,376 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 30022
+INFO 2025-05-05 18:49:19,388 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:49:22,865 basehttp "GET /admin/leaves/dateunavailability/ HTTP/1.1" 200 22014
+INFO 2025-05-05 18:49:22,875 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:49:24,911 basehttp "GET /admin/leaves/leaveimpact/ HTTP/1.1" 200 21437
+INFO 2025-05-05 18:49:24,926 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:49:27,311 basehttp "GET /admin/leaves/leaverequest/ HTTP/1.1" 200 23088
+INFO 2025-05-05 18:49:27,323 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:49:28,926 basehttp "GET /admin/leaves/leavetype/ HTTP/1.1" 200 21025
+INFO 2025-05-05 18:49:28,940 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 18:49:35,724 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:49:35,732 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:49:37,100 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 731
+INFO 2025-05-05 18:49:37,114 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 731
+INFO 2025-05-05 18:49:37,121 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 547
+INFO 2025-05-05 18:49:37,131 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 547
+INFO 2025-05-05 18:50:16,576 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 514
+INFO 2025-05-05 18:50:16,588 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 18:50:31,277 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 30604
+INFO 2025-05-05 18:50:31,290 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-05 18:50:56,866 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:50:56,867 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:50:56,879 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:50:56,884 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:50:56,884 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:50:56,899 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 18:51:25,969 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\tasks\urls.py changed, reloading.
+INFO 2025-05-05 18:51:27,893 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:52:14,801 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 18:52:14,813 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 18:52:57,392 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\accounts\views.py changed, reloading.
+INFO 2025-05-05 18:52:58,280 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 18:53:33,969 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 18:53:33,979 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 18:53:42,765 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+INFO 2025-05-05 18:53:42,766 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 731
+INFO 2025-05-05 18:53:42,779 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 731
+INFO 2025-05-05 18:53:42,781 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+WARNING 2025-05-05 18:56:51,269 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:56:51,274 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:56:51,280 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:56:51,281 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 18:56:51,282 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 18:56:51,295 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:56:56,748 log Forbidden: /api/proctoring/my-proctorings/
+INFO 2025-05-05 18:56:56,748 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 18:56:56,749 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 18:56:59,061 log Not Found: /api/logout/
+WARNING 2025-05-05 18:56:59,062 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 18:57:06,666 basehttp "POST /api/token/ HTTP/1.1" 200 878
+INFO 2025-05-05 18:57:06,702 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:57:06,705 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:57:06,716 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:57:06,718 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:57:09,327 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:57:09,331 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:57:09,343 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:57:09,346 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 18:59:32,346 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 18:59:32,355 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 18:59:44,971 basehttp "OPTIONS /api/workload/workloads/my_workload/ HTTP/1.1" 200 0
+INFO 2025-05-05 18:59:44,971 basehttp "OPTIONS /api/workload/workloads/my_workload/ HTTP/1.1" 200 0
+WARNING 2025-05-05 18:59:44,979 log Not Found: /api/workload/workloads/my_workload/
+WARNING 2025-05-05 18:59:44,979 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 404 53
+WARNING 2025-05-05 18:59:44,983 log Not Found: /api/workload/workloads/my_workload/
+WARNING 2025-05-05 18:59:44,983 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 404 53
+INFO 2025-05-05 19:01:05,691 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:01:05,706 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+WARNING 2025-05-05 19:01:08,073 log Not Found: /api/workload/workloads/my_workload/
+WARNING 2025-05-05 19:01:08,073 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 404 53
+WARNING 2025-05-05 19:01:08,078 log Not Found: /api/workload/workloads/my_workload/
+WARNING 2025-05-05 19:01:08,079 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 404 53
+INFO 2025-05-05 19:04:41,569 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:04:41,579 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:04:45,472 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 19:04:45,481 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 19:04:45,490 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 19:04:45,498 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 19:04:51,451 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 30604
+INFO 2025-05-05 19:04:51,464 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 19:04:55,042 basehttp "GET /admin/leaves/leaveimpact/ HTTP/1.1" 200 21437
+INFO 2025-05-05 19:04:55,054 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 19:05:02,725 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+INFO 2025-05-05 19:05:02,732 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+WARNING 2025-05-05 19:05:07,590 log Not Found: /api/logout/
+WARNING 2025-05-05 19:05:07,591 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 19:05:16,466 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-05 19:05:16,499 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 394
+INFO 2025-05-05 19:05:16,508 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 394
+INFO 2025-05-05 19:05:23,930 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:05:23,941 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:05:26,620 basehttp "OPTIONS /api/api/instructor/courses HTTP/1.1" 200 0
+INFO 2025-05-05 19:05:26,621 basehttp "OPTIONS /api/api/instructor/courses HTTP/1.1" 200 0
+WARNING 2025-05-05 19:05:26,629 log Not Found: /api/api/instructor/courses
+WARNING 2025-05-05 19:05:26,629 basehttp "GET /api/api/instructor/courses HTTP/1.1" 404 4235
+WARNING 2025-05-05 19:05:26,635 log Not Found: /api/api/instructor/courses
+WARNING 2025-05-05 19:05:26,636 basehttp "GET /api/api/instructor/courses HTTP/1.1" 404 4235
+INFO 2025-05-05 19:05:55,874 basehttp "OPTIONS /api/api/instructor/duties?status=DONE_PENDING_APPROVAL HTTP/1.1" 200 0
+INFO 2025-05-05 19:05:55,875 basehttp "OPTIONS /api/api/instructor/duties?status=DONE_PENDING_APPROVAL HTTP/1.1" 200 0
+WARNING 2025-05-05 19:05:55,880 log Not Found: /api/api/instructor/duties
+WARNING 2025-05-05 19:05:55,880 basehttp "GET /api/api/instructor/duties?status=DONE_PENDING_APPROVAL HTTP/1.1" 404 4261
+WARNING 2025-05-05 19:05:55,886 log Not Found: /api/api/instructor/duties
+WARNING 2025-05-05 19:05:55,886 basehttp "GET /api/api/instructor/duties?status=DONE_PENDING_APPROVAL HTTP/1.1" 404 4261
+INFO 2025-05-05 19:06:00,107 basehttp "OPTIONS /api/api/instructor/exams HTTP/1.1" 200 0
+INFO 2025-05-05 19:06:00,107 basehttp "OPTIONS /api/api/instructor/exams HTTP/1.1" 200 0
+WARNING 2025-05-05 19:06:00,113 log Not Found: /api/api/instructor/exams
+WARNING 2025-05-05 19:06:00,114 basehttp "GET /api/api/instructor/exams HTTP/1.1" 404 4229
+WARNING 2025-05-05 19:06:00,119 log Not Found: /api/api/instructor/exams
+WARNING 2025-05-05 19:06:00,120 basehttp "GET /api/api/instructor/exams HTTP/1.1" 404 4229
+INFO 2025-05-05 19:06:09,644 basehttp "OPTIONS /api/api/instructor/tas HTTP/1.1" 200 0
+INFO 2025-05-05 19:06:09,646 basehttp "OPTIONS /api/api/instructor/tas HTTP/1.1" 200 0
+WARNING 2025-05-05 19:06:09,650 log Not Found: /api/api/instructor/tas
+WARNING 2025-05-05 19:06:09,651 basehttp "GET /api/api/instructor/tas HTTP/1.1" 404 4223
+WARNING 2025-05-05 19:06:09,655 log Not Found: /api/api/instructor/tas
+WARNING 2025-05-05 19:06:09,655 basehttp "GET /api/api/instructor/tas HTTP/1.1" 404 4223
+WARNING 2025-05-05 19:06:15,955 log Not Found: /api/api/instructor/exams
+WARNING 2025-05-05 19:06:15,956 basehttp "GET /api/api/instructor/exams HTTP/1.1" 404 4229
+WARNING 2025-05-05 19:06:15,964 log Not Found: /api/api/instructor/exams
+WARNING 2025-05-05 19:06:15,964 basehttp "GET /api/api/instructor/exams HTTP/1.1" 404 4229
+INFO 2025-05-05 19:06:21,818 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:06:21,829 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+WARNING 2025-05-05 19:06:24,504 log Not Found: /api/api/instructor/courses
+WARNING 2025-05-05 19:06:24,504 basehttp "GET /api/api/instructor/courses HTTP/1.1" 404 4235
+WARNING 2025-05-05 19:06:24,511 log Not Found: /api/api/instructor/courses
+WARNING 2025-05-05 19:06:24,511 basehttp "GET /api/api/instructor/courses HTTP/1.1" 404 4235
+WARNING 2025-05-05 19:06:33,607 log Not Found: /api/api/instructor/courses
+WARNING 2025-05-05 19:06:33,607 basehttp "GET /api/api/instructor/courses HTTP/1.1" 404 4235
+WARNING 2025-05-05 19:06:33,614 log Not Found: /api/api/instructor/courses
+WARNING 2025-05-05 19:06:33,614 basehttp "GET /api/api/instructor/courses HTTP/1.1" 404 4235
+INFO 2025-05-05 19:06:34,477 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:06:34,486 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+WARNING 2025-05-05 19:06:36,116 log Not Found: /api/api/instructor/exams
+WARNING 2025-05-05 19:06:36,117 basehttp "GET /api/api/instructor/exams HTTP/1.1" 404 4229
+WARNING 2025-05-05 19:06:36,124 log Not Found: /api/api/instructor/exams
+WARNING 2025-05-05 19:06:36,124 basehttp "GET /api/api/instructor/exams HTTP/1.1" 404 4229
+WARNING 2025-05-05 19:06:45,367 log Not Found: /api/api/instructor/exams
+WARNING 2025-05-05 19:06:45,368 basehttp "GET /api/api/instructor/exams HTTP/1.1" 404 4229
+WARNING 2025-05-05 19:06:45,373 log Not Found: /api/api/instructor/exams
+WARNING 2025-05-05 19:06:45,374 basehttp "GET /api/api/instructor/exams HTTP/1.1" 404 4229
+INFO 2025-05-05 19:06:49,611 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:06:49,623 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:07:37,252 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\leaves\admin.py changed, reloading.
+INFO 2025-05-05 19:07:38,185 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 19:08:41,074 log Not Found: /api/api/instructor/courses
+WARNING 2025-05-05 19:08:41,075 basehttp "GET /api/api/instructor/courses HTTP/1.1" 404 4235
+WARNING 2025-05-05 19:08:41,081 log Not Found: /api/api/instructor/courses
+WARNING 2025-05-05 19:08:41,082 basehttp "GET /api/api/instructor/courses HTTP/1.1" 404 4235
+WARNING 2025-05-05 19:08:44,680 log Not Found: /api/logout/
+WARNING 2025-05-05 19:08:44,680 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+WARNING 2025-05-05 19:09:29,327 log Not Found: /admin/leaves/leaveimpact/
+WARNING 2025-05-05 19:09:29,327 basehttp "GET /admin/leaves/leaveimpact/ HTTP/1.1" 404 10706
+WARNING 2025-05-05 19:09:31,051 log Not Found: /admin/leaves/leaveimpact/
+WARNING 2025-05-05 19:09:31,052 basehttp "GET /admin/leaves/leaveimpact/ HTTP/1.1" 404 10706
+INFO 2025-05-05 19:09:36,200 basehttp "GET /admin/ HTTP/1.1" 200 24945
+INFO 2025-05-05 19:09:46,076 basehttp "POST /api/token/ HTTP/1.1" 200 878
+INFO 2025-05-05 19:09:47,258 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:09:47,270 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:09:52,887 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+INFO 2025-05-05 19:09:52,894 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+INFO 2025-05-05 19:09:56,784 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 19:09:56,794 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 19:09:56,801 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-05 19:09:56,808 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-05 19:10:02,564 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+INFO 2025-05-05 19:10:02,570 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 281
+WARNING 2025-05-05 19:10:07,337 log Not Found: /api/workload/workloads/my_workload/
+WARNING 2025-05-05 19:10:07,337 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 404 53
+WARNING 2025-05-05 19:10:07,342 log Not Found: /api/workload/workloads/my_workload/
+WARNING 2025-05-05 19:10:07,343 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 404 53
+WARNING 2025-05-05 19:10:17,735 log Not Found: /api/logout/
+WARNING 2025-05-05 19:10:17,736 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 19:10:26,283 basehttp "POST /api/token/ HTTP/1.1" 200 897
+WARNING 2025-05-05 19:10:41,323 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:10:41,325 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 19:10:41,334 log Forbidden: /api/proctoring/my-proctorings/
+INFO 2025-05-05 19:10:41,334 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:10:41,336 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:10:41,345 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 19:12:02,607 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:12:02,624 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:12:03,697 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 19:12:03,710 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 19:12:03,712 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 547
+INFO 2025-05-05 19:12:03,722 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 547
+INFO 2025-05-05 19:14:30,161 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:14:30,171 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+WARNING 2025-05-05 19:21:55,800 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:21:55,800 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 19:21:55,810 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:21:55,813 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:21:55,813 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 19:21:55,823 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:22:06,329 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:22:06,331 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:22:06,338 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:22:06,339 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:22:06,341 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:22:06,349 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 19:22:54,973 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:22:54,983 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:23:00,175 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:23:00,186 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:24:17,754 basehttp "GET /admin/tasks/taskreview/ HTTP/1.1" 200 20255
+INFO 2025-05-05 19:24:17,775 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 19:28:12,724 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 23389
+INFO 2025-05-05 19:28:12,736 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 19:28:36,084 basehttp "GET /admin/proctoring/proctorconstraint/ HTTP/1.1" 200 20624
+INFO 2025-05-05 19:28:36,094 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 19:37:20,366 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:37:30,452 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:38:01,637 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:38:38,746 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:38:38,747 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:38:38,819 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:38:38,835 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:38:45,863 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:38:45,863 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:38:45,863 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:38:45,868 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+WARNING 2025-05-05 19:38:45,870 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:38:45,876 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:38:45,884 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:38:45,884 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:38:45,885 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:38:45,897 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:38:57,664 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:38:57,666 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+WARNING 2025-05-05 19:38:57,678 log Forbidden: /api/proctoring/my-proctorings/
+INFO 2025-05-05 19:38:57,678 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:38:57,678 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:38:57,689 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:42:38,167 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:42:38,170 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:42:38,177 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:42:38,180 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:42:38,180 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:42:38,187 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:43:00,171 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:43:00,173 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:43:00,175 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 19:43:00,179 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 19:43:00,179 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 19:43:00,185 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+INFO 2025-05-05 19:43:05,626 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:44:50,855 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:47:31,990 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:47:31,990 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:47:32,018 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:47:32,031 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:47:34,011 basehttp "OPTIONS /api/proctoring/exams/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:47:34,011 basehttp "OPTIONS /api/proctoring/exams/ HTTP/1.1" 200 0
+WARNING 2025-05-05 19:47:34,017 log Method Not Allowed: /api/proctoring/exams/
+WARNING 2025-05-05 19:47:34,017 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 405 40
+WARNING 2025-05-05 19:47:34,022 log Method Not Allowed: /api/proctoring/exams/
+WARNING 2025-05-05 19:47:34,022 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 405 40
+INFO 2025-05-05 19:48:29,426 basehttp "GET /admin/ HTTP/1.1" 200 24945
+WARNING 2025-05-05 19:48:29,545 log Not Found: /favicon.ico
+WARNING 2025-05-05 19:48:29,545 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+INFO 2025-05-05 19:48:32,589 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 23928
+INFO 2025-05-05 19:48:32,605 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-05 19:48:45,023 log Method Not Allowed: /api/proctoring/exams/
+WARNING 2025-05-05 19:48:45,023 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 405 40
+WARNING 2025-05-05 19:48:45,028 log Method Not Allowed: /api/proctoring/exams/
+WARNING 2025-05-05 19:48:45,028 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 405 40
+INFO 2025-05-05 19:49:42,386 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:51:00,527 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:51:01,161 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:51:01,177 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:51:01,756 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:51:25,587 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:51:26,085 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:51:26,219 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:51:26,728 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:52:16,951 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:52:16,952 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 41
+ERROR 2025-05-05 19:52:16,955 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:52:16,955 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 41
+INFO 2025-05-05 19:52:53,570 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:52:54,304 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:52:54,435 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:52:54,935 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:52:54,946 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:52:55,130 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:53:04,315 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:04,316 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:04,321 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:04,321 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+INFO 2025-05-05 19:53:04,666 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:53:20,541 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:20,542 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:20,548 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:20,549 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:23,060 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:23,061 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:23,070 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:23,070 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+INFO 2025-05-05 19:53:28,393 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 24599
+INFO 2025-05-05 19:53:28,408 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+ERROR 2025-05-05 19:53:41,177 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:41,178 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:41,853 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:41,854 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:42,031 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:42,032 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:42,200 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:42,200 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:42,359 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:42,360 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:42,527 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:42,527 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:42,673 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:42,674 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:42,834 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:42,835 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:43,003 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:43,004 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:43,164 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:43,164 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:43,310 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:43,311 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:43,495 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:43,495 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:43,670 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:43,670 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:43,852 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:43,852 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:53:44,033 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:53:44,034 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+INFO 2025-05-05 19:53:53,067 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 19:53:53,077 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+ERROR 2025-05-05 19:54:22,664 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:54:22,664 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:54:22,669 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:54:22,669 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+INFO 2025-05-05 19:55:38,315 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:55:38,330 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:55:38,346 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:55:39,120 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:55:39,130 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:55:39,130 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:55:45,215 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:56:32,384 autoreload Watching for file changes with StatReloader
+ERROR 2025-05-05 19:56:46,484 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:56:46,484 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:56:46,494 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:56:46,494 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:57:06,729 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:57:06,730 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:57:07,525 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:57:07,525 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:57:07,722 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:57:07,722 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:57:07,972 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:57:07,973 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:57:09,523 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:57:09,524 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:57:09,544 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:57:09,544 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+INFO 2025-05-05 19:57:44,666 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-05 19:57:45,415 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-05 19:57:45,494 basehttp "OPTIONS /api/proctoring/exams/ HTTP/1.1" 200 0
+ERROR 2025-05-05 19:57:45,508 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:57:45,508 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+ERROR 2025-05-05 19:57:45,523 log Internal Server Error: /api/proctoring/exams/
+ERROR 2025-05-05 19:57:45,524 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 500 81
+INFO 2025-05-05 19:58:55,314 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 19:58:55,341 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 19:58:55,343 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 19:58:55,357 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 19:58:55,996 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 19:58:56,232 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:58:56,236 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:58:56,240 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:58:56,262 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:58:56,792 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:12,213 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-05 19:59:12,219 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-05 19:59:12,230 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-05 19:59:12,252 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-05 19:59:12,488 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-05 19:59:13,021 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:13,028 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:13,045 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:13,065 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:13,284 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:37,503 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:59:37,524 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:59:37,562 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:59:37,591 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:59:37,600 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 19:59:38,316 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:38,343 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:38,383 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:38,408 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 19:59:38,410 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:08,632 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:00:08,642 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:00:08,651 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:00:09,248 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:00:09,290 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:00:09,364 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:09,384 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:09,393 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:10,036 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:10,074 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:28,366 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:00:28,377 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:00:28,395 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:00:28,783 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:00:28,799 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:00:29,168 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:29,183 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:29,186 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:29,633 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:29,643 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:00:52,827 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:00:55,941 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:00:55,960 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:00:57,305 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:00:57,324 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:00:58,294 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:00:58,314 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:00:59,312 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:00:59,329 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:02:40,182 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:02:40,204 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:02:40,210 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:02:40,213 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:02:40,218 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:02:41,023 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:02:41,036 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:02:41,037 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:02:41,043 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:02:41,052 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:02:58,660 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:02:58,673 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:03:04,296 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:04,648 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:04,659 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:04,661 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:04,816 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:05,090 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:05,474 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:05,477 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:05,480 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:05,606 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:14,172 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:14,741 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:14,766 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:14,780 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:14,795 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:03:14,853 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:15,541 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:15,571 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:15,592 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:15,607 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:27,104 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:27,132 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:27,132 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:27,137 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:27,246 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:27,897 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:27,930 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:27,930 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:27,933 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:28,032 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:37,169 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:37,289 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:37,302 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:37,307 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:37,343 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:03:38,018 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:38,169 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:38,170 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:38,187 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:38,209 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:03:55,452 basehttp "OPTIONS /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:03:55,539 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+INFO 2025-05-05 20:04:31,538 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+INFO 2025-05-05 20:04:59,654 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25265
+INFO 2025-05-05 20:04:59,666 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:05:01,246 basehttp "GET /admin/proctoring/exam/3/change/ HTTP/1.1" 200 35940
+INFO 2025-05-05 20:05:01,257 basehttp "GET /static/admin/js/calendar.js HTTP/1.1" 304 0
+INFO 2025-05-05 20:05:01,259 basehttp "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 304 0
+INFO 2025-05-05 20:05:01,261 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:05:01,307 basehttp "GET /static/admin/img/icon-clock.svg HTTP/1.1" 304 0
+INFO 2025-05-05 20:05:01,307 basehttp "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 304 0
+INFO 2025-05-05 20:05:03,631 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25265
+INFO 2025-05-05 20:05:06,826 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 23389
+INFO 2025-05-05 20:05:06,838 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:05:23,080 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+INFO 2025-05-05 20:06:16,386 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 302 0
+INFO 2025-05-05 20:06:16,422 basehttp "GET /admin/login/?next=/admin/proctoring/proctorassignment/ HTTP/1.1" 200 4251
+INFO 2025-05-05 20:06:16,585 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2025-05-05 20:06:16,593 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 2808
+INFO 2025-05-05 20:06:16,608 basehttp "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2025-05-05 20:06:16,609 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2025-05-05 20:06:16,610 basehttp "GET /static/admin/css/base.css HTTP/1.1" 200 22154
+INFO 2025-05-05 20:06:16,615 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 200 16632
+INFO 2025-05-05 20:06:16,641 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+WARNING 2025-05-05 20:06:16,704 log Not Found: /favicon.ico
+WARNING 2025-05-05 20:06:16,705 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+INFO 2025-05-05 20:06:27,033 basehttp "POST /admin/login/?next=/admin/proctoring/proctorassignment/ HTTP/1.1" 302 0
+INFO 2025-05-05 20:06:27,080 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 23389
+INFO 2025-05-05 20:06:27,112 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:06:27,120 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 200 6878
+INFO 2025-05-05 20:06:27,123 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2025-05-05 20:06:27,130 basehttp "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2025-05-05 20:06:27,135 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2025-05-05 20:06:27,143 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2025-05-05 20:06:27,144 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2025-05-05 20:06:27,146 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2025-05-05 20:06:27,151 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 200 458
+INFO 2025-05-05 20:06:27,180 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2025-05-05 20:06:27,203 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2025-05-05 20:06:27,232 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2025-05-05 20:06:27,255 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+INFO 2025-05-05 20:06:27,255 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+INFO 2025-05-05 20:06:27,256 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+INFO 2025-05-05 20:06:31,730 basehttp "GET /admin/proctoring/examroom/ HTTP/1.1" 200 22148
+INFO 2025-05-05 20:06:31,755 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:06:34,677 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25265
+INFO 2025-05-05 20:06:34,702 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:06:34,742 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+INFO 2025-05-05 20:06:37,732 basehttp "GET /admin/proctoring/exam/3/change/ HTTP/1.1" 200 35940
+INFO 2025-05-05 20:06:37,770 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:06:37,779 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 200 8525
+INFO 2025-05-05 20:06:37,782 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 200 586
+INFO 2025-05-05 20:06:37,787 basehttp "GET /static/admin/js/calendar.js HTTP/1.1" 200 9141
+INFO 2025-05-05 20:06:37,788 basehttp "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 200 19319
+INFO 2025-05-05 20:06:37,831 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 200 11991
+INFO 2025-05-05 20:06:37,846 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 200 392
+INFO 2025-05-05 20:06:37,858 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 200 606
+INFO 2025-05-05 20:06:37,889 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+INFO 2025-05-05 20:06:37,968 basehttp "GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+INFO 2025-05-05 20:06:38,004 basehttp "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+INFO 2025-05-05 20:06:39,267 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:06:45,359 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25265
+INFO 2025-05-05 20:06:46,814 basehttp "GET /admin/proctoring/exam/2/change/ HTTP/1.1" 200 35942
+INFO 2025-05-05 20:06:46,836 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:06:51,615 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25265
+INFO 2025-05-05 20:07:57,359 basehttp "GET /admin/proctoring/exam/3/change/ HTTP/1.1" 200 35940
+INFO 2025-05-05 20:07:57,388 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:08:03,682 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 23389
+INFO 2025-05-05 20:08:03,698 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:08:06,869 basehttp "GET /admin/proctoring/proctorassignment/add/ HTTP/1.1" 200 38749
+INFO 2025-05-05 20:08:06,888 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:08:28,615 basehttp "POST /admin/proctoring/proctorassignment/add/ HTTP/1.1" 302 0
+INFO 2025-05-05 20:08:28,639 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 24295
+INFO 2025-05-05 20:08:28,663 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:08:28,691 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+INFO 2025-05-05 20:08:36,110 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:08:36,129 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:08:41,195 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1573
+INFO 2025-05-05 20:08:42,466 basehttp "OPTIONS /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 200 0
+WARNING 2025-05-05 20:08:42,474 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:08:42,475 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 101
+WARNING 2025-05-05 20:08:44,405 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:08:44,406 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 101
+INFO 2025-05-05 20:08:56,502 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1573
+WARNING 2025-05-05 20:09:04,563 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:09:04,564 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 101
+INFO 2025-05-05 20:09:15,669 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1573
+WARNING 2025-05-05 20:10:06,915 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:10:06,916 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 101
+INFO 2025-05-05 20:11:58,303 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:11:58,444 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:12:00,125 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1573
+WARNING 2025-05-05 20:12:02,367 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:12:02,368 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 101
+WARNING 2025-05-05 20:12:07,870 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:12:07,870 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:12:37,828 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+WARNING 2025-05-05 20:12:46,970 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:12:46,971 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:12:52,677 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:12:52,677 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:13:02,045 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+WARNING 2025-05-05 20:13:06,090 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:06,090 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:13:07,157 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:07,160 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:13:07,846 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:07,847 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:13:08,410 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:08,410 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:13:08,969 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:08,970 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:13:09,540 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:09,540 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:13:09,956 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:09,957 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:13:10,375 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:10,376 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:13:10,687 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:13:10,688 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:13:28,033 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+INFO 2025-05-05 20:13:38,582 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:13:47,849 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:13:47,851 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:13:47,852 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:13:47,854 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:13:47,885 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 20:13:47,897 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+INFO 2025-05-05 20:13:47,911 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 20:13:47,921 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+WARNING 2025-05-05 20:14:09,948 log Not Found: /api/logout/
+WARNING 2025-05-05 20:14:09,949 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 20:14:26,584 basehttp "POST /api/token/ HTTP/1.1" 200 894
+INFO 2025-05-05 20:14:32,662 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:14:32,662 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:14:32,662 basehttp "OPTIONS /api/proctoring/swap-history/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:14:32,662 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+WARNING 2025-05-05 20:14:32,670 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 20:14:32,672 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 20:14:32,684 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 20:14:32,685 log Forbidden: /api/proctoring/my-proctorings/
+WARNING 2025-05-05 20:14:32,685 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 403 63
+INFO 2025-05-05 20:14:32,696 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 810
+WARNING 2025-05-05 20:14:52,634 log Not Found: /api/logout/
+WARNING 2025-05-05 20:14:52,634 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 20:15:01,504 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-05 20:15:18,527 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 20:15:18,531 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+INFO 2025-05-05 20:15:18,549 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+INFO 2025-05-05 20:15:18,558 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 20:15:24,936 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:15:24,949 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:15:32,550 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 23389
+INFO 2025-05-05 20:15:32,569 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:15:35,660 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+WARNING 2025-05-05 20:15:37,744 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:15:37,745 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:15:42,902 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+WARNING 2025-05-05 20:15:48,758 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:15:48,758 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:15:55,486 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+INFO 2025-05-05 20:16:01,568 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:16:01,568 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:16:01,584 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 20:16:01,601 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 566
+INFO 2025-05-05 20:16:06,588 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:16:06,606 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:16:22,777 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25265
+INFO 2025-05-05 20:16:22,797 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:16:26,033 basehttp "GET /admin/proctoring/exam/add/ HTTP/1.1" 200 35447
+INFO 2025-05-05 20:16:26,054 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:16:42,515 basehttp "GET /static/admin/img/calendar-icons.svg HTTP/1.1" 200 2455
+INFO 2025-05-05 20:17:12,369 basehttp "POST /admin/proctoring/exam/add/ HTTP/1.1" 200 35784
+INFO 2025-05-05 20:17:12,389 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:17:20,661 basehttp "POST /admin/proctoring/exam/add/ HTTP/1.1" 302 0
+INFO 2025-05-05 20:17:20,684 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 26171
+INFO 2025-05-05 20:17:20,703 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:17:24,879 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:24,897 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:26,644 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:26,662 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:27,287 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:27,304 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:27,916 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:27,934 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:28,443 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:28,461 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:28,941 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:28,958 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:29,467 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:29,483 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:29,834 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:29,861 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:30,293 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:30,310 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:30,774 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:30,790 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:31,241 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:31,258 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:34,279 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 20:17:34,292 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 427
+INFO 2025-05-05 20:17:34,303 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+INFO 2025-05-05 20:17:34,315 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 607
+INFO 2025-05-05 20:17:38,135 basehttp "OPTIONS /api/accounts/instructor/remove-ta/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:17:38,155 basehttp "POST /api/accounts/instructor/remove-ta/ HTTP/1.1" 200 49
+INFO 2025-05-05 20:17:38,171 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 239
+INFO 2025-05-05 20:17:38,174 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 719
+INFO 2025-05-05 20:17:40,130 basehttp "POST /api/accounts/instructor/remove-ta/ HTTP/1.1" 200 49
+INFO 2025-05-05 20:17:40,142 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 20:17:40,147 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 20:17:45,529 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 20:17:45,537 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 20:17:45,539 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-05 20:17:45,551 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 817
+INFO 2025-05-05 20:17:49,450 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:49,465 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:57,327 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:57,348 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:58,257 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:17:58,272 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:18:00,885 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+WARNING 2025-05-05 20:18:02,830 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:18:02,831 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:22:43,916 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:22:43,935 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 386
+INFO 2025-05-05 20:22:48,888 basehttp "GET /api/proctoring/exams/3/eligible-tas/ HTTP/1.1" 200 1571
+WARNING 2025-05-05 20:22:51,130 log Bad Request: /api/proctoring/exams/3/assign-proctors/
+WARNING 2025-05-05 20:22:51,131 basehttp "POST /api/proctoring/exams/3/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:23:02,711 log Not Found: /api/logout/
+WARNING 2025-05-05 20:23:02,712 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 20:23:11,943 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 37680
+INFO 2025-05-05 20:23:11,966 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:23:11,973 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 560
+WARNING 2025-05-05 20:23:42,725 log Unauthorized: /api/token/
+WARNING 2025-05-05 20:23:42,726 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-05 20:24:03,862 basehttp "POST /api/token/ HTTP/1.1" 200 902
+INFO 2025-05-05 20:24:13,064 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:24:13,087 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:24:20,350 basehttp "OPTIONS /api/proctoring/exams/4/eligible-tas/ HTTP/1.1" 200 0
+WARNING 2025-05-05 20:24:20,357 log Forbidden: /api/proctoring/exams/4/eligible-tas/
+WARNING 2025-05-05 20:24:20,358 basehttp "GET /api/proctoring/exams/4/eligible-tas/ HTTP/1.1" 403 78
+INFO 2025-05-05 20:24:24,141 basehttp "OPTIONS /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 0
+INFO 2025-05-05 20:24:24,189 basehttp "GET /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 1571
+INFO 2025-05-05 20:24:27,310 basehttp "OPTIONS /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 200 0
+WARNING 2025-05-05 20:24:27,318 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:24:27,319 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 101
+WARNING 2025-05-05 20:24:36,730 log Forbidden: /api/proctoring/exams/4/eligible-tas/
+WARNING 2025-05-05 20:24:36,731 basehttp "GET /api/proctoring/exams/4/eligible-tas/ HTTP/1.1" 403 78
+INFO 2025-05-05 20:24:40,324 basehttp "OPTIONS /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 200 0
+WARNING 2025-05-05 20:24:40,330 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:24:40,331 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+WARNING 2025-05-05 20:24:46,142 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:24:46,143 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+INFO 2025-05-05 20:25:24,937 basehttp "GET /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 1571
+WARNING 2025-05-05 20:25:26,528 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:25:26,536 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 101
+WARNING 2025-05-05 20:25:27,967 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:25:27,968 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:25:42,554 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20329
+INFO 2025-05-05 20:25:42,575 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:25:47,352 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20329
+INFO 2025-05-05 20:25:47,366 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:25:51,012 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 20498
+INFO 2025-05-05 20:25:51,036 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:25:52,724 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20329
+INFO 2025-05-05 20:25:52,744 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:25:55,612 basehttp "GET /admin/ HTTP/1.1" 200 24910
+INFO 2025-05-05 20:25:55,640 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2025-05-05 20:25:57,980 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20329
+INFO 2025-05-05 20:25:58,000 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:26:03,084 basehttp "GET /admin/ HTTP/1.1" 200 24910
+INFO 2025-05-05 20:26:13,570 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20329
+INFO 2025-05-05 20:26:13,590 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:26:17,210 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:26:17,236 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:26:20,004 basehttp "GET /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 1567
+WARNING 2025-05-05 20:26:21,834 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:26:21,836 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:26:30,789 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25932
+INFO 2025-05-05 20:26:30,808 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-05 20:26:43,966 log Forbidden: /api/proctoring/exams/4/eligible-tas/
+WARNING 2025-05-05 20:26:43,967 basehttp "GET /api/proctoring/exams/4/eligible-tas/ HTTP/1.1" 403 78
+INFO 2025-05-05 20:32:40,385 basehttp "GET /admin/proctoring/exam/1/change/ HTTP/1.1" 200 35906
+INFO 2025-05-05 20:32:40,410 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:32:44,953 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25932
+INFO 2025-05-05 20:35:55,695 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 956
+INFO 2025-05-05 20:35:55,696 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 639
+INFO 2025-05-05 20:35:55,713 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 956
+INFO 2025-05-05 20:35:55,715 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 639
+INFO 2025-05-05 20:36:02,570 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 639
+INFO 2025-05-05 20:36:02,579 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 956
+INFO 2025-05-05 20:36:02,588 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 639
+INFO 2025-05-05 20:36:02,597 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 956
+INFO 2025-05-05 20:36:12,779 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:36:12,794 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:36:14,942 basehttp "GET /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 1567
+WARNING 2025-05-05 20:36:16,784 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:36:16,785 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:36:18,303 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:36:18,304 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:36:19,966 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:36:19,967 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:36:21,059 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:36:21,059 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:36:23,602 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:36:23,603 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:36:25,090 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:36:25,090 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:36:26,452 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:36:26,452 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:36:30,065 log Forbidden: /api/proctoring/exams/4/eligible-tas/
+WARNING 2025-05-05 20:36:30,066 basehttp "GET /api/proctoring/exams/4/eligible-tas/ HTTP/1.1" 403 78
+WARNING 2025-05-05 20:36:31,460 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:36:31,461 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+WARNING 2025-05-05 20:36:32,667 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:36:32,668 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+WARNING 2025-05-05 20:36:37,498 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:36:37,499 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+WARNING 2025-05-05 20:36:39,160 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:36:39,161 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+WARNING 2025-05-05 20:36:40,326 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:36:40,327 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+WARNING 2025-05-05 20:36:42,112 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:36:42,112 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+WARNING 2025-05-05 20:36:43,174 log Forbidden: /api/proctoring/exams/4/assign-proctors/
+WARNING 2025-05-05 20:36:43,175 basehttp "POST /api/proctoring/exams/4/assign-proctors/ HTTP/1.1" 403 71
+INFO 2025-05-05 20:38:29,017 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:38:29,090 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:38:49,665 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:38:49,669 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:38:49,813 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\serializers.py changed, reloading.
+INFO 2025-05-05 20:38:49,898 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:38:50,582 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:38:51,801 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:38:51,851 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:38:51,881 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:38:51,947 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:38:52,000 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:38:52,448 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:38:52,485 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:39:20,575 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:20,955 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:20,971 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:20,983 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:20,984 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:21,321 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:21,775 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:21,775 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:21,794 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:21,803 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:29,366 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:30,016 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:30,035 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:30,083 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:30,105 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:30,118 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:30,774 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:30,860 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:30,871 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:30,881 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:37,885 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:37,939 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:37,967 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:37,988 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:38,194 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:38,758 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:38,810 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:38,822 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:38,823 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:38,967 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:46,941 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:47,043 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:47,062 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:47,075 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:47,114 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:47,695 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:47,862 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:47,892 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:47,892 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:47,932 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:55,808 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:56,129 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:56,147 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:56,150 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:56,161 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 20:39:56,571 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:56,939 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:56,951 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:56,957 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:39:56,971 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:40:06,893 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 20:40:46,754 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:40:46,778 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:40:48,775 basehttp "GET /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 1567
+WARNING 2025-05-05 20:40:50,647 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:40:50,648 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:40:54,370 basehttp "GET /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 1567
+WARNING 2025-05-05 20:40:55,493 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:40:55,494 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:40:56,774 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:40:56,775 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:40:57,422 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:40:57,423 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+WARNING 2025-05-05 20:40:58,605 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:40:58,606 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:41:05,441 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20329
+INFO 2025-05-05 20:41:05,467 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:41:08,117 basehttp "GET /admin/proctoring/proctorassignment/add/ HTTP/1.1" 200 38827
+INFO 2025-05-05 20:41:08,137 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:41:47,677 basehttp "POST /admin/proctoring/proctorassignment/add/ HTTP/1.1" 302 0
+INFO 2025-05-05 20:41:47,708 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 23023
+INFO 2025-05-05 20:41:47,728 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:41:52,242 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:41:52,259 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:42:05,332 basehttp "GET /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 1569
+WARNING 2025-05-05 20:42:07,014 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:42:07,015 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 101
+WARNING 2025-05-05 20:42:11,397 log Bad Request: /api/proctoring/exams/1/assign-proctors/
+WARNING 2025-05-05 20:42:11,397 basehttp "POST /api/proctoring/exams/1/assign-proctors/ HTTP/1.1" 400 190
+INFO 2025-05-05 20:42:16,115 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20329
+INFO 2025-05-05 20:42:16,136 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:42:17,444 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20329
+INFO 2025-05-05 20:42:17,463 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 20:42:20,437 basehttp "GET /api/proctoring/exams/1/eligible-tas/ HTTP/1.1" 200 1567
+INFO 2025-05-05 20:42:23,880 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+INFO 2025-05-05 20:42:23,901 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 753
+WARNING 2025-05-05 20:42:40,980 log Not Found: /api/logout/
+WARNING 2025-05-05 20:42:40,981 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 22:15:31,204 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-05 22:15:44,123 log Not Found: /api/logout/
+WARNING 2025-05-05 22:15:44,124 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-05 22:15:55,225 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-05 22:15:56,997 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-05 22:16:00,884 basehttp "OPTIONS /api/proctoring/exams/ HTTP/1.1" 200 0
+INFO 2025-05-05 22:16:00,885 basehttp "OPTIONS /api/proctoring/exams/ HTTP/1.1" 200 0
+INFO 2025-05-05 22:16:00,950 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 2
+INFO 2025-05-05 22:16:00,960 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 2
+INFO 2025-05-05 22:16:07,800 basehttp "GET /admin/ HTTP/1.1" 200 24922
+WARNING 2025-05-05 22:16:07,904 log Not Found: /favicon.ico
+WARNING 2025-05-05 22:16:07,905 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+INFO 2025-05-05 22:16:10,712 basehttp "GET /admin/proctoring/examroom/ HTTP/1.1" 200 22148
+INFO 2025-05-05 22:16:10,733 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 22:16:22,696 basehttp "GET /admin/proctoring/examroom/add/ HTTP/1.1" 200 23710
+INFO 2025-05-05 22:16:22,710 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 22:16:30,314 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 25932
+INFO 2025-05-05 22:16:30,327 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 22:16:32,600 basehttp "GET /admin/proctoring/exam/add/ HTTP/1.1" 200 35447
+INFO 2025-05-05 22:16:32,617 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 22:16:53,194 basehttp "GET /static/admin/img/calendar-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-05 22:17:12,644 basehttp "POST /admin/proctoring/exam/add/ HTTP/1.1" 200 35786
+INFO 2025-05-05 22:17:12,662 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 22:17:20,277 basehttp "POST /admin/proctoring/exam/add/ HTTP/1.1" 302 0
+INFO 2025-05-05 22:17:20,331 basehttp "GET /admin/proctoring/exam/ HTTP/1.1" 200 26846
+INFO 2025-05-05 22:17:20,345 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-05 22:17:23,713 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 2
+INFO 2025-05-05 22:17:23,724 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 2
+INFO 2025-05-05 22:17:25,241 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 2
+INFO 2025-05-05 22:17:25,252 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 2
+INFO 2025-05-05 22:17:28,624 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 2
+INFO 2025-05-05 22:19:01,828 autoreload C:\Users\atama\Desktop\Bilkent-TA-Mangement-System\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-05 22:19:02,571 autoreload Watching for file changes with StatReloader
+INFO 2025-05-05 22:19:14,369 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 1897
+INFO 2025-05-05 22:19:14,386 basehttp "GET /api/proctoring/exams/ HTTP/1.1" 200 1897

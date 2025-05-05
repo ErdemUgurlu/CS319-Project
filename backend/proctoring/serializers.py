@@ -206,37 +206,68 @@ class ExamCreateSerializer(serializers.ModelSerializer):
 
 
 class ExamDetailSerializer(serializers.ModelSerializer):
-    """Serializer for retrieving and updating an exam."""
-    rooms = ExamRoomSerializer(many=True, read_only=True)
-    section_code = serializers.CharField(source='section.code', read_only=True)
-    course_code = serializers.CharField(source='section.course.code', read_only=True)
-    course_title = serializers.CharField(source='section.course.title', read_only=True)
-    exam_type_display = serializers.CharField(source='get_exam_type_display', read_only=True)
-    status_display = serializers.CharField(source='get_status_display', read_only=True)
-    created_by_name = serializers.CharField(source='created_by.full_name', read_only=True)
-    proctors = serializers.SerializerMethodField()
+    """Serializer for detailed exam information."""
+    
+    section_display = serializers.SerializerMethodField()
+    course_code = serializers.SerializerMethodField()
+    assigned_proctors = serializers.SerializerMethodField()
+    rooms = serializers.SerializerMethodField()
+    creator_name = serializers.SerializerMethodField()
+    section = SectionMinimalSerializer(read_only=True)
     
     class Meta:
         model = Exam
         fields = [
-            'id', 'title', 'section', 'section_code', 'course_code', 'course_title',
-            'exam_type', 'exam_type_display', 'date', 'start_time', 'end_time',
-            'duration_minutes', 'student_count', 'proctor_count_needed', 'room_count',
-            'student_list_file', 'status', 'status_display', 'notes', 'created_by',
-            'created_by_name', 'created_at', 'updated_at', 'rooms', 'proctors',
+            'id', 'title', 'section', 'section_display', 'course_code',
+            'exam_type', 'date', 'start_time', 'end_time', 'duration_minutes',
+            'student_count', 'proctor_count_needed', 'room_count',
+            'status', 'created_by', 'creator_name', 'created_at', 'updated_at',
+            'notes', 'student_list_file', 'assigned_proctors', 'rooms',
             'is_cross_department', 'requested_from_department', 'dean_office_request',
             'dean_office_comments'
         ]
-        read_only_fields = [
-            'id', 'created_by', 'created_by_name', 'created_at', 'updated_at',
-            'duration_minutes', 'rooms', 'proctors', 'section_code', 'course_code',
-            'course_title', 'exam_type_display', 'status_display'
+    
+    def get_section_display(self, obj):
+        return str(obj.section)
+    
+    def get_course_code(self, obj):
+        try:
+            return f"{obj.section.course.department.code}{obj.section.course.code}"
+        except (AttributeError, TypeError):
+            # Handle case where section or course might be None
+            return "Unknown"
+    
+    def get_creator_name(self, obj):
+        return obj.created_by.get_full_name() if obj.created_by else "Unknown"
+    
+    def get_assigned_proctors(self, obj):
+        assignments = obj.proctor_assignments.select_related('proctor').all()
+        return [
+            {
+                'id': assignment.id,
+                'proctor_id': assignment.proctor.id,
+                'proctor_name': assignment.proctor.get_full_name(),
+                'proctor_email': assignment.proctor.email,
+                'status': assignment.status,
+                'room': assignment.exam_room.classroom.building + '-' + assignment.exam_room.classroom.room_number if assignment.exam_room else None,
+                'confirmed': assignment.status == 'CONFIRMED',
+                'swap_depth': assignment.swap_depth
+            }
+            for assignment in assignments
         ]
     
-    def get_proctors(self, obj):
-        """Get all proctors assigned to this exam."""
-        assignments = ProctorAssignment.objects.filter(exam=obj)
-        return ProctorAssignmentSimpleSerializer(assignments, many=True).data
+    def get_rooms(self, obj):
+        rooms = obj.rooms.select_related('classroom').all()
+        return [
+            {
+                'id': room.id,
+                'classroom_id': room.classroom.id,
+                'classroom_name': room.classroom.building + '-' + room.classroom.room_number,
+                'student_count': room.student_count,
+                'proctor_count': room.proctor_count
+            }
+            for room in rooms
+        ]
 
 
 class ProctorAssignmentSimpleSerializer(serializers.ModelSerializer):
@@ -303,3 +334,33 @@ class CrossDepartmentRequestSerializer(serializers.Serializer):
             raise serializers.ValidationError(f"Invalid department code. Must be one of: {', '.join(valid_departments)}")
         
         return value
+
+
+class ExamListSerializer(serializers.ModelSerializer):
+    """Serializer for listing exams with basic information."""
+    
+    section_display = serializers.SerializerMethodField()
+    course_code = serializers.SerializerMethodField()
+    assigned_proctors_count = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Exam
+        fields = [
+            'id', 'title', 'section', 'section_display', 'course_code',
+            'exam_type', 'date', 'start_time', 'end_time', 'duration_minutes',
+            'student_count', 'proctor_count_needed', 'room_count',
+            'status', 'assigned_proctors_count', 'created_at'
+        ]
+    
+    def get_section_display(self, obj):
+        return str(obj.section)
+    
+    def get_course_code(self, obj):
+        try:
+            return f"{obj.section.course.department.code}{obj.section.course.code}"
+        except (AttributeError, TypeError):
+            # Handle case where section or course might be None
+            return "Unknown"
+    
+    def get_assigned_proctors_count(self, obj):
+        return obj.proctor_assignments.count()

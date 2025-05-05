@@ -1,0 +1,36 @@
+{
+  "id": 2,
+  "title": "Midterm Exam",
+  "section": {
+    "id": 2,
+    "section_number": "1",
+    "course": {
+      "id": 2,
+      "code": "CS101",
+      "title": "Introduction to Computer Science"
+    }
+  },
+  "section_display": "CSCS101-1 (FALL 2023)",
+  "course_code": "CSCS101",
+  "exam_type": "MIDTERM",
+  "date": "2025-05-12",
+  "start_time": "16:52:00.336623",
+  "end_time": "18:52:00.336624",
+  "duration_minutes": 120,
+  "student_count": 50,
+  "proctor_count_needed": 2,
+  "room_count": 1,
+  "status": "PENDING",
+  "created_by": 25,
+  "creator_name": "Test Instructor",
+  "created_at": "2025-05-05T19:52:00.336960+03:00",
+  "updated_at": "2025-05-05T19:52:00.336975+03:00",
+  "notes": "This is a test exam created for demo purposes.",
+  "student_list_file": null,
+  "assigned_proctors": [],
+  "rooms": [],
+  "is_cross_department": false,
+  "requested_from_department": null,
+  "dean_office_request": false,
+  "dean_office_comments": ""
+}

@@ -10,7 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 
-from accounts.models import User, AuditLog, Classroom
+from accounts.models import User, AuditLog, Classroom, Section, Department
 from .models import Exam, ExamRoom, ProctorAssignment, SwapRequest, ProctorConstraint
 from workload.models import TAWorkload
 from . import serializers
@@ -427,12 +427,106 @@ class SwapHistoryView(generics.ListAPIView):
             return SwapRequest.objects.none()
 
 
-class ExamCreateView(generics.CreateAPIView):
+class ExamCreateView(APIView):
     """
     API endpoint for creating new exams.
     """
     serializer_class = serializers.ExamCreateSerializer
     permission_classes = [IsAuthenticated, IsStaffOrInstructor]
+    
+    def get(self, request):
+        """List all exams for the user based on their role."""
+        user = request.user
+        print(f"ExamCreateView.get called by user {user.email} with role {user.role}")
+        
+        try:
+            if user.role == 'INSTRUCTOR':
+                # Instructors can only see exams for their sections
+                print(f"Looking for sections with instructor: {user.email} (ID: {user.id})")
+                sections = Section.objects.filter(instructor=user)
+                print(f"Found {sections.count()} sections for instructor {user.email}")
+                
+                # List the sections found
+                if sections.count() > 0:
+                    for section in sections:
+                        print(f"  - Section: {section.course.department.code}{section.course.code}-{section.section_number}")
+                
+                exams = Exam.objects.filter(section__in=sections)
+                print(f"Found {exams.count()} exams for instructor {user.email}")
+                
+                # List the exams found
+                if exams.count() > 0:
+                    for exam in exams:
+                        print(f"  - Exam: {exam.title} (ID: {exam.id}) for {exam.section}")
+                
+                # If no exams found, try to debug why
+                if exams.count() == 0:
+                    # Try to find all exams in the system
+                    all_exams = Exam.objects.all()
+                    print(f"Total exams in the system: {all_exams.count()}")
+                    if all_exams.count() > 0:
+                        print("Examples of exams in the system:")
+                        for exam in all_exams[:3]:  # Show first 3 exams
+                            print(f"  - Exam: {exam.title} for {exam.section} (Created by: {exam.created_by.email})")
+            elif user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']:
+                # Staff can see all exams in their department
+                if user.role == 'DEAN_OFFICE':
+                    # Dean's office can see exams with cross-department requests
+                    exams = Exam.objects.filter(dean_office_request=True)
+                    print(f"Found {exams.count()} exams for dean's office {user.email}")
+                elif user.role == 'ADMIN':
+                    # Admins can see all exams
+                    exams = Exam.objects.all()
+                    print(f"Found {exams.count()} exams for admin {user.email}")
+                else:
+                    # Department staff can see all exams in their department
+                    print(f"Staff user: {user.email}, Department: {user.department}")
+                    
+                    # Get all departments in the system
+                    all_departments = Department.objects.all()
+                    print(f"Available departments: {[d.code for d in all_departments]}")
+                    
+                    # Debug user department value
+                    print(f"User department value type: {type(user.department)}")
+                    
+                    # Get all exams for debugging
+                    all_exams = Exam.objects.all()
+                    for exam in all_exams[:5]:
+                        print(f"Exam: {exam.title}, Section: {exam.section}, Course Dept: {exam.section.course.department.code}")
+                    
+                    # First try to get the exact department match
+                    dept_exams = Exam.objects.filter(section__course__department__code=user.department)
+                    print(f"Found {dept_exams.count()} exams for department exact match {user.department}")
+                    
+                    if dept_exams.count() == 0:
+                        # If no exact match, try with case-insensitive comparison
+                        dept_exams = Exam.objects.filter(section__course__department__code__iexact=user.department)
+                        print(f"Found {dept_exams.count()} exams with case-insensitive match")
+                        
+                        if dept_exams.count() == 0:
+                            # If still no match, return all exams for now (temporary)
+                            dept_exams = Exam.objects.all()
+                            print(f"Temporarily returning all {dept_exams.count()} exams since no department match found")
+                    
+                    exams = dept_exams
+            else:
+                # TAs cannot access this endpoint
+                return Response(
+                    {"error": "You do not have permission to view exams."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+                
+            serializer = serializers.ExamListSerializer(exams, many=True)
+            print(f"Returning {len(serializer.data)} exams")
+            return Response(serializer.data)
+        except Exception as e:
+            print(f"Error in ExamCreateView.get: {e}")
+            import traceback
+            traceback.print_exc()
+            return Response(
+                {"error": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
     def perform_create(self, serializer):
         exam = serializer.save(created_by=self.request.user, status='DRAFT')
@@ -473,6 +567,43 @@ class ExamDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.ExamDetailSerializer
     permission_classes = [IsAuthenticated, IsStaffOrInstructorOfCourse]
     
+    def get_object(self):
+        """
+        Returns the object the view is displaying.
+        Adds additional error handling and debugging.
+        """
+        try:
+            obj = super().get_object()
+            return obj
+        except Http404:
+            print(f"Exam with ID {self.kwargs.get('pk')} not found")
+            raise  # Re-raise the Http404
+        except Exception as e:
+            print(f"Error in ExamDetailView.get_object: {e}")
+            import traceback
+            traceback.print_exc()
+            raise
+    
+    def retrieve(self, request, *args, **kwargs):
+        """
+        Retrieve an exam with detailed error handling.
+        """
+        try:
+            instance = self.get_object()
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        except Exception as e:
+            print(f"Error in ExamDetailView.retrieve: {e}")
+            print(f"Request user: {request.user.email}, Request data: {request.data}")
+            import traceback
+            traceback.print_exc()
+            
+            # Return a more helpful error message
+            return Response(
+                {"detail": f"Could not retrieve exam data: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
     def perform_update(self, serializer):
         exam = serializer.save()
         
@@ -509,7 +640,10 @@ class ExamRoomUpdateView(APIView):
             exam = Exam.objects.get(id=exam_id)
             
             # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and exam.created_by != request.user:
+            if request.user.role not in ['STAFF', 'ADMIN'] and not (
+                exam.created_by == request.user or
+                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
+            ):
                 return Response({
                     'error': 'You do not have permission to update rooms for this exam'
                 }, status=status.HTTP_403_FORBIDDEN)
@@ -570,7 +704,10 @@ class ProctorAssignmentView(APIView):
             exam = Exam.objects.get(id=exam_id)
             
             # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and exam.created_by != request.user:
+            if request.user.role not in ['STAFF', 'ADMIN'] and not (
+                exam.created_by == request.user or
+                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
+            ):
                 return Response({
                     'error': 'You do not have permission to assign proctors for this exam'
                 }, status=status.HTTP_403_FORBIDDEN)
@@ -646,7 +783,10 @@ class EligibleProctorsForExamView(APIView):
             exam = Exam.objects.get(id=exam_id)
             
             # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and exam.created_by != request.user:
+            if request.user.role not in ['STAFF', 'ADMIN'] and not (
+                exam.created_by == request.user or
+                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
+            ):
                 return Response({
                     'error': 'You do not have permission to view eligible proctors for this exam'
                 }, status=status.HTTP_403_FORBIDDEN)
@@ -699,7 +839,10 @@ class SeatingPlanView(APIView):
             exam = Exam.objects.get(id=exam_id)
             
             # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and exam.created_by != request.user:
+            if request.user.role not in ['STAFF', 'ADMIN'] and not (
+                exam.created_by == request.user or
+                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
+            ):
                 return Response({
                     'error': 'You do not have permission to generate seating plan for this exam'
                 }, status=status.HTTP_403_FORBIDDEN)
@@ -797,7 +940,10 @@ class CrossDepartmentRequestView(APIView):
             exam = Exam.objects.get(id=exam_id)
             
             # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and exam.created_by != request.user:
+            if request.user.role not in ['STAFF', 'ADMIN'] and not (
+                exam.created_by == request.user or
+                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
+            ):
                 return Response({
                     'error': 'You do not have permission to request cross-department proctoring'
                 }, status=status.HTTP_403_FORBIDDEN)
