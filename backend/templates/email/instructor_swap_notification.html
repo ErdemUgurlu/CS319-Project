@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Proctor Swap Notification - Bilkent TA Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #003366;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px 5px 0 0;
+        }
+        .content {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        .exam-details {
+            background-color: #f5f5f5;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .notification {
+            background-color: #e9f5fb;
+            padding: 10px;
+            border-left: 4px solid #39a2db;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Bilkent TA Management System</h1>
+    </div>
+    <div class="content">
+        <h2>Proctor Swap Notification</h2>
+        
+        <p>Hello {{ instructor.first_name }},</p>
+        
+        <div class="notification">
+            <p>This is to inform you that <strong>a proctor swap has occurred</strong> for one of your course exams.</p>
+        </div>
+        
+        <div class="exam-details">
+            <h3>Exam Details:</h3>
+            <p><strong>Course:</strong> {{ exam.section }}</p>
+            <p><strong>Exam:</strong> {{ exam.title }} ({{ exam.get_exam_type_display }})</p>
+            <p><strong>Date:</strong> {{ exam.date }}</p>
+            <p><strong>Time:</strong> {{ exam.start_time }} - {{ exam.end_time }}</p>
+            {% if exam_room %}
+            <p><strong>Room:</strong> {{ exam_room.classroom.building }} {{ exam_room.classroom.room_number }}</p>
+            {% endif %}
+        </div>
+        
+        <p><strong>Proctor Change:</strong></p>
+        <p>From: {{ original_proctor.full_name }} ({{ original_proctor.email }})</p>
+        <p>To: {{ new_proctor.full_name }} ({{ new_proctor.email }})</p>
+        
+        <p>Reason for swap: {{ swap_request.reason }}</p>
+        
+        <p>No action is required on your part. The new proctor has been notified and the assignment has been updated in the system.</p>
+        
+        <p>If you have any questions or concerns, please contact your department staff.</p>
+    </div>
+    <div class="footer">
+        <p>This is an automated message. Please do not reply to this email.</p>
+        <p>&copy; {{ timestamp.year }} Bilkent University. All rights reserved.</p>
+    </div>
+</body>
+</html> 
