@@ -23,8 +23,12 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 from accounts.views import CustomTokenObtainPairView
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    # Root path redirection to admin page
+    path('', RedirectView.as_view(url='/admin/'), name='home'),
+    
     path('admin/', admin.site.urls),
     
     # API authentication endpoints

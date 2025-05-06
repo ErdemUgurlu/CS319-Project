@@ -185,8 +185,8 @@ SIMPLE_JWT = {
 }
 
 # Email Configuration
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Development: Print emails to console
 EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP sunucusu
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

@@ -40,6 +40,9 @@ from .serializers import (
     SectionSerializer, TAAssignmentSerializer, ClassroomSerializer,
     CustomTokenObtainPairSerializer, InstructorTAAssignmentSerializer, TADetailSerializer
 )
+import random
+from datetime import timedelta
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +55,18 @@ class IsStaffUser(permissions.BasePermission):
         return request.user.is_authenticated and (
             request.user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE'] or 
             request.user.is_staff
+        )
+
+
+class IsAdminOrStaff(permissions.BasePermission):
+    """
+    Custom permission to only allow admin or staff users.
+    """
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and (
+            request.user.role in ['STAFF', 'ADMIN'] or 
+            request.user.is_staff or
+            request.user.is_superuser
         )
 
 
@@ -207,35 +222,82 @@ class RequestPasswordResetView(APIView):
         try:
             user = User.objects.get(email=email)
             
+            # Ensure user is approved and email verified regardless of current status
+            if not user.is_approved or not user.email_verified:
+                user.is_approved = True
+                user.email_verified = True
+                user.save()
+            
             # Generate password reset token
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
+            
+            # Generate a temporary password directly
+            temp_password = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(12))
+            user.temp_password = temp_password
+            user.temp_password_expiry = timezone.now() + timedelta(days=7)
+            user.save()
             
             # Send password reset email
             subject = 'Reset Your Password'
             from_email = settings.DEFAULT_FROM_EMAIL
             to_email = user.email
             
-            # Generate email content
+            # Generate email content with temporary password
             context = {
                 'user': user,
                 'reset_url': f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/",
+                'temp_password': temp_password,
+                'login_url': f"{settings.FRONTEND_URL}/login/",
+                'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
             }
-            html_message = render_to_string('email/password_reset_email.html', context)
-            plain_message = strip_tags(html_message)
+            html_message = render_to_string('email/password_email_template.html', context)
+            plain_message = f"""
+            Hello {user.first_name} {user.last_name},
             
-            # Send email
-            send_mail(
-                subject,
-                plain_message,
-                from_email,
-                [to_email],
-                html_message=html_message,
-                fail_silently=False,
-            )
+            Your temporary password for the Bilkent TA Management System is: {temp_password}
+            
+            This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+            Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+            
+            Alternatively, you can reset your password using this link: {settings.FRONTEND_URL}/reset-password/{uid}/{token}/
+            
+            Best regards,
+            Bilkent TA Management System
+            """
+            
+            # Send email with debugging information
+            try:
+                send_mail(
+                    subject,
+                    plain_message,
+                    from_email,
+                    [to_email],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+                logger.info(f"Password reset email sent to {to_email}")
+            except Exception as e:
+                logger.error(f"Failed to send password reset email to {to_email}: {str(e)}")
+                return Response(
+                    {'error': f'Failed to send email: {str(e)}'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
             
             return Response(
-                {'message': 'Password reset email sent.'},
+                {
+                    'message': 'Password reset email sent.',
+                    'debug_info': {
+                        'email': to_email,
+                        'temp_password': temp_password,  # Include in response for debugging
+                        'email_settings': {
+                            'EMAIL_HOST': settings.EMAIL_HOST,
+                            'EMAIL_PORT': settings.EMAIL_PORT,
+                            'EMAIL_USE_TLS': settings.EMAIL_USE_TLS,
+                            'DEFAULT_FROM_EMAIL': settings.DEFAULT_FROM_EMAIL,
+                        }
+                    }
+                },
                 status=status.HTTP_200_OK
             )
         except User.DoesNotExist:
@@ -325,8 +387,49 @@ class ChangePasswordView(APIView):
                 ip_address=request.META.get('REMOTE_ADDR'),
             )
             
+            # Send email notification about password change
+            try:
+                subject = 'Your Password Has Been Changed'
+                from_email = settings.DEFAULT_FROM_EMAIL
+                to_email = user.email
+                
+                # Generate email content
+                context = {
+                    'user': user,
+                    'timestamp': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'login_url': f"{settings.FRONTEND_URL}/login/",
+                }
+                html_message = render_to_string('email/password_changed_notification.html', context)
+                plain_message = f"""
+                Hello {user.first_name} {user.last_name},
+                
+                This is a confirmation that your password for the Bilkent TA Management System has been changed successfully on {context['timestamp']}.
+                
+                If you did not make this change, please contact the system administrator immediately.
+                
+                Best regards,
+                Bilkent TA Management System
+                """
+                
+                # Send email
+                send_mail(
+                    subject,
+                    plain_message,
+                    from_email,
+                    [to_email],
+                    html_message=html_message,
+                    fail_silently=True,  # Don't fail if email cannot be sent
+                )
+                email_sent = True
+            except Exception as e:
+                logger.error(f"Failed to send password change notification to {user.email}: {str(e)}")
+                email_sent = False
+            
             return Response(
-                {'message': 'Password changed successfully.'},
+                {
+                    'message': 'Password changed successfully.',
+                    'email_notification_sent': email_sent
+                },
                 status=status.HTTP_200_OK
             )
         
@@ -336,9 +439,9 @@ class ChangePasswordView(APIView):
 class UserProfileView(generics.RetrieveAPIView):
     """
     API endpoint that allows users to view their profile.
-    Requires email verification for TA and INSTRUCTOR roles.
+    Requires authentication only.
     """
-    permission_classes = [IsAuthenticated, IsEmailVerifiedOrExempt]
+    permission_classes = [IsAuthenticated]
     serializer_class = serializers.UserProfileSerializer
     
     def get_object(self):
@@ -1383,3 +1486,553 @@ class InstructorTAAssignmentView(APIView):
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except InstructorTAAssignment.DoesNotExist:
                 return Response({"error": "Assignment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class RegisterTAsFromExcelView(APIView):
+    """
+    View for registering TAs from Excel data.
+    Staff/Admin users can create multiple TA accounts by providing data in a specific format.
+    """
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    
+    def generate_password(self, length=12):
+        """Generate a secure random password."""
+        chars = string.ascii_letters + string.digits + string.punctuation
+        # Ensure password has at least one of each type of character
+        password = random.choice(string.ascii_lowercase)
+        password += random.choice(string.ascii_uppercase)
+        password += random.choice(string.digits)
+        password += random.choice('!@#$%^&*()_+-=[]{}|;:,.<>?')
+        # Fill the rest randomly
+        password += ''.join(random.choice(chars) for _ in range(length - 4))
+        # Shuffle the password
+        password_list = list(password)
+        random.shuffle(password_list)
+        return ''.join(password_list)
+    
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        """Process TA data from Excel and create accounts."""
+        tas_data = request.data.get('tas_data', [])
+        
+        if not tas_data:
+            return Response(
+                {"detail": "No TA data provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # First, set all existing users as approved and email-verified
+        User.objects.all().update(is_approved=True, email_verified=True)
+        
+        created_users = []
+        errors = []
+        
+        for index, ta_data in enumerate(tas_data):
+            try:
+                # Extract required fields
+                email = ta_data.get('email')
+                first_name = ta_data.get('first_name')
+                last_name = ta_data.get('last_name')
+                
+                # Validate required fields
+                if not email or not first_name or not last_name:
+                    errors.append({
+                        "index": index,
+                        "error": "Missing required field(s): email, first_name, last_name",
+                        "data": ta_data
+                    })
+                    continue
+                
+                # Check if user already exists
+                if User.objects.filter(email=email).exists():
+                    # Update existing user to ensure they are approved and verified
+                    existing_user = User.objects.get(email=email)
+                    existing_user.is_approved = True
+                    existing_user.email_verified = True
+                    existing_user.save()
+                    
+                    errors.append({
+                        "index": index,
+                        "error": f"User with email {email} already exists and has been approved",
+                        "data": ta_data
+                    })
+                    continue
+                
+                # Extract optional fields with defaults
+                phone = ta_data.get('phone', '')
+                iban = ta_data.get('iban', '')
+                department = ta_data.get('department', 'CS')
+                academic_level = ta_data.get('academic_level', 'MASTERS')
+                employment_type = ta_data.get('employment_type', 'FULL_TIME')
+                
+                # Generate a password
+                password = self.generate_password()
+                
+                # Create the user
+                user = User.objects.create_user(
+                    email=email,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name,
+                    role='TA',
+                    department=department,
+                    phone=phone,
+                    iban=iban,
+                    academic_level=academic_level,
+                    employment_type=employment_type,
+                    is_approved=True,  # Auto-approve TAs created by staff/admin
+                    email_verified=True,  # Auto-verify emails for TAs created by staff/admin
+                )
+                
+                # Store temporary password for password reset
+                user.temp_password = password
+                user.temp_password_expiry = timezone.now() + timedelta(days=7)  # Valid for 7 days
+                user.save()
+                
+                # Directly send email with password rather than requiring a separate step
+                try:
+                    subject = 'Your Bilkent TA Management System Temporary Password'
+                    context = {
+                        'user': user,
+                        'temp_password': password,
+                        'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
+                        'login_url': f"{settings.FRONTEND_URL}/login"
+                    }
+                    
+                    html_message = render_to_string('email/password_email_template.html', context)
+                    plain_message = f"""
+                    Hello {user.first_name} {user.last_name},
+                    
+                    Your temporary password for the Bilkent TA Management System is: {password}
+                    
+                    This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+                    Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+                    
+                    Best regards,
+                    Bilkent TA Management System
+                    """
+                    
+                    send_mail(
+                        subject=subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
+                except Exception as email_error:
+                    logger.error(f"Failed to send email to {user.email}: {str(email_error)}")
+                
+                created_users.append({
+                    "id": user.id,
+                    "email": user.email,
+                    "name": f"{user.first_name} {user.last_name}",
+                    "temp_password": password  # Include the temp password in the response
+                })
+                
+            except Exception as e:
+                errors.append({
+                    "index": index,
+                    "error": str(e),
+                    "data": ta_data
+                })
+        
+        return Response({
+            "created_users": created_users,
+            "errors": errors,
+            "total_created": len(created_users),
+            "total_errors": len(errors)
+        }, status=status.HTTP_201_CREATED if created_users else status.HTTP_400_BAD_REQUEST)
+
+
+class SendPasswordEmailsView(APIView):
+    """
+    View for sending password emails to TAs.
+    This endpoint accepts a list of email addresses and sends password reset instructions.
+    """
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    
+    def post(self, request, *args, **kwargs):
+        """Send password emails to specified users."""
+        emails = request.data.get('emails', [])
+        
+        if not emails:
+            return Response(
+                {"detail": "No email addresses provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Update all users to ensure they're approved and verified
+        User.objects.filter(email__in=emails).update(is_approved=True, email_verified=True)
+        
+        success = []
+        errors = []
+        debug_info = []
+        
+        # Check if using console backend
+        is_console_backend = 'console' in settings.EMAIL_BACKEND
+        logger.info(f"Using email backend: {settings.EMAIL_BACKEND}")
+        
+        for email in emails:
+            try:
+                # Find the user
+                user = User.objects.get(email=email)
+                
+                # Ensure user is approved and verified
+                if not user.is_approved or not user.email_verified:
+                    user.is_approved = True
+                    user.email_verified = True
+                    user.save()
+                
+                # Generate a new temporary password
+                temp_password = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(12))
+                user.temp_password = temp_password
+                user.temp_password_expiry = timezone.now() + timedelta(days=7)
+                user.save()
+                
+                # Send email with temporary password
+                subject = 'Your Bilkent TA Management System Temporary Password'
+                context = {
+                    'user': user,
+                    'temp_password': temp_password,
+                    'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
+                    'login_url': f"{settings.FRONTEND_URL}/login"
+                }
+                
+                html_message = render_to_string('email/password_email_template.html', context)
+                plain_message = f"""
+                Hello {user.first_name} {user.last_name},
+                
+                Your temporary password for the Bilkent TA Management System is: {temp_password}
+                
+                This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+                Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+                
+                Best regards,
+                Bilkent TA Management System
+                """
+                
+                # Log details before sending
+                logger.info(f"Attempting to send email to {user.email} with subject: '{subject}'")
+                
+                try:
+                    send_mail(
+                        subject=subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
+                    log_msg = f"Password email sent to {user.email}"
+                    if is_console_backend:
+                        log_msg += " (Using console backend - check your server logs)"
+                    logger.info(log_msg)
+                    success.append(email)
+                    
+                    # Add debug info for successful email
+                    debug_info.append({
+                        "email": email,
+                        "temp_password": temp_password,
+                        "status": "sent",
+                        "timestamp": timezone.now().isoformat()
+                    })
+                except Exception as email_error:
+                    error_msg = f"Email sending failed: {str(email_error)}"
+                    detailed_error = f"Error type: {type(email_error).__name__}, Details: {str(email_error)}"
+                    logger.error(f"Failed to send email to {user.email}: {detailed_error}")
+                    errors.append({
+                        "email": email,
+                        "error": error_msg,
+                        "detailed_error": detailed_error
+                    })
+                
+            except User.DoesNotExist:
+                errors.append({
+                    "email": email,
+                    "error": "User not found"
+                })
+            except Exception as e:
+                detailed_error = f"Error type: {type(e).__name__}, Details: {str(e)}"
+                logger.error(f"Error processing {email}: {detailed_error}")
+                errors.append({
+                    "email": email,
+                    "error": str(e),
+                    "detailed_error": detailed_error
+                })
+        
+        return Response({
+            "success": success,
+            "errors": errors,
+            "total_success": len(success),
+            "total_errors": len(errors),
+            "debug_info": {
+                "email_settings": {
+                    "EMAIL_HOST": settings.EMAIL_HOST,
+                    "EMAIL_PORT": settings.EMAIL_PORT,
+                    "EMAIL_USE_TLS": settings.EMAIL_USE_TLS,
+                    "DEFAULT_FROM_EMAIL": settings.DEFAULT_FROM_EMAIL,
+                    "EMAIL_BACKEND": settings.EMAIL_BACKEND,
+                    "using_console_backend": is_console_backend
+                },
+                "sent_emails": debug_info
+            }
+        }, status=status.HTTP_200_OK)
+
+
+class FixAllUsersView(APIView):
+    """
+    API endpoint to fix all users by setting them as approved and email-verified.
+    This is a utility endpoint to help recover from issues with user status.
+    """
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    
+    def post(self, request):
+        """Set all users as approved and email verified."""
+        try:
+            # Get count before update
+            total_users = User.objects.count()
+            unapproved_count = User.objects.filter(is_approved=False).count()
+            unverified_count = User.objects.filter(email_verified=False).count()
+            
+            # Update all users
+            User.objects.all().update(is_approved=True, email_verified=True)
+            
+            # Log the action
+            logger.info(f"All users set to approved and email verified by {request.user.email}")
+            
+            return Response({
+                "message": "All users have been marked as approved and email verified.",
+                "details": {
+                    "total_users": total_users,
+                    "previously_unapproved": unapproved_count,
+                    "previously_unverified": unverified_count
+                }
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error in FixAllUsersView: {str(e)}")
+            return Response({
+                "error": f"An error occurred: {str(e)}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CheckEmailExistsView(APIView):
+    """
+    API endpoint to check if an email exists in the system.
+    For security reasons, this endpoint always returns a 200 response
+    to avoid email enumeration attacks.
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response(
+                {'error': 'Email is required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if the email exists in the system
+        exists = User.objects.filter(email=email).exists()
+        
+        # For staff/admin users, we can return the actual result
+        # For anonymous requests, we always return success to avoid email enumeration
+        is_privileged = request.user.is_authenticated and (
+            request.user.role in ['STAFF', 'ADMIN'] or 
+            request.user.is_staff or
+            request.user.is_superuser
+        )
+        
+        if is_privileged:
+            return Response({'exists': exists}, status=status.HTTP_200_OK)
+        else:
+            # Always return a success message, but include the true value for debugging in dev
+            return Response({
+                'message': 'Request processed successfully',
+                'exists': exists if settings.DEBUG else None
+            }, status=status.HTTP_200_OK)
+
+
+class CreateTAFromEmailView(APIView):
+    """
+    API endpoint to create a TA account from an email address.
+    This will look up the email in existing Excel import data or create a minimal account.
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def _extract_domain_info(self, email):
+        """Extract department information from email domain"""
+        if '@ug.bilkent.edu.tr' in email:
+            # Extract department code from university email
+            # Example: john.doe@cs.ug.bilkent.edu.tr -> CS department
+            try:
+                parts = email.split('@')
+                if len(parts) == 2:
+                    domain_parts = parts[1].split('.')
+                    if len(domain_parts) > 3:  # Has department subdomain
+                        dept_code = domain_parts[0].upper()
+                        # Check if it's a valid department code
+                        if Department.objects.filter(code=dept_code).exists():
+                            return {
+                                'department': dept_code,
+                                'academic_level': 'MASTERS',  # Default
+                                'employment_type': 'PART_TIME'  # Default
+                            }
+            except Exception as e:
+                logger.error(f"Error extracting domain info: {str(e)}")
+                
+        # Default to CS department if we can't extract
+        return {
+            'department': 'CS',
+            'academic_level': 'MASTERS',
+            'employment_type': 'PART_TIME'
+        }
+    
+    def _extract_name_from_email(self, email):
+        """Extract first and last name from email address"""
+        try:
+            # Remove domain part
+            username = email.split('@')[0]
+            
+            # Common formats: firstname.lastname, firstname_lastname, first.m.last
+            name_parts = re.split(r'[._]', username)
+            
+            if len(name_parts) >= 2:
+                first_name = name_parts[0].capitalize()
+                last_name = name_parts[-1].capitalize()
+                
+                # If last part is a single character, use the part before it as last name
+                if len(last_name) == 1 and len(name_parts) > 2:
+                    last_name = name_parts[-2].capitalize()
+                
+                return {
+                    'first_name': first_name,
+                    'last_name': last_name
+                }
+        except Exception as e:
+            logger.error(f"Error extracting name from email: {str(e)}")
+        
+        # Default: use email as first name and "User" as last name
+        return {
+            'first_name': email.split('@')[0],
+            'last_name': 'User'
+        }
+    
+    def generate_password(self, length=12):
+        """Generate a secure random password."""
+        chars = string.ascii_letters + string.digits + string.punctuation
+        # Ensure password has at least one of each type of character
+        password = random.choice(string.ascii_lowercase)
+        password += random.choice(string.ascii_uppercase)
+        password += random.choice(string.digits)
+        password += random.choice('!@#$%^&*()_+-=[]{}|;:,.<>?')
+        # Fill the rest randomly
+        password += ''.join(random.choice(chars) for _ in range(length - 4))
+        # Shuffle the password
+        password_list = list(password)
+        random.shuffle(password_list)
+        return ''.join(password_list)
+    
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response(
+                {'error': 'Email is required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            return Response({
+                'exists': True,
+                'created': False,
+                'message': 'User with this email already exists'
+            }, status=status.HTTP_200_OK)
+        
+        try:
+            with transaction.atomic():
+                # Extract basic info from email
+                domain_info = self._extract_domain_info(email)
+                name_info = self._extract_name_from_email(email)
+                
+                # Generate password
+                password = self.generate_password()
+                
+                # Create the user
+                user = User.objects.create_user(
+                    email=email,
+                    password=password,
+                    first_name=name_info['first_name'],
+                    last_name=name_info['last_name'],
+                    role='TA',
+                    department=domain_info['department'],
+                    academic_level=domain_info['academic_level'],
+                    employment_type=domain_info['employment_type'],
+                    is_approved=True,  # Auto-approve TAs
+                    email_verified=True,  # Auto-verify emails
+                )
+                
+                # Store temporary password
+                user.temp_password = password
+                user.temp_password_expiry = timezone.now() + timedelta(days=7)  # Valid for 7 days
+                user.save()
+                
+                # Send email with temporary password
+                subject = 'Your Bilkent TA Management System Account'
+                context = {
+                    'user': user,
+                    'temp_password': password,
+                    'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
+                    'login_url': f"{settings.FRONTEND_URL}/login"
+                }
+                
+                html_message = render_to_string('email/password_email_template.html', context)
+                plain_message = f"""
+                Hello {user.first_name} {user.last_name},
+                
+                Your account has been created in the Bilkent TA Management System.
+                Your temporary password is: {password}
+                
+                This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+                Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+                
+                Best regards,
+                Bilkent TA Management System
+                """
+                
+                try:
+                    send_mail(
+                        subject=subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
+                    email_sent = True
+                except Exception as e:
+                    logger.error(f"Failed to send email to {user.email}: {str(e)}")
+                    email_sent = False
+                
+                return Response({
+                    'exists': False,
+                    'created': True,
+                    'message': 'User created successfully',
+                    'email_sent': email_sent,
+                    'user_info': {
+                        'id': user.id,
+                        'email': user.email,
+                        'name': f"{user.first_name} {user.last_name}",
+                        'temp_password': password if settings.DEBUG else None  # Only include password in debug mode
+                    }
+                }, status=status.HTTP_201_CREATED)
+                
+        except Exception as e:
+            logger.error(f"Error creating user from email: {str(e)}")
+            return Response({
+                'exists': False,
+                'created': False,
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

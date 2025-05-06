@@ -8303,3 +8303,776 @@ INFO 2025-05-06 11:46:44,636 basehttp "GET /api/leaves/instructor/requests/ HTTP
 INFO 2025-05-06 11:46:44,641 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
 INFO 2025-05-06 11:46:44,644 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 559
 INFO 2025-05-06 11:46:46,030 basehttp "GET /api/leaves/requests/1/ HTTP/1.1" 200 477
+WARNING 2025-05-06 11:53:48,519 log Not Found: /api/logout/
+WARNING 2025-05-06 11:53:48,520 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-06 11:53:55,786 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-06 11:56:19,297 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-06 11:56:19,297 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-06 11:56:19,323 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-06 11:56:19,326 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 520
+INFO 2025-05-06 11:56:19,329 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-06 11:56:19,331 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 520
+INFO 2025-05-06 11:56:34,888 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-06 11:56:34,888 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-06 11:56:34,901 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 52
+INFO 2025-05-06 11:56:34,901 basehttp "GET /api/proctoring/swap-history/ HTTP/1.1" 200 52
+INFO 2025-05-06 11:56:42,029 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 200 706
+INFO 2025-05-06 11:56:42,041 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 200 706
+INFO 2025-05-06 11:57:42,731 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 200 706
+INFO 2025-05-06 11:57:42,741 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 200 706
+WARNING 2025-05-06 11:57:45,266 log Not Found: /api/logout/
+WARNING 2025-05-06 11:57:45,266 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-06 11:57:47,247 basehttp "POST /api/token/ HTTP/1.1" 200 902
+WARNING 2025-05-06 11:57:47,271 log Forbidden: /api/workload/workloads/my_workload/
+WARNING 2025-05-06 11:57:47,272 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 403 46
+WARNING 2025-05-06 11:57:47,275 log Forbidden: /api/workload/workloads/my_workload/
+WARNING 2025-05-06 11:57:47,275 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 403 46
+INFO 2025-05-06 11:57:50,782 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 353
+INFO 2025-05-06 11:57:50,782 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 1311
+INFO 2025-05-06 11:57:50,799 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 353
+INFO 2025-05-06 11:57:50,803 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 1311
+INFO 2025-05-06 11:57:55,332 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 4423
+INFO 2025-05-06 11:57:55,350 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 4423
+WARNING 2025-05-06 13:40:29,976 log Unauthorized: /api/tasks/my-tasks/
+WARNING 2025-05-06 13:40:29,977 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 401 172
+WARNING 2025-05-06 13:40:29,979 log Unauthorized: /api/tasks/my-tasks/
+WARNING 2025-05-06 13:40:29,980 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 401 172
+INFO 2025-05-06 13:40:29,981 basehttp "OPTIONS /api/token/refresh/ HTTP/1.1" 200 0
+ERROR 2025-05-06 13:40:30,019 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-06 13:40:30,030 log Internal Server Error: /api/token/refresh/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 44, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 225, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 447, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 141, in validate
+    refresh.outstand()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 222, in outstand
+    return OutstandingToken.objects.get_or_create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: type object 'OutstandingToken' has no attribute 'objects'
+ERROR 2025-05-06 13:40:30,033 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 115823
+ERROR 2025-05-06 13:40:30,036 basehttp "POST /api/token/refresh/ HTTP/1.1" 500 115823
+INFO 2025-05-06 13:40:32,062 basehttp "POST /api/token/ HTTP/1.1" 200 902
+INFO 2025-05-06 13:40:32,834 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 4423
+INFO 2025-05-06 13:40:32,849 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 4423
+INFO 2025-05-06 13:40:37,411 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-06 13:40:37,411 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-06 13:40:37,421 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 353
+INFO 2025-05-06 13:40:37,424 basehttp "OPTIONS /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 0
+INFO 2025-05-06 13:40:37,431 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 353
+ERROR 2025-05-06 13:40:37,448 log Internal Server Error: /api/workload/instructor/ta-workloads/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/CS319-Project/backend/workload/views.py", line 347, in get
+    current_workload = workload.current_weekly_hours + task_hours + manual_adjustments
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+TypeError: unsupported operand type(s) for +: 'float' and 'decimal.Decimal'
+ERROR 2025-05-06 13:40:37,449 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 500 95415
+ERROR 2025-05-06 13:40:37,468 log Internal Server Error: /api/workload/instructor/ta-workloads/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/CS319-Project/backend/workload/views.py", line 347, in get
+    current_workload = workload.current_weekly_hours + task_hours + manual_adjustments
+                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
+TypeError: unsupported operand type(s) for +: 'float' and 'decimal.Decimal'
+ERROR 2025-05-06 13:40:37,469 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 500 95415
+INFO 2025-05-06 13:40:59,748 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 4423
+INFO 2025-05-06 13:40:59,763 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 4423
+INFO 2025-05-06 15:28:21,642 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-06 15:30:34,463 log Not Found: /
+WARNING 2025-05-06 15:30:34,464 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:30:34,782 log Not Found: /favicon.ico
+WARNING 2025-05-06 15:30:34,783 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+WARNING 2025-05-06 15:30:35,757 log Not Found: /
+WARNING 2025-05-06 15:30:35,757 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-06 15:35:28,730 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-06 15:35:47,250 log Not Found: /
+WARNING 2025-05-06 15:35:47,251 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-06 15:35:49,540 autoreload /Users/erdemugurlu/CS319-Project/backend/proctoring/models.py changed, reloading.
+INFO 2025-05-06 15:35:49,762 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:36:19,777 autoreload /Users/erdemugurlu/CS319-Project/backend/proctoring/views.py changed, reloading.
+INFO 2025-05-06 15:36:19,990 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:39:00,779 autoreload /Users/erdemugurlu/CS319-Project/backend/proctoring/admin.py changed, reloading.
+INFO 2025-05-06 15:39:01,073 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:39:07,918 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-06 15:39:10,475 log Not Found: /
+WARNING 2025-05-06 15:39:10,475 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:05,492 log Not Found: /
+WARNING 2025-05-06 15:40:05,492 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:06,426 log Not Found: /
+WARNING 2025-05-06 15:40:06,426 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:27,220 log Not Found: /
+WARNING 2025-05-06 15:40:27,221 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:28,155 log Not Found: /
+WARNING 2025-05-06 15:40:28,155 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:28,769 log Not Found: /
+WARNING 2025-05-06 15:40:28,769 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:29,031 log Not Found: /
+WARNING 2025-05-06 15:40:29,031 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:29,230 log Not Found: /
+WARNING 2025-05-06 15:40:29,230 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:29,411 log Not Found: /
+WARNING 2025-05-06 15:40:29,412 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:29,581 log Not Found: /
+WARNING 2025-05-06 15:40:29,581 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:29,779 log Not Found: /
+WARNING 2025-05-06 15:40:29,780 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:40:29,944 log Not Found: /
+WARNING 2025-05-06 15:40:29,944 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-06 15:40:48,268 basehttp "OPTIONS /api/accounts/request-password-reset/ HTTP/1.1" 200 0
+INFO 2025-05-06 15:40:48,276 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+WARNING 2025-05-06 15:42:08,504 log Not Found: /
+WARNING 2025-05-06 15:42:08,505 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:42:09,505 log Not Found: /
+WARNING 2025-05-06 15:42:09,505 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:42:10,247 log Not Found: /
+WARNING 2025-05-06 15:42:10,248 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:42:10,688 log Not Found: /
+WARNING 2025-05-06 15:42:10,688 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:43:32,639 log Not Found: /
+WARNING 2025-05-06 15:43:32,640 basehttp "GET / HTTP/1.1" 404 4139
+WARNING 2025-05-06 15:43:33,389 log Not Found: /
+WARNING 2025-05-06 15:43:33,390 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-06 15:43:37,848 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+WARNING 2025-05-06 15:43:37,985 log Unauthorized: /api/token/
+WARNING 2025-05-06 15:43:37,985 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-06 15:43:40,283 log Unauthorized: /api/token/
+WARNING 2025-05-06 15:43:40,283 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-06 15:43:43,184 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+WARNING 2025-05-06 15:43:49,249 log Not Found: /
+WARNING 2025-05-06 15:43:49,249 basehttp "GET / HTTP/1.1" 404 4139
+INFO 2025-05-06 15:44:22,097 basehttp "GET /admin/ HTTP/1.1" 200 27379
+INFO 2025-05-06 15:44:22,148 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-06 15:44:22,148 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:44:22,149 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-06 15:44:22,149 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-06 15:44:22,150 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-06 15:44:22,418 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:44:22,420 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,626 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34286
+INFO 2025-05-06 15:45:00,640 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,641 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,643 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,644 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,648 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,651 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,656 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,656 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,657 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,658 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,658 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,661 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:45:00,754 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,754 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,767 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,768 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:00,768 basehttp "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+INFO 2025-05-06 15:45:27,425 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 21507
+ERROR 2025-05-06 15:45:29,327 log Internal Server Error: /admin/accounts/user/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 303, in _commit
+    return self.connection.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: FOREIGN KEY constraint failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 2081, in changelist_view
+    response = self.response_action(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1686, in response_action
+    response = func(self, request, queryset)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/actions.py", line 49, in delete_selected
+    modeladmin.delete_queryset(request, queryset)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1324, in delete_queryset
+    queryset.delete()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 1197, in delete
+    num_deleted, num_deleted_per_model = collector.delete()
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/deletion.py", line 454, in delete
+    with transaction.atomic(using=self.using, savepoint=False):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/transaction.py", line 263, in __exit__
+    connection.commit()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 327, in commit
+    self._commit()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 302, in _commit
+    with debug_transaction(self, "COMMIT"), self.wrap_database_errors:
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 303, in _commit
+    return self.connection.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: FOREIGN KEY constraint failed
+ERROR 2025-05-06 15:45:29,330 basehttp "POST /admin/accounts/user/ HTTP/1.1" 500 166927
+INFO 2025-05-06 15:45:33,582 basehttp "GET /admin/ HTTP/1.1" 200 27449
+INFO 2025-05-06 15:45:42,546 basehttp "GET /admin/accounts/weeklyschedule/ HTTP/1.1" 200 22036
+INFO 2025-05-06 15:45:42,572 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:45:44,181 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34286
+INFO 2025-05-06 15:45:44,196 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:45:44,803 basehttp "GET /admin/accounts/student/ HTTP/1.1" 200 21870
+INFO 2025-05-06 15:45:44,823 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:45:45,407 basehttp "GET /admin/accounts/section/ HTTP/1.1" 200 25181
+INFO 2025-05-06 15:45:45,425 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:45:50,393 basehttp "POST /admin/accounts/section/ HTTP/1.1" 200 21143
+ERROR 2025-05-06 15:45:51,340 log Internal Server Error: /admin/accounts/section/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 303, in _commit
+    return self.connection.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: FOREIGN KEY constraint failed
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 2081, in changelist_view
+    response = self.response_action(
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1686, in response_action
+    response = func(self, request, queryset)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/actions.py", line 49, in delete_selected
+    modeladmin.delete_queryset(request, queryset)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/contrib/admin/options.py", line 1324, in delete_queryset
+    queryset.delete()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 1197, in delete
+    num_deleted, num_deleted_per_model = collector.delete()
+                                         ^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/deletion.py", line 454, in delete
+    with transaction.atomic(using=self.using, savepoint=False):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/transaction.py", line 263, in __exit__
+    connection.commit()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/utils/asyncio.py", line 26, in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 327, in commit
+    self._commit()
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 302, in _commit
+    with debug_transaction(self, "COMMIT"), self.wrap_database_errors:
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/base/base.py", line 303, in _commit
+    return self.connection.commit()
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.IntegrityError: FOREIGN KEY constraint failed
+ERROR 2025-05-06 15:45:51,342 basehttp "POST /admin/accounts/section/ HTTP/1.1" 500 163877
+INFO 2025-05-06 15:45:53,399 basehttp "GET /admin/accounts/section/ HTTP/1.1" 200 25181
+INFO 2025-05-06 15:45:53,577 basehttp "GET /admin/accounts/student/ HTTP/1.1" 200 21870
+INFO 2025-05-06 15:45:54,801 basehttp "GET /admin/accounts/auditlog/ HTTP/1.1" 200 58045
+INFO 2025-05-06 15:45:54,823 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:45:56,837 basehttp "GET /admin/accounts/classroom/ HTTP/1.1" 200 23652
+INFO 2025-05-06 15:45:56,858 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:45:57,685 basehttp "GET /admin/accounts/course/ HTTP/1.1" 200 24518
+INFO 2025-05-06 15:45:57,702 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:46:03,504 basehttp "GET /admin/workload/taworkload/ HTTP/1.1" 200 22273
+INFO 2025-05-06 15:46:03,524 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:46:12,589 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 15:47:14,872 autoreload /Users/erdemugurlu/CS319-Project/backend/ta_management_system/urls.py changed, reloading.
+INFO 2025-05-06 15:47:15,195 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:47:59,617 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 15:47:59,841 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:48:13,793 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 15:48:20,386 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 15:48:41,630 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 15:49:03,868 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34286
+INFO 2025-05-06 15:49:03,888 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:49:14,961 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34286
+INFO 2025-05-06 15:49:14,982 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:50:48,188 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 15:50:48,472 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:51:14,380 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 15:51:14,600 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:51:37,416 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 15:51:37,618 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:51:55,302 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 15:51:55,523 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:52:00,267 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 15:52:19,441 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-06 15:52:19,711 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:52:32,234 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-06 15:52:52,072 log Unauthorized: /api/accounts/fix-all-users/
+WARNING 2025-05-06 15:52:52,072 basehttp "POST /api/accounts/fix-all-users/ HTTP/1.1" 401 172
+INFO 2025-05-06 15:53:04,485 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+WARNING 2025-05-06 15:53:15,469 log Unauthorized: /api/token/
+WARNING 2025-05-06 15:53:15,469 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-06 15:53:27,068 log Unauthorized: /api/token/
+WARNING 2025-05-06 15:53:27,068 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-06 15:55:32,860 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 15:56:22,835 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34286
+INFO 2025-05-06 15:56:22,861 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 15:56:27,121 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 15:57:10,657 autoreload /Users/erdemugurlu/CS319-Project/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-06 15:57:10,885 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:57:38,908 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 15:57:39,147 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:57:47,116 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 15:57:53,553 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+WARNING 2025-05-06 15:58:01,995 log Unauthorized: /api/accounts/send-password-emails/
+WARNING 2025-05-06 15:58:01,995 basehttp "POST /api/accounts/send-password-emails/ HTTP/1.1" 401 172
+WARNING 2025-05-06 15:58:09,011 log Unauthorized: /api/token/
+WARNING 2025-05-06 15:58:09,011 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-06 15:58:22,041 log Unauthorized: /api/token/
+WARNING 2025-05-06 15:58:22,041 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-06 15:58:56,315 basehttp "POST /api/token/ HTTP/1.1" 200 918
+INFO 2025-05-06 15:59:13,304 basehttp "POST /api/accounts/send-password-emails/ HTTP/1.1" 200 385
+INFO 2025-05-06 15:59:55,432 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 258
+INFO 2025-05-06 16:01:00,364 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 258
+INFO 2025-05-06 16:01:02,015 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 258
+INFO 2025-05-06 16:01:08,188 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 258
+INFO 2025-05-06 16:01:08,994 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 258
+INFO 2025-05-06 16:10:34,250 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 16:10:34,640 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:10:53,504 autoreload /Users/erdemugurlu/CS319-Project/backend/ta_management_system/urls.py changed, reloading.
+INFO 2025-05-06 16:10:54,678 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:12:57,669 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-06 16:12:58,087 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:13:51,847 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 16:13:52,271 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:15:17,779 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:15:52,193 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 258
+INFO 2025-05-06 16:15:52,198 basehttp "OPTIONS /api/accounts/check-email-exists/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:15:52,205 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 58
+INFO 2025-05-06 16:15:58,488 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34300
+INFO 2025-05-06 16:15:58,516 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 16:16:30,379 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34300
+INFO 2025-05-06 16:16:30,405 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 16:16:38,514 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 20838
+INFO 2025-05-06 16:16:39,846 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-06 16:16:39,866 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 33495
+INFO 2025-05-06 16:16:39,885 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 16:16:48,168 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 16:16:48,185 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 59
+INFO 2025-05-06 16:16:48,196 basehttp "OPTIONS /api/accounts/create-ta-from-email/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:16:48,405 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 201 204
+INFO 2025-05-06 16:16:56,290 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34315
+INFO 2025-05-06 16:16:56,310 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 16:22:19,216 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 20837
+INFO 2025-05-06 16:22:20,509 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-06 16:22:20,526 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 33495
+INFO 2025-05-06 16:22:20,551 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 16:22:23,585 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 16:22:23,592 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 59
+INFO 2025-05-06 16:22:23,816 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 201 203
+INFO 2025-05-06 16:23:37,404 autoreload /Users/erdemugurlu/CS319-Project/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-06 16:23:37,836 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:23:40,257 autoreload /Users/erdemugurlu/CS319-Project/backend/ta_management_system/settings.py changed, reloading.
+INFO 2025-05-06 16:23:40,576 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:24:12,883 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:24:26,805 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34315
+INFO 2025-05-06 16:24:26,829 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 16:24:31,856 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 20837
+INFO 2025-05-06 16:24:32,970 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-06 16:24:32,987 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 33495
+INFO 2025-05-06 16:24:33,003 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 16:24:35,163 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 16:24:35,169 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 59
+INFO 2025-05-06 16:24:44,761 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 201 203
+INFO 2025-05-06 16:24:58,347 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-06 16:24:59,534 basehttp "OPTIONS /api/leaves/types/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:24:59,539 basehttp "OPTIONS /api/leaves/my-requests/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:24:59,541 basehttp "OPTIONS /api/leaves/types/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:24:59,543 basehttp "OPTIONS /api/leaves/my-requests/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:24:59,548 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:24:59,553 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:24:59,556 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:24:59,559 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:25:29,719 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 201 100
+INFO 2025-05-06 16:25:29,726 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 302
+WARNING 2025-05-06 16:25:39,839 log Not Found: /api/logout/
+WARNING 2025-05-06 16:25:39,840 basehttp "POST /api/logout/ HTTP/1.1" 404 4347
+INFO 2025-05-06 16:25:44,916 basehttp "POST /api/token/ HTTP/1.1" 200 902
+INFO 2025-05-06 16:25:44,986 basehttp "OPTIONS /api/leaves/instructor/requests/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:25:44,987 basehttp "OPTIONS /api/leaves/instructor/requests/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:25:44,990 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:25:44,996 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:25:44,999 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:25:45,002 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:25:49,845 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:25:49,846 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:25:49,846 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:25:49,846 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:25:49,862 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:25:49,894 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 403
+INFO 2025-05-06 16:25:49,896 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:25:49,903 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 403
+INFO 2025-05-06 16:25:52,324 basehttp "OPTIONS /api/accounts/instructor/assign-ta/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:25:52,334 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 300
+INFO 2025-05-06 16:25:52,357 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 352
+INFO 2025-05-06 16:25:52,360 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 301
+INFO 2025-05-06 16:34:16,115 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34316
+INFO 2025-05-06 16:34:16,144 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-06 16:34:21,940 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 21199
+INFO 2025-05-06 16:34:22,956 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-06 16:34:22,972 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 33495
+INFO 2025-05-06 16:34:22,990 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-06 16:34:26,525 log Not Found: /api/logout/
+WARNING 2025-05-06 16:34:26,525 basehttp "POST /api/logout/ HTTP/1.1" 404 4347
+INFO 2025-05-06 16:34:29,740 basehttp "POST /api/accounts/request-password-reset/ HTTP/1.1" 200 89
+INFO 2025-05-06 16:34:29,747 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 59
+INFO 2025-05-06 16:34:32,093 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 201 203
+INFO 2025-05-06 16:34:48,576 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-06 16:41:04,771 autoreload /Users/erdemugurlu/CS319-Project/backend/proctoring/views.py changed, reloading.
+INFO 2025-05-06 16:41:05,242 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:41:48,853 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 16:41:49,246 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 16:42:17,157 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:42:17,160 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:42:17,164 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:42:17,166 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:42:29,826 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 201 103
+INFO 2025-05-06 16:42:29,848 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 305
+WARNING 2025-05-06 16:42:32,025 log Not Found: /api/logout/
+WARNING 2025-05-06 16:42:32,026 basehttp "POST /api/logout/ HTTP/1.1" 404 4347
+INFO 2025-05-06 16:42:34,167 basehttp "POST /api/token/ HTTP/1.1" 200 902
+INFO 2025-05-06 16:42:34,250 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:42:34,253 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:42:34,266 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:42:34,268 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:42:40,301 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:42:40,304 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:42:40,313 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:42:40,316 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:42:45,704 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:42:45,709 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 403
+INFO 2025-05-06 16:42:45,712 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-06 16:42:45,718 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 403
+INFO 2025-05-06 16:42:48,130 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 300
+INFO 2025-05-06 16:42:48,147 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 352
+INFO 2025-05-06 16:42:48,151 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 301
+INFO 2025-05-06 16:42:50,837 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:42:50,844 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 305
+INFO 2025-05-06 16:42:50,848 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:42:50,853 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 305
+INFO 2025-05-06 16:42:55,357 basehttp "OPTIONS /api/leaves/requests/4/ HTTP/1.1" 200 0
+INFO 2025-05-06 16:42:55,367 basehttp "GET /api/leaves/requests/4/ HTTP/1.1" 200 398
+INFO 2025-05-06 16:42:57,617 basehttp "OPTIONS /api/leaves/requests/4/review/ HTTP/1.1" 200 0
+WARNING 2025-05-06 16:43:06,855 log Bad Request: /api/leaves/requests/4/review/
+WARNING 2025-05-06 16:43:06,856 basehttp "POST /api/leaves/requests/4/review/ HTTP/1.1" 400 56
+WARNING 2025-05-06 16:43:09,169 log Bad Request: /api/leaves/requests/4/review/
+WARNING 2025-05-06 16:43:09,169 basehttp "POST /api/leaves/requests/4/review/ HTTP/1.1" 400 56
+INFO 2025-05-06 16:43:12,483 basehttp "GET /api/leaves/requests/4/ HTTP/1.1" 200 463
+WARNING 2025-05-06 16:43:16,604 log Not Found: /api/logout/
+WARNING 2025-05-06 16:43:16,604 basehttp "POST /api/logout/ HTTP/1.1" 404 4347
+WARNING 2025-05-06 16:43:19,665 log Unauthorized: /api/token/
+WARNING 2025-05-06 16:43:19,666 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-06 16:43:51,779 log Unauthorized: /api/token/
+WARNING 2025-05-06 16:43:51,779 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-06 16:44:05,824 basehttp "POST /api/token/ HTTP/1.1" 200 897
+ERROR 2025-05-06 16:44:06,091 log Internal Server Error: /api/leaves/requests/4/review/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 946, in get_or_create
+    return self.get(**kwargs), False
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 633, in get
+    raise self.model.DoesNotExist(
+leaves.models.DateUnavailability.DoesNotExist: DateUnavailability matching query does not exist.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: database is locked
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/CS319-Project/backend/leaves/views.py", line 226, in post
+    self.create_date_unavailability_records(leave_request)
+  File "/Users/erdemugurlu/CS319-Project/backend/leaves/views.py", line 248, in create_date_unavailability_records
+    DateUnavailability.objects.update_or_create(
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 988, in update_or_create
+    obj, created = self.select_for_update().get_or_create(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 953, in get_or_create
+    return self.create(**params), True
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 663, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 902, in save
+    self.save_base(
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 1008, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 1169, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 1210, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 1854, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1881, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 360, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: database is locked
+ERROR 2025-05-06 16:44:06,096 basehttp "POST /api/leaves/requests/4/review/ HTTP/1.1" 500 215554
+INFO 2025-05-06 16:44:06,097 basehttp - Broken pipe from ('127.0.0.1', 57177)
+INFO 2025-05-06 16:44:08,100 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:44:08,105 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 307
+INFO 2025-05-06 16:44:08,108 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 625
+INFO 2025-05-06 16:44:08,115 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 307
+INFO 2025-05-06 17:06:23,143 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34316
+INFO 2025-05-06 17:06:23,172 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-06 17:06:38,680 log Not Found: /api/logout/
+WARNING 2025-05-06 17:06:38,681 basehttp "POST /api/logout/ HTTP/1.1" 404 4347
+WARNING 2025-05-06 17:06:42,007 log Unauthorized: /api/token/
+WARNING 2025-05-06 17:06:42,007 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-06 17:06:45,768 basehttp "POST /api/token/ HTTP/1.1" 200 902
+WARNING 2025-05-06 17:06:49,642 log Not Found: /api/logout/
+WARNING 2025-05-06 17:06:49,642 basehttp "POST /api/logout/ HTTP/1.1" 404 4347
+WARNING 2025-05-06 17:06:52,531 log Unauthorized: /api/token/
+WARNING 2025-05-06 17:06:52,531 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-06 17:07:09,231 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-06 17:09:36,945 basehttp "OPTIONS /api/accounts/profile/ HTTP/1.1" 200 0
+INFO 2025-05-06 17:09:36,945 basehttp "OPTIONS /api/accounts/profile/ HTTP/1.1" 200 0
+INFO 2025-05-06 17:09:36,955 basehttp "GET /api/accounts/profile/ HTTP/1.1" 200 458
+INFO 2025-05-06 17:09:36,960 basehttp "GET /api/accounts/profile/ HTTP/1.1" 200 458
+INFO 2025-05-06 17:11:12,084 basehttp "GET /api/accounts/profile/ HTTP/1.1" 200 458
+INFO 2025-05-06 17:11:12,089 basehttp "GET /api/accounts/profile/ HTTP/1.1" 200 458
+WARNING 2025-05-06 17:11:22,686 log Unauthorized: /api/accounts/fix-all-users/
+WARNING 2025-05-06 17:11:22,686 basehttp "POST /api/accounts/fix-all-users/ HTTP/1.1" 401 58
+WARNING 2025-05-06 17:11:35,364 log Not Found: /api/logout/
+WARNING 2025-05-06 17:11:35,365 basehttp "POST /api/logout/ HTTP/1.1" 404 4347
+WARNING 2025-05-06 17:11:42,086 log Unauthorized: /api/token/
+WARNING 2025-05-06 17:11:42,087 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-06 17:11:44,582 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/views.py changed, reloading.
+INFO 2025-05-06 17:11:45,082 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 17:11:49,258 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-06 17:11:49,322 basehttp "GET /api/accounts/profile/ HTTP/1.1" 200 458
+INFO 2025-05-06 17:11:49,330 basehttp "GET /api/accounts/profile/ HTTP/1.1" 200 458
+INFO 2025-05-06 17:12:02,749 autoreload Watching for file changes with StatReloader
+INFO 2025-05-06 17:13:17,254 basehttp "OPTIONS /api/accounts/change-password/ HTTP/1.1" 200 0
+INFO 2025-05-06 17:13:19,758 basehttp "POST /api/accounts/change-password/ HTTP/1.1" 200 75
+INFO 2025-05-06 17:13:21,819 basehttp "GET /api/accounts/profile/ HTTP/1.1" 200 458
+INFO 2025-05-06 17:13:21,825 basehttp "GET /api/accounts/profile/ HTTP/1.1" 200 458
+WARNING 2025-05-06 17:13:25,639 log Not Found: /api/logout/
+WARNING 2025-05-06 17:13:25,640 basehttp "POST /api/logout/ HTTP/1.1" 404 4347
+WARNING 2025-05-06 17:13:30,208 log Unauthorized: /api/token/
+WARNING 2025-05-06 17:13:30,208 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-06 17:13:35,591 log Unauthorized: /api/token/
+WARNING 2025-05-06 17:13:35,592 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-06 17:13:45,608 basehttp "POST /api/token/ HTTP/1.1" 200 897
+WARNING 2025-05-06 17:13:50,302 log Not Found: /api/logout/
+WARNING 2025-05-06 17:13:50,302 basehttp "POST /api/logout/ HTTP/1.1" 404 4347

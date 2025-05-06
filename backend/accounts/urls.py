@@ -12,6 +12,17 @@ urlpatterns = [
     path('change-password/', views.ChangePasswordView.as_view(), name='change_password'),
     path('set-password-after-approval/', views.SetPasswordAfterApprovalView.as_view(), name='set_password_after_approval'),
     
+    # New endpoints for TA bulk registration from Excel
+    path('register-tas-from-excel/', views.RegisterTAsFromExcelView.as_view(), name='register_tas_from_excel'),
+    path('send-password-emails/', views.SendPasswordEmailsView.as_view(), name='send_password_emails'),
+    
+    # First-time login endpoints
+    path('check-email-exists/', views.CheckEmailExistsView.as_view(), name='check_email_exists'),
+    path('create-ta-from-email/', views.CreateTAFromEmailView.as_view(), name='create_ta_from_email'),
+    
+    # Utility endpoint to fix user approval status
+    path('fix-all-users/', views.FixAllUsersView.as_view(), name='fix_all_users'),
+    
     # User profile endpoints
     path('profile/', views.UserProfileView.as_view(), name='user_profile'),
     path('profile/update/', views.UpdateUserProfileView.as_view(), name='update_profile'),
