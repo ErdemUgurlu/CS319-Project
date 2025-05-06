@@ -172,6 +172,39 @@ class WeeklyScheduleSerializer(serializers.ModelSerializer):
         if attrs.get('start_time') and attrs.get('end_time') and attrs['start_time'] >= attrs['end_time']:
             raise serializers.ValidationError({"end_time": "End time must be after start time."})
         
+        # Check for overlapping schedules on the same day
+        request = self.context.get('request')
+        if request and hasattr(request, 'user') and request.user.is_authenticated:
+            day = attrs.get('day')
+            start_time = attrs.get('start_time')
+            end_time = attrs.get('end_time')
+            
+            # Get existing schedules for this TA on the same day
+            from .models import WeeklySchedule
+            existing_schedules = WeeklySchedule.objects.filter(
+                ta=request.user,
+                day=day
+            )
+            
+            # If updating, exclude the current instance
+            instance = getattr(self, 'instance', None)
+            if instance:
+                existing_schedules = existing_schedules.exclude(pk=instance.pk)
+            
+            # Check for any overlapping time slots
+            for schedule in existing_schedules:
+                # Check if the new time slot overlaps with any existing slot
+                if (
+                    (start_time <= schedule.start_time and end_time > schedule.start_time) or  # New slot starts before and ends during/after existing slot
+                    (start_time >= schedule.start_time and start_time < schedule.end_time) or  # New slot starts during existing slot
+                    (start_time <= schedule.start_time and end_time >= schedule.end_time)  # New slot completely covers existing slot
+                ):
+                    raise serializers.ValidationError({
+                        "non_field_errors": [
+                            f"This time slot overlaps with an existing schedule on {schedule.get_day_display()} from {schedule.start_time} to {schedule.end_time}."
+                        ]
+                    })
+        
         return attrs
 
 
@@ -363,11 +396,15 @@ class InstructorTAAssignmentSerializer(serializers.ModelSerializer):
     instructor_name = serializers.SerializerMethodField()
     ta_name = serializers.SerializerMethodField()
     department_name = serializers.SerializerMethodField()
+    ta_email = serializers.SerializerMethodField()
+    ta_academic_level = serializers.SerializerMethodField()
+    ta_employment_type = serializers.SerializerMethodField()
     
     class Meta:
         model = InstructorTAAssignment
         fields = ('id', 'instructor', 'ta', 'assigned_at', 'department',
-                  'instructor_name', 'ta_name', 'department_name')
+                  'instructor_name', 'ta_name', 'department_name',
+                  'ta_email', 'ta_academic_level', 'ta_employment_type')
         read_only_fields = ('assigned_at',)
     
     def get_instructor_name(self, obj):
@@ -378,6 +415,15 @@ class InstructorTAAssignmentSerializer(serializers.ModelSerializer):
     
     def get_department_name(self, obj):
         return obj.department.name if obj.department else None
+        
+    def get_ta_email(self, obj):
+        return obj.ta.email if obj.ta else None
+        
+    def get_ta_academic_level(self, obj):
+        return obj.ta.academic_level if obj.ta else None
+        
+    def get_ta_employment_type(self, obj):
+        return obj.ta.employment_type if obj.ta else None
     
     def validate(self, data):
         # Ensure the instructor is actually an instructor
@@ -387,6 +433,23 @@ class InstructorTAAssignmentSerializer(serializers.ModelSerializer):
         # Ensure the TA is actually a TA
         if data.get('ta') and data['ta'].role != 'TA':
             raise serializers.ValidationError({"ta": "Selected user is not a TA"})
+        
+        # Check that the TA and instructor are from the same department
+        instructor = data.get('instructor')
+        ta = data.get('ta')
+        
+        if instructor and ta and instructor.department != ta.department:
+            raise serializers.ValidationError({
+                "non_field_errors": "Instructor and TA must be from the same department"
+            })
+
+        # Check if the TA is already assigned to another instructor
+        if ta:
+            existing_assignments = InstructorTAAssignment.objects.filter(ta=ta)
+            if existing_assignments.exists() and not existing_assignments.filter(instructor=instructor).exists():
+                raise serializers.ValidationError({
+                    "non_field_errors": "This TA is already assigned to another instructor"
+                })
         
         # Check for existing assignment to prevent duplicates
         if InstructorTAAssignment.objects.filter(

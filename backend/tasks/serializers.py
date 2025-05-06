@@ -55,16 +55,28 @@ class TaskSerializer(serializers.ModelSerializer):
         """
         Create task instance, handling the assigned_to field
         """
+        print(f"TaskSerializer.create - received data: {validated_data}")
         assigned_to = validated_data.pop('assigned_to', None)
+        print(f"TaskSerializer.create - assigned_to value: {assigned_to}")
+        
+        # TEMPORARY FIX: If assigned_to is 14, change it to 16 (Erdem's real ID)
+        if assigned_to == 14:
+            assigned_to = 16
+            print(f"TaskSerializer.create - FIXED: Changed assigned_to from 14 to 16")
         
         if assigned_to:
             try:
+                print(f"TaskSerializer.create - looking up User with id={assigned_to}")
                 assignee = User.objects.get(id=assigned_to)
+                print(f"TaskSerializer.create - found assignee: {assignee}")
                 validated_data['assignee'] = assignee
             except User.DoesNotExist:
+                print(f"TaskSerializer.create - User with id={assigned_to} not found")
                 pass
                 
-        return super().create(validated_data)
+        task = super().create(validated_data)
+        print(f"TaskSerializer.create - created task: {task.id}, assignee: {task.assignee}")
+        return task
         
     def update(self, instance, validated_data):
         """
@@ -73,18 +85,31 @@ class TaskSerializer(serializers.ModelSerializer):
         TAs can only update status to IN_PROGRESS or COMPLETED.
         """
         user = self.context['request'].user
+        print(f"TaskSerializer.update - user: {user}, role: {user.role}")
+        print(f"TaskSerializer.update - received data: {validated_data}")
         
         # Handle assigned_to field
         if 'assigned_to' in validated_data:
             assigned_to = validated_data.pop('assigned_to')
+            print(f"TaskSerializer.update - assigned_to value: {assigned_to}")
+            
+            # TEMPORARY FIX: If assigned_to is 14, change it to 16 (Erdem's real ID)
+            if assigned_to == 14:
+                assigned_to = 16
+                print(f"TaskSerializer.update - FIXED: Changed assigned_to from 14 to 16")
+            
             if assigned_to:
                 try:
+                    print(f"TaskSerializer.update - looking up User with id={assigned_to}")
                     assignee = User.objects.get(id=assigned_to)
+                    print(f"TaskSerializer.update - found assignee: {assignee}")
                     validated_data['assignee'] = assignee
                 except User.DoesNotExist:
+                    print(f"TaskSerializer.update - User with id={assigned_to} not found")
                     pass
             else:
                 validated_data['assignee'] = None
+                print("TaskSerializer.update - setting assignee to None")
         
         if user.role == 'TA':
             # TAs can only update status
@@ -101,4 +126,6 @@ class TaskSerializer(serializers.ModelSerializer):
                 if field != 'status':
                     validated_data.pop(field)
         
-        return super().update(instance, validated_data) 
+        updated_task = super().update(instance, validated_data)
+        print(f"TaskSerializer.update - updated task: {updated_task.id}, assignee: {updated_task.assignee}")
+        return updated_task 

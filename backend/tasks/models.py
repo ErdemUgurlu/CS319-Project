@@ -10,6 +10,7 @@ class Task(models.Model):
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
         ('IN_PROGRESS', 'In Progress'),
+        ('WAITING_FOR_APPROVAL', 'Waiting for Approval'),
         ('COMPLETED', 'Completed'),
         ('APPROVED', 'Approved'),
         ('REJECTED', 'Rejected'),
@@ -74,12 +75,6 @@ class TaskCompletion(models.Model):
     
     def __str__(self):
         return f"Completion of {self.task.title} by {self.task.assignee.full_name}"
-    
-    def save(self, *args, **kwargs):
-        # Update task status when completion is recorded
-        self.task.status = 'COMPLETED'
-        self.task.save()
-        super().save(*args, **kwargs)
 
 
 class TaskReview(models.Model):

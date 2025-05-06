@@ -61,12 +61,12 @@ class LeaveRequestCreateSerializer(serializers.ModelSerializer):
         if attrs.get('start_date') and attrs.get('end_date') and attrs['start_date'] > attrs['end_date']:
             raise serializers.ValidationError({"end_date": "End date must be after start date."})
         
-        # Check if documentation is required but not provided
-        leave_type = attrs.get('leave_type')
-        if leave_type and leave_type.requires_documentation and not attrs.get('documentation'):
-            raise serializers.ValidationError(
-                {"documentation": f"Documentation is required for {leave_type.name} leave."}
-            )
+        # Documentation is now recommended but not required
+        # leave_type = attrs.get('leave_type')
+        # if leave_type and leave_type.requires_documentation and not attrs.get('documentation'):
+        #     raise serializers.ValidationError(
+        #         {"documentation": f"Documentation is required for {leave_type.name} leave."}
+        #     )
         
         # Add more validations as needed
         return attrs
@@ -93,13 +93,13 @@ class LeaveRequestUpdateSerializer(serializers.ModelSerializer):
         if start_date > end_date:
             raise serializers.ValidationError({"end_date": "End date must be after start date."})
         
-        # Check if documentation is required but not provided
-        leave_type = attrs.get('leave_type', instance.leave_type)
-        documentation = attrs.get('documentation', instance.documentation)
-        if leave_type.requires_documentation and not documentation:
-            raise serializers.ValidationError(
-                {"documentation": f"Documentation is required for {leave_type.name} leave."}
-            )
+        # Documentation is now recommended but not required
+        # leave_type = attrs.get('leave_type', instance.leave_type)
+        # documentation = attrs.get('documentation', instance.documentation)
+        # if leave_type.requires_documentation and not documentation:
+        #     raise serializers.ValidationError(
+        #         {"documentation": f"Documentation is required for {leave_type.name} leave."}
+        #     )
         
         # Can only update if the request is in PENDING or CANCELLED status
         if instance.status not in ['PENDING', 'CANCELLED']:

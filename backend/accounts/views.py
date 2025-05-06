@@ -511,6 +511,12 @@ class WeeklyScheduleListCreateView(generics.ListCreateAPIView):
             # This ensures users with undefined roles can still access their data
             return WeeklySchedule.objects.filter(ta=self.request.user)
     
+    def list(self, request, *args, **kwargs):
+        """Override list to ensure we always return a list even when no data exists."""
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+    
     def perform_create(self, serializer):
         serializer.save(ta=self.request.user)
         
@@ -1044,11 +1050,10 @@ class AvailableTAsListView(generics.ListAPIView):
         assigned_ta_ids = InstructorTAAssignment.objects.values_list('ta_id', flat=True)
         logger.debug(f"Assigned TA IDs: {list(assigned_ta_ids)}")
         
-        # Return all available TAs regardless of department
-        # This allows instructors to see TAs from all departments
+        # Return only TAs from the same department as the instructor
         available_tas = User.objects.filter(
             role='TA',
-            # department=user.department,  # Removed department filter
+            department=user.department,  # Re-add department filter to only show TAs from same department
             is_approved=True,
             is_active=True
         ).exclude(id__in=assigned_ta_ids)
@@ -1114,12 +1119,12 @@ class AssignTAView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
         
-        # Removed department check to allow cross-department assignments
-        # if ta.department != request.user.department:
-        #    return Response(
-        #        {"error": "You can only assign TAs from your own department."},
-        #        status=status.HTTP_403_FORBIDDEN
-        #    )
+        # Re-add department check to enforce only same department assignments
+        if ta.department != request.user.department:
+            return Response(
+                {"error": "You can only assign TAs from your own department."},
+                status=status.HTTP_403_FORBIDDEN
+            )
         
         # Check if TA is already assigned to another instructor
         if InstructorTAAssignment.objects.filter(ta=ta).exists():
@@ -1207,12 +1212,22 @@ class AllTAsListView(generics.ListAPIView):
             logger.debug(f"User {user.email} does not have permission to view all TAs")
             return User.objects.none()
         
-        # Get all active and approved TAs
-        all_tas = User.objects.filter(
-            role='TA',
-            is_approved=True,
-            is_active=True
-        )
+        # Get TAs based on user role
+        if user.role == 'INSTRUCTOR':
+            # Instructors can only see TAs from their own department
+            all_tas = User.objects.filter(
+                role='TA',
+                department=user.department,
+                is_approved=True,
+                is_active=True
+            )
+        else:
+            # Admin and Staff can see all TAs
+                    all_tas = User.objects.filter(
+                        role='TA',
+                        is_approved=True,
+                        is_active=True
+                    )
         
         logger.debug(f"All TAs count: {all_tas.count()}")
         
@@ -1304,6 +1319,32 @@ class InstructorTAAssignmentView(APIView):
         # If instructor is making the request, use their ID
         if request.user.role == 'INSTRUCTOR':
             data['instructor'] = request.user.id
+            
+            # Also set the department to the instructor's department
+            data['department'] = request.user.department.id
+            
+            # Verify that the TA is from the same department as the instructor
+            ta_id = data.get('ta')
+            if ta_id:
+                try:
+                    ta = User.objects.get(id=ta_id, role='TA')
+                    if ta.department != request.user.department:
+                        return Response(
+                            {"error": "You can only assign TAs from your own department"},
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+                    
+                    # Check if the TA is already assigned to another instructor
+                    if InstructorTAAssignment.objects.filter(ta=ta).exists():
+                        return Response(
+                            {"error": "This TA is already assigned to another instructor"},
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+                except User.DoesNotExist:
+                    return Response(
+                        {"error": "TA not found"},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
         
         serializer = InstructorTAAssignmentSerializer(data=data)
         if serializer.is_valid():

@@ -22,4 +22,5 @@ urlpatterns = [
     path('instructor/ta-workloads/', views.TAWorkloadSummaryView.as_view(), name='instructor_ta_workloads'),
     path('instructor/adjust-workload/', views.ManualWorkloadAdjustmentView.as_view(), name='adjust_workload'),
     path('instructor/adjustment-history/', views.WorkloadAdjustmentHistoryView.as_view(), name='adjustment_history'),
+    path('task/update-workload/', views.TaskCompletionWorkloadUpdateView.as_view(), name='task_update_workload'),
 ] 

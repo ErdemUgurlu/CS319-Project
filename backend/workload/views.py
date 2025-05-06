@@ -16,7 +16,7 @@ from .serializers import (
     WorkloadSummarySerializer,
     WorkloadManualAdjustmentSerializer
 )
-from accounts.models import User, InstructorTAAssignment
+from accounts.models import User, InstructorTAAssignment, Department
 
 
 class IsStaffOrInstructor(permissions.BasePermission):
@@ -98,19 +98,71 @@ class TAWorkloadViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_403_FORBIDDEN
             )
         
-        # Get current term (this could be improved with a proper term management system)
-        current_term = "Spring 2025"  # Example - should come from a settings or term management
+        # Get current term dynamically based on current date
+        current_date = timezone.now().date()
+        current_month = current_date.month
+        current_year = current_date.year
         
+        # Determine academic term based on month (this is a simple approach)
+        # Jan-May: Spring, Jun-Aug: Summer, Sep-Dec: Fall
+        if 1 <= current_month <= 5:
+            term_name = "Spring"
+        elif 6 <= current_month <= 8:
+            term_name = "Summer"
+        else:
+            term_name = "Fall"
+            
+        current_term = f"{term_name} {current_year}"
+        
+        # Try to get existing workload record
         workload = TAWorkload.objects.filter(
             ta=request.user, 
             academic_term=current_term
         ).first()
         
+        # If no workload exists, create a default one
         if not workload:
-            return Response(
-                {"error": "No workload record found for current term"},
-                status=status.HTTP_404_NOT_FOUND
-            )
+            try:
+                # Get the TA's department (which is a department code string)
+                department_code = request.user.department
+                
+                # Get the Department model instance
+                try:
+                    department = Department.objects.get(code=department_code)
+                except Department.DoesNotExist:
+                    # Create a default department if not found
+                    department = Department.objects.create(
+                        name=f"{department_code} Department",
+                        code=department_code,
+                        faculty="Default Faculty"
+                    )
+                
+                # Get active policy for the department, if any
+                policy = WorkloadPolicy.objects.filter(
+                    department=department, 
+                    is_active=True
+                ).first()
+                
+                # Create new workload record
+                workload = TAWorkload.objects.create(
+                    ta=request.user,
+                    academic_term=current_term,
+                    department=department,
+                    policy=policy
+                )
+                
+                print(f"Created new workload record for TA {request.user.id} ({request.user.email}) - Term: {current_term}")
+            except Exception as e:
+                # Log error but return a user-friendly message
+                print(f"Error creating workload record: {str(e)}")
+                return Response(
+                    {
+                        "error": "No workload record found for current term",
+                        "message": "Please contact your department administrator to setup your workload.",
+                        "current_term": current_term
+                    },
+                    status=status.HTTP_404_NOT_FOUND
+                )
         
         serializer = TAWorkloadDetailSerializer(workload)
         return Response(serializer.data)
@@ -248,6 +300,21 @@ class TAWorkloadSummaryView(APIView):
                 status=status.HTTP_403_FORBIDDEN
             )
         
+        # Get current term dynamically based on current date
+        current_date = timezone.now().date()
+        current_month = current_date.month
+        current_year = current_date.year
+        
+        # Determine academic term based on month
+        if 1 <= current_month <= 5:
+            term_name = "Spring"
+        elif 6 <= current_month <= 8:
+            term_name = "Summer"
+        else:
+            term_name = "Fall"
+            
+        current_term = f"{term_name} {current_year}"
+        
         # Get all TAs assigned to this instructor
         assigned_tas = InstructorTAAssignment.objects.filter(
             instructor=request.user
@@ -263,7 +330,7 @@ class TAWorkloadSummaryView(APIView):
                 try:
                     workload = TAWorkload.objects.get(
                         ta=ta,
-                        academic_term='Spring 2024'  # Should be dynamic or from settings
+                        academic_term=current_term
                     )
                     
                     # Get the manual adjustments
@@ -276,33 +343,57 @@ class TAWorkloadSummaryView(APIView):
                         user=ta
                     ).aggregate(total=Sum('hours'))['total'] or 0
                     
+                    # Calculate total current workload
+                    current_workload = workload.current_weekly_hours + task_hours + manual_adjustments
+                    
+                    # Calculate workload percentage
+                    workload_cap = workload.max_weekly_hours
+                    workload_percentage = current_workload / workload_cap if workload_cap > 0 else 0
+                    
                     workloads.append({
                         'ta_id': ta.id,
                         'ta_name': ta.full_name,
                         'email': ta.email,
                         'employment_type': ta.employment_type,
+                        'academic_level': ta.academic_level,
+                        'current_workload': current_workload,
+                        'workload_cap': workload_cap,
+                        'workload_percentage': workload_percentage,
                         'current_weekly_hours': workload.current_weekly_hours,
                         'max_weekly_hours': workload.max_weekly_hours,
                         'is_overloaded': workload.is_overloaded,
                         'total_assigned_hours': workload.total_assigned_hours,
                         'manual_adjustments': manual_adjustments,
                         'completed_task_hours': task_hours,
-                        'academic_level': ta.academic_level
+                        'first_name': ta.first_name,
+                        'last_name': ta.last_name,
+                        'department': ta.get_department_display(),
+                        'current_term': current_term
                     })
                 except TAWorkload.DoesNotExist:
                     # No workload record exists
+                    # Set default workload cap based on employment type
+                    workload_cap = 20 if ta.employment_type == 'FULL_TIME' else 10
+                    
                     workloads.append({
                         'ta_id': ta.id,
                         'ta_name': ta.full_name,
                         'email': ta.email,
                         'employment_type': ta.employment_type,
+                        'academic_level': ta.academic_level,
+                        'current_workload': 0,
+                        'workload_cap': workload_cap,
+                        'workload_percentage': 0,
                         'current_weekly_hours': 0,
-                        'max_weekly_hours': 20,  # Default
+                        'max_weekly_hours': workload_cap,
                         'is_overloaded': False,
                         'total_assigned_hours': 0,
                         'manual_adjustments': 0,
                         'completed_task_hours': 0,
-                        'academic_level': ta.academic_level
+                        'first_name': ta.first_name,
+                        'last_name': ta.last_name,
+                        'department': ta.get_department_display(),
+                        'current_term': current_term
                     })
             except User.DoesNotExist:
                 pass
@@ -445,3 +536,139 @@ class WorkloadActivityDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = WorkloadActivity.objects.all()
     serializer_class = WorkloadActivitySerializer
     permission_classes = [IsAuthenticated]
+
+
+# Helper function to update workload when a task is approved
+def update_workload_on_task_approval(task_id, ta_id, hours, approved=True):
+    """
+    Update a TA's workload when a task is approved or rejected.
+    
+    Args:
+        task_id (int): The ID of the task being approved/rejected
+        ta_id (int): The ID of the TA who completed the task
+        hours (float): The number of hours spent on the task
+        approved (bool): Whether the task was approved (True) or rejected (False)
+    
+    Returns:
+        bool: True if the workload was updated successfully, False otherwise
+    """
+    try:
+        # Only update workload if task is approved
+        if not approved:
+            return True
+            
+        # Get the TA user
+        ta = User.objects.get(id=ta_id, role='TA')
+        
+        # Get the TA's department (which is a department code string)
+        department_code = ta.department
+        
+        # Get the Department model instance
+        try:
+            department = Department.objects.get(code=department_code)
+        except Department.DoesNotExist:
+            # Create a default department if not found
+            department = Department.objects.create(
+                name=f"{department_code} Department",
+                code=department_code,
+                faculty="Default Faculty"
+            )
+        
+        # Get current term dynamically based on current date
+        current_date = timezone.now().date()
+        current_month = current_date.month
+        current_year = current_date.year
+        
+        # Determine academic term based on month (this is a simple approach)
+        # Jan-May: Spring, Jun-Aug: Summer, Sep-Dec: Fall
+        if 1 <= current_month <= 5:
+            term_name = "Spring"
+        elif 6 <= current_month <= 8:
+            term_name = "Summer"
+        else:
+            term_name = "Fall"
+            
+        current_term = f"{term_name} {current_year}"
+        
+        print(f"Updating workload for TA {ta.full_name} for term: {current_term}")
+        
+        # Get or create a workload record for the TA
+        workload, created = TAWorkload.objects.get_or_create(
+            ta=ta,
+            academic_term=current_term,
+            defaults={
+                'department': department,
+                'max_weekly_hours': 20 if ta.employment_type == 'FULL_TIME' else 10,
+                'current_weekly_hours': 0
+            }
+        )
+        
+        # Create a workload record
+        record = WorkloadRecord.objects.create(
+            user=ta,
+            task_id=task_id,
+            hours=hours,
+            date=timezone.now().date(),
+            description=f"Task {task_id} completion approved"
+        )
+        
+        # Log the workload update process
+        print(f"Before update: TA {ta.full_name}, current_weekly_hours: {workload.current_weekly_hours}, total_assigned_hours: {workload.total_assigned_hours}, adding: {hours}")
+        
+        # Update the workload - hours count towards both weekly and total term workload
+        workload.current_weekly_hours += hours
+        workload.total_assigned_hours += hours  # This is important for term workload tracking
+        
+        # Check if TA is now overloaded
+        if workload.current_weekly_hours > workload.max_weekly_hours:
+            workload.is_overloaded = True
+            
+        workload.save()
+        
+        print(f"After update: TA {ta.full_name}, current_weekly_hours: {workload.current_weekly_hours}, total_assigned_hours: {workload.total_assigned_hours}, is_overloaded: {workload.is_overloaded}")
+        
+        return True
+    except Exception as e:
+        print(f"Error updating workload for task {task_id}, TA {ta_id}: {str(e)}")
+        return False
+        
+
+class TaskCompletionWorkloadUpdateView(APIView):
+    """
+    API endpoint for updating TA workload when a task is completed and approved.
+    This is called from the tasks app when a task is approved.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        task_id = request.data.get('task_id')
+        ta_id = request.data.get('ta_id')
+        hours = request.data.get('hours')
+        approved = request.data.get('approved', True)
+        
+        if not task_id or not ta_id or hours is None:
+            return Response(
+                {"error": "Task ID, TA ID, and hours are required."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        try:
+            hours = float(hours)
+        except ValueError:
+            return Response(
+                {"error": "Hours must be a numeric value."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+        success = update_workload_on_task_approval(task_id, ta_id, hours, approved)
+        
+        if success:
+            return Response(
+                {"message": f"Workload updated successfully for TA {ta_id}"},
+                status=status.HTTP_200_OK
+            )
+        else:
+            return Response(
+                {"error": "Failed to update workload."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

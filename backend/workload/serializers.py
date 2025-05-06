@@ -105,9 +105,53 @@ class TAWorkloadDetailSerializer(TAWorkloadSerializer):
     
     activities = WorkloadActivitySerializer(many=True, read_only=True)
     policy_details = WorkloadPolicySerializer(source='policy', read_only=True)
+    total_workload_hours = serializers.SerializerMethodField()
+    completed_task_hours = serializers.SerializerMethodField()
+    manual_adjustment_hours = serializers.SerializerMethodField()
+    total_term_workload = serializers.SerializerMethodField()
     
     class Meta(TAWorkloadSerializer.Meta):
-        fields = TAWorkloadSerializer.Meta.fields + ('activities', 'policy_details')
+        fields = TAWorkloadSerializer.Meta.fields + ('activities', 'policy_details', 'total_workload_hours', 'completed_task_hours', 'manual_adjustment_hours', 'total_term_workload')
+    
+    def get_completed_task_hours(self, obj):
+        from django.db.models import Sum
+        from .models import WorkloadRecord
+        
+        task_hours = WorkloadRecord.objects.filter(
+            user=obj.ta
+        ).aggregate(total=Sum('hours'))['total'] or 0
+        
+        return float(task_hours)
+    
+    def get_manual_adjustment_hours(self, obj):
+        from django.db.models import Sum
+        from .models import WorkloadManualAdjustment
+        
+        adjustments = WorkloadManualAdjustment.objects.filter(
+            ta=obj.ta
+        ).aggregate(total=Sum('hours'))['total'] or 0
+        
+        return float(adjustments)
+    
+    def get_total_workload_hours(self, obj):
+        # Get the task hours and manual adjustments
+        task_hours = self.get_completed_task_hours(obj)
+        adjustments = self.get_manual_adjustment_hours(obj)
+        
+        # Calculate total hours as current_weekly_hours + task_hours + adjustments
+        total_hours = obj.current_weekly_hours + task_hours + adjustments
+        
+        return float(total_hours)
+        
+    def get_total_term_workload(self, obj):
+        # Get the task hours and manual adjustments
+        task_hours = self.get_completed_task_hours(obj)
+        adjustments = self.get_manual_adjustment_hours(obj)
+        
+        # Calculate total term workload as total_assigned_hours + task_hours + adjustments
+        total_term = obj.total_assigned_hours + task_hours + adjustments
+        
+        return float(total_term)
 
 
 class WorkloadSummarySerializer(serializers.Serializer):
