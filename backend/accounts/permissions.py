@@ -17,4 +17,11 @@ class IsEmailVerifiedOrExempt(permissions.BasePermission):
             return True
             
         # Diğer kullanıcılar (TA, INSTRUCTOR) için email doğrulama gerekli
-        return user.email_verified 
+        return user.email_verified
+
+class IsStaffOrInstructor(permissions.BasePermission):
+    """
+    Custom permission to only allow staff and instructors to access a view.
+    """
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and request.user.role in ['STAFF', 'ADMIN', 'INSTRUCTOR'] 

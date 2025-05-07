@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class UserManager(BaseUserManager):
@@ -138,6 +140,13 @@ class User(AbstractUser):
     def full_name(self):
         """Return the full name of the user."""
         return f"{self.first_name} {self.last_name}"
+
+    def is_student_in_course(self, course):
+        """Check if the user is enrolled as a student in a given course."""
+        # This should be implemented according to how students are tracked in courses
+        # For now, returning False as placeholder
+        # In a real implementation, this would check a StudentEnrollment model or similar
+        return False
 
 
 class Student(models.Model):
@@ -311,29 +320,36 @@ class Exam(models.Model):
     def save(self, *args, **kwargs):
         """Override save method to ensure status transitions happen correctly."""
         
-        status_changed_by_this_method = False
-        # Update status to AWAITING_PROCTORS if a classroom is assigned, regardless of current status
-        if self.classroom:
-            # Instead of checking just WAITING_FOR_PLACES, allow any status to update when classroom is assigned
-            # if self.status == self.Status.WAITING_FOR_PLACES: 
-            old_status = self.status
-            self.status = self.Status.AWAITING_PROCTORS
-            
-            # Only mark as changed if status actually changed
-            if old_status != self.status:
-                status_changed_by_this_method = True
-            
-        if status_changed_by_this_method:
-            update_fields = kwargs.get('update_fields')
-            if update_fields is not None:
-                # Ensure 'status' is in update_fields if it was changed here
-                # and the caller specified update_fields.
-                update_fields = set(update_fields)
-                update_fields.add('status')
-                kwargs['update_fields'] = list(update_fields)
-            # If update_fields is None, super().save() will do a full save,
-            # which will include the status change.
-            
+        # Check if this is an update and if 'classroom' is one of the fields being updated.
+        # Or if it's a new instance and classroom is set.
+        is_new = self._state.adding
+        original_status = self.status
+
+        # Logic to set to AWAITING_PROCTORS when classroom is assigned.
+        # This should only happen if the classroom is being set and the exam isn't already READY.
+        if self.classroom and self.status != Exam.Status.READY:
+            # If it's a new exam with a classroom, or if the classroom field has changed for an existing exam
+            if is_new or (kwargs.get('update_fields') and 'classroom' in kwargs.get('update_fields')) or (not kwargs.get('update_fields') and self.pk and Exam.objects.get(pk=self.pk).classroom != self.classroom):
+                # Only revert to AWAITING_PROCTORS if it wasn't already AWAITING_PROCTORS or if it was something earlier
+                if self.status in [Exam.Status.WAITING_FOR_STUDENT_LIST, Exam.Status.WAITING_FOR_PLACES]:
+                    self.status = Exam.Status.AWAITING_PROCTORS
+                # If the classroom is being assigned and the status *was* AWAITING_PROCTORS, keep it there. 
+                # If the signal has set it to READY, this part won't execute due to `self.status != Exam.Status.READY`
+
+        # If the signal handler changed the status (e.g., to READY), 
+        # and no other part of this save method changed it back, then kwargs['update_fields'] from the signal will be used.
+        # If update_fields is not passed from the signal, a full save occurs.
+
+        # Special handling if the call to save() explicitly targets the status field, e.g. from the signal
+        if kwargs.get('update_fields') and 'status' in kwargs.get('update_fields') and len(kwargs.get('update_fields')) == 1:
+            # This means the save is likely coming from our signal, trying to set the status. 
+            # In this case, we trust the status value that has been set on the instance before calling save.
+            pass # The status set by the signal will be saved.
+        elif self.status == original_status and self.classroom and self.status != Exam.Status.READY: 
+             # If status wasn't changed by signal, and classroom exists, and it's not READY, ensure AWAITING_PROCTORS
+             # This handles the case where an exam is edited in admin, classroom is present, but status isn't READY.
+             self.status = Exam.Status.AWAITING_PROCTORS
+
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -342,6 +358,36 @@ class Exam(models.Model):
     @property
     def status_display(self):
         return self.get_status_display()
+
+    def update_status_based_on_proctoring(self):
+        """
+        Updates the exam's status based on the current number of assigned proctors
+        and the required proctor_count.
+        This method should be called after proctor_count changes or proctor assignments change.
+        """
+        from proctoring.models import ProctorAssignment # Local import to avoid circular dependency issues
+        
+        assigned_proctor_count = ProctorAssignment.objects.filter(
+            exam=self,
+            status=ProctorAssignment.Status.ASSIGNED
+        ).count()
+        
+        original_status = self.status
+        new_status = original_status
+
+        if self.proctor_count > 0 and assigned_proctor_count >= self.proctor_count:
+            new_status = Exam.Status.READY
+        elif self.proctor_count == 0: # If no proctors needed, it's always ready
+            new_status = Exam.Status.READY
+        else:
+            new_status = Exam.Status.AWAITING_PROCTORS
+            
+        if original_status != new_status:
+            self.status = new_status
+            self.save(update_fields=['status'])
+            print(f"[Exam.update_status_based_on_proctoring] Exam ID {self.id} status updated to: {self.status}")
+        else:
+            print(f"[Exam.update_status_based_on_proctoring] Exam ID {self.id} status ({self.status}) unchanged.")
 
 
 # TA-Instructor relation model
@@ -363,7 +409,7 @@ class InstructorTAAssignment(models.Model):
     department = models.ForeignKey(
         Department,
         on_delete=models.CASCADE,
-        related_name='instructor_ta_assignments'
+        related_name='ta_assignments'
     )
     
     class Meta:
@@ -372,4 +418,93 @@ class InstructorTAAssignment(models.Model):
         verbose_name_plural = "Instructor-TA Assignments"
     
     def __str__(self):
-        return f"{self.instructor.full_name} -> {self.ta.full_name}"
+        return f"{self.ta.full_name} assigned to {self.instructor.full_name}"
+
+
+class TAProfile(models.Model):
+    """
+    Extended profile for users with TA role.
+    Contains additional fields specific to TAs.
+    """
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='ta_profile',
+        limit_choices_to={'role': 'TA'}
+    )
+    
+    # Additional TA-specific fields
+    undergrad_university = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True,
+        help_text="University where TA completed undergraduate studies"
+    )
+    
+    supervisor = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='supervised_tas',
+        limit_choices_to={'role': 'INSTRUCTOR'},
+        help_text="Academic supervisor for this TA"
+    )
+    
+    workload_number = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="Workload category/type for the TA (e.g., 1 or 2, immutable once set)"
+    )
+    
+    workload_credits = models.PositiveIntegerField(
+        default=0,
+        help_text="Accumulated workload credits from assigned proctoring duties"
+    )
+    
+    # JSON field to store weekly schedule if not using the WeeklySchedule model
+    schedule_json = models.JSONField(
+        null=True, 
+        blank=True,
+        help_text="JSON representation of TA's weekly schedule if not using the WeeklySchedule model"
+    )
+    
+    class Meta:
+        verbose_name = "TA Profile"
+        verbose_name_plural = "TA Profiles"
+    
+    def __str__(self):
+        return f"TA Profile: {self.user.full_name}"
+    
+    def save(self, *args, **kwargs):
+        # Ensure the workload_number is immutable once set
+        if self.pk:
+            original = TAProfile.objects.get(pk=self.pk)
+            if original.workload_number is not None and self.workload_number != original.workload_number:
+                 # If trying to change an already set workload_number, prevent it or log a warning
+                 # Reverting to original value to enforce immutability
+                 self.workload_number = original.workload_number
+                 # Optionally, raise an error or log a warning here
+                 print(f"Warning: Attempted to change immutable workload_number for TAProfile {self.pk}. Reverted to {self.workload_number}.")
+            elif original.workload_number is None and self.workload_number is not None:
+                 # If setting it for the first time, allow it.
+                 pass 
+
+        super().save(*args, **kwargs)
+
+
+@receiver(post_save, sender=User)
+def create_ta_profile(sender, instance, created, **kwargs):
+    """Create a TAProfile when a User with role 'TA' is created."""
+    if created and instance.role == 'TA':
+        TAProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def update_ta_profile(sender, instance, created, **kwargs):
+    """Update TAProfile when a User's role changes to or from 'TA'."""
+    if not created:
+        # If role changed to TA, create profile if it doesn't exist
+        if instance.role == 'TA':
+            TAProfile.objects.get_or_create(user=instance)
+        # If role changed from TA, we could handle that here, but we'll leave profiles in place
+        # to preserve workload history

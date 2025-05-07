@@ -1,9 +1,11 @@
 from django.contrib import admin
-from .models import ProctorAssignment, SwapRequest, ProctorConstraint
+from .models import ProctorAssignment
 
-# Simple admin registrations for placeholder models
-# Removed redundant Exam admin registration since the canonical model is in accounts app
-# Removed ExamRoom admin registration as requested
-admin.site.register(ProctorAssignment)
-admin.site.register(SwapRequest)
-admin.site.register(ProctorConstraint)
+@admin.register(ProctorAssignment)
+class ProctorAssignmentAdmin(admin.ModelAdmin):
+    """Admin for the ProctorAssignment model."""
+    list_display = ('exam', 'ta', 'assigned_by', 'assigned_at', 'status')
+    list_filter = ('status', 'assigned_at')
+    search_fields = ('ta__email', 'ta__first_name', 'ta__last_name', 'exam__course__code')
+    date_hierarchy = 'assigned_at'
+    readonly_fields = ('assigned_at',) 

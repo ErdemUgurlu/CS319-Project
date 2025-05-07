@@ -54,9 +54,8 @@ INSTALLED_APPS = [
     'tasks',
     'duties',
     'leaves',
-    'proctoring',
     'reports',
-    'workload',
+    'proctoring.apps.ProctoringConfig',
 ]
 
 MIDDLEWARE = [

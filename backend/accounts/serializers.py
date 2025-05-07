@@ -2,10 +2,12 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, Classroom, WeeklySchedule, InstructorTAAssignment, Exam
+    Section, TAAssignment, Classroom, WeeklySchedule, InstructorTAAssignment, Exam,
+    TAProfile
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from proctoring.models import ProctorAssignment
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -346,6 +348,7 @@ class ExamSerializer(serializers.ModelSerializer):
     status_display = serializers.CharField(read_only=True, required=False, allow_null=True)
     student_list_file = serializers.FileField(required=False, allow_null=True)
     has_student_list = serializers.BooleanField(read_only=True)
+    assigned_proctor_count = serializers.SerializerMethodField()
     
     class Meta:
         model = Exam
@@ -354,7 +357,7 @@ class ExamSerializer(serializers.ModelSerializer):
             'date', 'classroom', 'classroom_id', 'proctor_count',
             'created_by', 'created_by_name', 'created_at', 'updated_at',
             'status', 'status_display', 'student_count', 'student_list_file',
-            'has_student_list'
+            'has_student_list', 'assigned_proctor_count'
         )
         read_only_fields = ('created_by', 'created_at', 'updated_at', 'has_student_list')
     
@@ -362,6 +365,10 @@ class ExamSerializer(serializers.ModelSerializer):
         if obj.created_by:
             return f"{obj.created_by.first_name} {obj.created_by.last_name}"
         return None
+    
+    def get_assigned_proctor_count(self, obj):
+        """Returns the count of currently ASSIGNED proctors for this exam."""
+        return ProctorAssignment.objects.filter(exam=obj, status=ProctorAssignment.Status.ASSIGNED).count()
     
     def create(self, validated_data):
         # Set the created_by field from the request user
@@ -529,9 +536,67 @@ class InstructorTAAssignmentSerializer(serializers.ModelSerializer):
 
 
 class TADetailSerializer(serializers.ModelSerializer):
+    """
+    Enhanced serializer for TA details including profile information.
+    """
     full_name = serializers.CharField(read_only=True)
-    department_name = serializers.CharField(source='department.name', read_only=True)
+    department_name = serializers.SerializerMethodField()
+    academic_level_display = serializers.CharField(source='get_academic_level_display', read_only=True)
+    employment_type_display = serializers.CharField(source='get_employment_type_display', read_only=True)
+    profile = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ('id', 'email', 'full_name', 'department', 'department_name', 'academic_level', 'employment_type') 
+        fields = (
+            'id', 'email', 'first_name', 'last_name', 'full_name', 
+            'department', 'department_name', 'academic_level', 'academic_level_display',
+            'employment_type', 'employment_type_display', 'profile'
+        )
+    
+    def get_department_name(self, obj):
+        if obj.department:
+            try:
+                dept = Department.objects.get(code=obj.department)
+                return dept.name
+            except Department.DoesNotExist:
+                return None
+        return None
+    
+    def get_profile(self, obj):
+        try:
+            profile = TAProfile.objects.get(user=obj)
+            return {
+                'undergrad_university': profile.undergrad_university,
+                'supervisor': profile.supervisor.id if profile.supervisor else None,
+                'supervisor_name': profile.supervisor.full_name if profile.supervisor else None,
+                'workload_number': profile.workload_number,
+                'workload_credits': profile.workload_credits
+            }
+        except TAProfile.DoesNotExist:
+            return None
+
+
+class TAProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer for TA profile data.
+    """
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    full_name = serializers.CharField(source='user.full_name', read_only=True)
+    department = serializers.CharField(source='user.department', read_only=True)
+    academic_level = serializers.CharField(source='user.academic_level', read_only=True)
+    academic_level_display = serializers.CharField(source='user.get_academic_level_display', read_only=True)
+    employment_type = serializers.CharField(source='user.employment_type', read_only=True)
+    employment_type_display = serializers.CharField(source='user.get_employment_type_display', read_only=True)
+    
+    class Meta:
+        model = TAProfile
+        fields = (
+            'id', 'user_id', 'email', 'first_name', 'last_name', 'full_name',
+            'department', 'academic_level', 'academic_level_display',
+            'employment_type', 'employment_type_display',
+            'undergrad_university', 'supervisor', 'workload_number', 'workload_credits', 'schedule_json'
+        )
+        read_only_fields = ('id', 'user_id', 'workload_number') 

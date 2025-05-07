@@ -1,41 +1,112 @@
 from django.db import models
+from django.conf import settings
+from accounts.models import Exam, TAProfile
 from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+import logging
 
-# Proctoring models removed for future reimplementation
-# This file intentionally left with minimal placeholder models
-
-class Exam(models.Model):
-    """Model for exams that need proctors."""
-    
-    title = models.CharField(max_length=200, default="Placeholder")
-    
-    def __str__(self):
-        return "Disabled - Pending Reimplementation"
-
-
-class ExamRoom(models.Model):
-    """Model for tracking which classrooms are used for an exam."""
-    
-    def __str__(self):
-        return "Disabled - Pending Reimplementation"
-
+logger = logging.getLogger(__name__)
 
 class ProctorAssignment(models.Model):
-    """Model for assigning TAs as proctors to exams."""
+    """Model for tracking TA assignments to exams as proctors."""
+    
+    class Status(models.TextChoices):
+        ASSIGNED = 'ASSIGNED', _('Assigned')
+        COMPLETED = 'COMPLETED', _('Completed')
+        CANCELED = 'CANCELED', _('Canceled')
+    
+    exam = models.ForeignKey(
+        Exam, 
+        on_delete=models.CASCADE, 
+        related_name='proctor_assignments'
+    )
+    ta = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='proctoring_assignments',
+        limit_choices_to={'role': 'TA'}
+    )
+    assigned_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='proctor_assignments_made',
+        limit_choices_to={'role__in': ['STAFF', 'ADMIN', 'INSTRUCTOR']}
+    )
+    assigned_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.ASSIGNED
+    )
+    notes = models.TextField(blank=True)
+    
+    _original_status = None 
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._original_status = self.status
+
+    def save(self, *args, **kwargs):
+        is_new = self._state.adding
+        
+        status_changed = not is_new and self.status != self._original_status
+        was_assigned = self._original_status == self.Status.ASSIGNED
+        is_assigned = self.status == self.Status.ASSIGNED
+
+        super().save(*args, **kwargs)
+
+        try:
+            profile = TAProfile.objects.get(user=self.ta)
+            changed = False
+            if is_new and is_assigned:
+                profile.workload_credits += 1
+                changed = True
+                logger.info(f"Workload credit +1 for TA {self.ta.id} (New Assignment ID: {self.id}). New total: {profile.workload_credits}")
+            elif status_changed:
+                if not was_assigned and is_assigned:
+                    profile.workload_credits += 1
+                    changed = True
+                    logger.info(f"Workload credit +1 for TA {self.ta.id} (Assignment ID: {self.id} status -> ASSIGNED). New total: {profile.workload_credits}")
+                elif was_assigned and not is_assigned:
+                    if profile.workload_credits > 0:
+                        profile.workload_credits -= 1
+                        changed = True
+                        logger.info(f"Workload credit -1 for TA {self.ta.id} (Assignment ID: {self.id} status ASSIGNED -> {self.status}). New total: {profile.workload_credits}")
+                    else:
+                         logger.warning(f"Attempted to decrement workload credit below zero for TA {self.ta.id} (Assignment ID: {self.id}).")
+            
+            if changed:
+                 profile.save(update_fields=['workload_credits'])
+        
+        except TAProfile.DoesNotExist:
+            logger.error(f"TAProfile not found for TA {self.ta.id} when updating workload credits for Assignment ID {self.id}")
+        except Exception as e:
+             logger.error(f"Error updating workload credits for TA {self.ta.id} on Assignment {self.id} save: {e}")
+
+        self._original_status = self.status
+
+    class Meta:
+        verbose_name = 'Proctor Assignment'
+        verbose_name_plural = 'Proctor Assignments'
+        unique_together = ('exam', 'ta')
     
     def __str__(self):
-        return "Disabled - Pending Reimplementation"
+        return f"{self.ta.full_name} - {self.exam.course.code} {self.exam.get_type_display()}"
 
-
-class SwapRequest(models.Model):
-    """Model for handling proctor swap requests."""
-    
-    def __str__(self):
-        return "Disabled - Pending Reimplementation"
-
-
-class ProctorConstraint(models.Model):
-    """Model for defining constraints that prevent certain TAs from being assigned to certain exams."""
-    
-    def __str__(self):
-        return "Disabled - Pending Reimplementation"
+@receiver(post_delete, sender=ProctorAssignment)
+def decrement_workload_on_delete(sender, instance, **kwargs):
+    if instance.status == ProctorAssignment.Status.ASSIGNED:
+        try:
+            profile = TAProfile.objects.get(user=instance.ta)
+            if profile.workload_credits > 0:
+                profile.workload_credits -= 1
+                profile.save(update_fields=['workload_credits'])
+                logger.info(f"Workload credit -1 for TA {instance.ta.id} (Deleted Assignment ID: {instance.id}). New total: {profile.workload_credits}")
+            else:
+                 logger.warning(f"Attempted to decrement workload credit below zero for TA {instance.ta.id} on deleting Assignment ID {instance.id}.")
+        except TAProfile.DoesNotExist:
+             logger.error(f"TAProfile not found for TA {instance.ta.id} when updating workload credits for deleted Assignment ID {instance.id}")
+        except Exception as e:
+             logger.error(f"Error updating workload credits for TA {instance.ta.id} on Assignment {instance.id} delete: {e}")

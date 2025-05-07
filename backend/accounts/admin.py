@@ -17,7 +17,8 @@ from decimal import Decimal
 from datetime import datetime
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, Classroom, WeeklySchedule, AuditLog, InstructorTAAssignment, Exam
+    Section, TAAssignment, Classroom, WeeklySchedule, AuditLog, InstructorTAAssignment, Exam,
+    TAProfile
 )
 
 
@@ -442,3 +443,26 @@ class InstructorTAAssignmentAdmin(admin.ModelAdmin):
     search_fields = ('instructor__email', 'instructor__first_name', 'instructor__last_name', 
                     'ta__email', 'ta__first_name', 'ta__last_name')
     date_hierarchy = 'assigned_at'
+
+
+@admin.register(TAProfile)
+class TAProfileAdmin(admin.ModelAdmin):
+    """Admin for the TAProfile model."""
+    
+    list_display = ('user', 'get_department', 'undergrad_university', 'supervisor', 'workload_number', 'workload_credits')
+    list_filter = ('user__department', 'user__academic_level', 'user__employment_type')
+    search_fields = ('user__email', 'user__first_name', 'user__last_name', 'undergrad_university')
+    
+    def get_department(self, obj):
+        return obj.user.department
+    get_department.short_description = 'Department'
+    get_department.admin_order_field = 'user__department'
+    
+    def get_queryset(self, request):
+        # Only show profiles for users with TA role
+        queryset = super().get_queryset(request)
+        return queryset.filter(user__role='TA')
+    
+    def has_add_permission(self, request):
+        # Profiles are created automatically, so disable manual creation
+        return False

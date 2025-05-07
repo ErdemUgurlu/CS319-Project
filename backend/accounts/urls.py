@@ -79,13 +79,14 @@ urlpatterns = [
     # User approve list - for staff to approve users from their department
     path('users/pending/', views.PendingApprovalUsersView.as_view(), name='pending_approval_users'),
     
-    # Instructor-TA management endpoints
+    # Instructor TA management
     path('instructor/tas/', views.MyTAsListView.as_view(), name='my_tas'),
     path('instructor/available-tas/', views.AvailableTAsListView.as_view(), name='available_tas'),
     path('instructor/assign-ta/', views.AssignTAView.as_view(), name='assign_ta'),
     path('instructor/remove-ta/', views.RemoveTAView.as_view(), name='remove_ta'),
     path('instructor/tas/', views.InstructorTAAssignmentView.as_view(), name='instructor-tas'),
     
-    # New endpoint for Task component to get all TAs
+    # New endpoints for Task component and TA profiles
     path('tas/', views.AllTAsListView.as_view(), name='all_tas'),
+    path('tas/<int:ta_id>/profile/', views.TAProfileView.as_view(), name='ta_profile'),
 ] 

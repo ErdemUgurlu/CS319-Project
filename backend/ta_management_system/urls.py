@@ -41,9 +41,8 @@ urlpatterns = [
     path('api/tasks/', include('tasks.urls')),
     path('api/duties/', include('duties.urls')),
     path('api/leaves/', include('leaves.urls')),
-    path('api/proctoring/', include('proctoring.urls')),
     path('api/reports/', include('reports.urls')),
-    path('api/workload/', include('workload.urls')),
+    path('api/proctoring/', include('proctoring.urls')),
 ]
 
 # Serve media files in development

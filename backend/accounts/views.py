@@ -17,7 +17,8 @@ import logging
 from . import serializers
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, WeeklySchedule, AuditLog, InstructorTAAssignment, Exam, Classroom
+    Section, TAAssignment, Classroom, WeeklySchedule, AuditLog, InstructorTAAssignment, Exam,
+    TAProfile
 )
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.password_validation import validate_password
@@ -34,12 +35,11 @@ import string
 import datetime
 from .permissions import IsEmailVerifiedOrExempt
 from .serializers import (
-    UserProfileSerializer, UserListSerializer, UserDetailSerializer,
-    ChangePasswordSerializer, UserRegistrationSerializer, UserUpdateSerializer,
-    WeeklyScheduleSerializer, StudentSerializer, DepartmentSerializer, CourseSerializer,
-    SectionSerializer, TAAssignmentSerializer, ClassroomSerializer,
-    CustomTokenObtainPairSerializer, InstructorTAAssignmentSerializer, TADetailSerializer,
-    ExamSerializer
+    UserRegistrationSerializer, ChangePasswordSerializer, UserProfileSerializer, 
+    UserUpdateSerializer, UserListSerializer, UserDetailSerializer, WeeklyScheduleSerializer,
+    DepartmentSerializer, CourseSerializer, SectionSerializer, TAAssignmentSerializer,
+    ClassroomSerializer, CustomTokenObtainPairSerializer, AdminCreateStaffSerializer,
+    InstructorTAAssignmentSerializer, TADetailSerializer, ExamSerializer, TAProfileSerializer
 )
 import random
 from datetime import timedelta
@@ -48,6 +48,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from decimal import Decimal
 import os
 from .utils import process_student_list_file
+from django.http import Http404
 
 logger = logging.getLogger(__name__)
 
@@ -1209,7 +1210,7 @@ class ReactivateUserView(APIView):
 
 class MyTAsListView(generics.ListAPIView):
     """API endpoint for instructors to view their assigned TAs."""
-    serializer_class = InstructorTAAssignmentSerializer
+    serializer_class = serializers.InstructorTAAssignmentSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
@@ -1222,7 +1223,7 @@ class MyTAsListView(generics.ListAPIView):
 
 class AvailableTAsListView(generics.ListAPIView):
     """API endpoint for instructors to view unassigned TAs in their department."""
-    serializer_class = TADetailSerializer
+    serializer_class = serializers.TADetailSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
@@ -1333,7 +1334,7 @@ class AssignTAView(APIView):
                 department=instructor_department
             )
             
-            serializer = InstructorTAAssignmentSerializer(assignment)
+            serializer = serializers.InstructorTAAssignmentSerializer(assignment)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Department.DoesNotExist:
             return Response(
@@ -1388,75 +1389,94 @@ class RemoveTAView(APIView):
 
 class AllTAsListView(generics.ListAPIView):
     """API endpoint for getting all active and approved TAs (for task assignment)."""
-    serializer_class = TADetailSerializer
+    serializer_class = serializers.TADetailSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        user = self.request.user
-        # Debug log to check user role
-        logger.debug(f"User requesting all TAs: {user.email}, role: {user.role}")
-        
-        # Check if user has permission to view TAs
-        if user.role not in ['INSTRUCTOR', 'STAFF', 'ADMIN']:
-            logger.debug(f"User {user.email} does not have permission to view all TAs")
-            return User.objects.none()
-        
-        # Get TAs based on user role
-        if user.role == 'INSTRUCTOR':
-            # Instructors can only see TAs from their own department
-            all_tas = User.objects.filter(
+        # Only return active and approved TAs with role='TA'
+        queryset = User.objects.filter(
                 role='TA',
-                department=user.department,
-                is_approved=True,
-                is_active=True
-            )
-        else:
-            # Admin and Staff can see all TAs
-                    all_tas = User.objects.filter(
-                        role='TA',
-                        is_approved=True,
-                        is_active=True
-                    )
+            is_active=True,
+            is_approved=True
+        )
         
-        logger.debug(f"All TAs count: {all_tas.count()}")
+        # Optional department filter
+        department = self.request.query_params.get('department', None)
+        if department:
+            queryset = queryset.filter(department=department)
         
-        # Add instructor's assigned TAs information
-        if user.role == 'INSTRUCTOR':
-            assigned_tas = InstructorTAAssignment.objects.filter(instructor=user).values_list('ta_id', flat=True)
-            logger.debug(f"Instructor {user.email} has {len(assigned_tas)} assigned TAs")
+        # Optional academic_level filter
+        academic_level = self.request.query_params.get('academic_level', None)
+        if academic_level:
+            queryset = queryset.filter(academic_level=academic_level)
         
-        return all_tas
+        # Optional employment_type filter
+        employment_type = self.request.query_params.get('employment_type', None)
+        if employment_type:
+            queryset = queryset.filter(employment_type=employment_type)
+        
+        return queryset
     
     def list(self, request, *args, **kwargs):
-        """Override list method to add debug info in response"""
         queryset = self.filter_queryset(self.get_queryset())
         
-        # Get debug information
-        user = request.user
-        
-        # Add debug info
-        debug_info = {
-            "request_user": user.email,
-            "request_user_role": user.role,
-            "all_tas_count": queryset.count(),
-        }
-        
-        # Add instructor specific debug info
-        if user.role == 'INSTRUCTOR':
-            instructor_tas = InstructorTAAssignment.objects.filter(instructor=user)
-            debug_info["assigned_ta_count"] = instructor_tas.count()
-            debug_info["assigned_tas"] = [{"id": ta.ta.id, "email": ta.ta.email} for ta in instructor_tas]
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         
         serializer = self.get_serializer(queryset, many=True)
-        return Response({
-            "results": serializer.data,
-            "debug_info": debug_info
-        })
+        
+        # Log the action
+        AuditLog.objects.create(
+            user=request.user,
+            action='READ',
+            object_type='TA List',
+            description=f"User viewed list of all TAs",
+            ip_address=request.META.get('REMOTE_ADDR'),
+        )
+        
+        return Response(serializer.data)
+
+
+class TAProfileView(generics.RetrieveUpdateAPIView):
+    """API endpoint for retrieving and updating TA profiles."""
+    serializer_class = serializers.TAProfileSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        ta_id = self.kwargs.get('ta_id')
+        try:
+            user = User.objects.get(id=ta_id, role='TA')
+            profile, created = TAProfile.objects.get_or_create(user=user)
+            return profile
+        except User.DoesNotExist:
+            raise Http404("TA not found")
+    
+    def perform_update(self, serializer):
+        # Only allow certain fields to be updated
+        instance = serializer.instance
+        
+        # Ensure that workload_number remains immutable once set
+        if instance.workload_number and 'workload_number' in serializer.validated_data:
+            serializer.validated_data.pop('workload_number')
+        
+        serializer.save()
+        
+        # Log the action
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='UPDATE',
+            object_type='TAProfile',
+            object_id=instance.id,
+            description=f"User updated TA profile for {instance.user.full_name}",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
 
 
 class PendingApprovalUsersView(generics.ListAPIView):
     """API endpoint for staff to view users pending approval in their department."""
-    serializer_class = UserListSerializer
+    serializer_class = serializers.UserListSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
@@ -1494,7 +1514,7 @@ class InstructorTAAssignmentView(APIView):
             # Admins can see all assignments
             assignments = InstructorTAAssignment.objects.all()
             
-        serializer = InstructorTAAssignmentSerializer(assignments, many=True)
+        serializer = serializers.InstructorTAAssignmentSerializer(assignments, many=True)
         return Response(serializer.data)
     
     def post(self, request):
@@ -1535,7 +1555,7 @@ class InstructorTAAssignmentView(APIView):
                         status=status.HTTP_404_NOT_FOUND
                     )
         
-        serializer = InstructorTAAssignmentSerializer(data=data)
+        serializer = serializers.InstructorTAAssignmentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -1651,6 +1671,11 @@ class RegisterTAsFromExcelView(APIView):
                 academic_level = ta_data.get('academic_level', 'MASTERS')
                 employment_type = ta_data.get('employment_type', 'FULL_TIME')
                 
+                # Extract TA profile specific fields
+                undergrad_university = ta_data.get('undergrad_university', '')
+                workload_number = ta_data.get('workload_number', None)
+                supervisor_email = ta_data.get('supervisor_email', None)
+                
                 # Generate a password
                 password = self.generate_password()
                 
@@ -1674,6 +1699,25 @@ class RegisterTAsFromExcelView(APIView):
                 user.temp_password = password
                 user.temp_password_expiry = timezone.now() + timedelta(days=7)  # Valid for 7 days
                 user.save()
+                
+                # Create/update TA profile with additional fields
+                profile, _ = TAProfile.objects.get_or_create(user=user)
+                profile.undergrad_university = undergrad_university
+                
+                # Set workload number if provided
+                if workload_number and not profile.workload_number:  # Only set if not already set (immutable)
+                    profile.workload_number = workload_number
+                
+                # Set supervisor if provided
+                if supervisor_email:
+                    try:
+                        supervisor = User.objects.get(email=supervisor_email, role='INSTRUCTOR')
+                        profile.supervisor = supervisor
+                    except User.DoesNotExist:
+                        # Log but don't fail if supervisor not found
+                        logger.warning(f"Supervisor with email {supervisor_email} not found for TA {email}")
+                
+                profile.save()
                 
                 # Directly send email with password rather than requiring a separate step
                 try:
@@ -2752,18 +2796,26 @@ class ExamSetProctorsView(generics.UpdateAPIView):
             
             try:
                 proctor_count = int(proctor_count)
-                if proctor_count < 1:
-                    return Response({"detail": "Proctor count must be at least 1"}, status=status.HTTP_400_BAD_REQUEST)
+                # Allow proctor count to be 0
+                if proctor_count < 0:
+                    return Response({"detail": "Proctor count cannot be negative"}, status=status.HTTP_400_BAD_REQUEST)
             except (ValueError, TypeError):
                 return Response({"detail": "Invalid proctor count"}, status=status.HTTP_400_BAD_REQUEST)
             
             # Update the proctor count
             instance.proctor_count = proctor_count
             
-            # Update the status to READY
-            instance.status = Exam.Status.READY
+            # --- REMOVED: Don't automatically set status to READY --- 
+            # instance.status = Exam.Status.READY 
             
-            instance.save()
+            # Save the updated proctor count
+            instance.save(update_fields=['proctor_count'])
+            
+            # --- ADDED: Re-evaluate status based on new proctor count --- 
+            print(f"[ExamSetProctorsView] Calling update_status_based_on_proctoring for Exam ID {instance.id} after setting proctor_count to {proctor_count}")
+            instance.update_status_based_on_proctoring()
+            # Refresh instance from db to get the potentially updated status
+            instance.refresh_from_db(fields=['status'])
             
             # Log the proctor count update
             AuditLog.objects.create(
@@ -2778,8 +2830,8 @@ class ExamSetProctorsView(generics.UpdateAPIView):
             return Response({
                 "detail": "Proctor count set successfully",
                 "proctor_count": instance.proctor_count,
-                "status": instance.status,
-                "status_display": instance.status_display
+                "status": instance.status, # Return the potentially updated status
+                "status_display": instance.get_status_display() # Use the method to get display
             }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"detail": f"Error setting proctor count: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)

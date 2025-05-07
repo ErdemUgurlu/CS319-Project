@@ -10,7 +10,7 @@ django.setup()
 
 from django.utils import timezone
 from accounts.models import User, Department, InstructorTAAssignment, Course, Section
-from proctoring.models import Exam
+# from proctoring.models import Exam  # Removed proctoring import
 
 def create_test_data():
     # Create departments if they don't exist
@@ -208,27 +208,8 @@ def create_test_instructor_and_exam():
         section.save()
     print(f"Section: {'Created' if created else 'Already exists'}")
 
-    # Create exam if needed
-    exams = Exam.objects.filter(section=section)
-    if exams.count() == 0:
-        exam = Exam.objects.create(
-            title='Midterm Exam',
-            section=section,
-            exam_type='MIDTERM',
-            date=timezone.now().date() + datetime.timedelta(days=7),
-            start_time=timezone.now().time(),
-            end_time=(timezone.now() + datetime.timedelta(hours=2)).time(),
-            duration_minutes=120,
-            student_count=50,
-            proctor_count_needed=2,
-            room_count=1,
-            status='PENDING',
-            created_by=instructor,
-            notes='This is a test exam created for demo purposes.'
-        )
-        print(f"Created exam: {exam.title} for {exam.section}")
-    else:
-        print(f"Exams already exist for section: {exams.count()} exams")
+    # Exam creation removed since proctoring module has been removed
+    print("Note: Exam creation skipped as proctoring module has been removed.")
     
     print("Test data creation complete")
 
