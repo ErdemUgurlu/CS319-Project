@@ -179,26 +179,19 @@ class Course(models.Model):
 
 
 class Section(models.Model):
-    """Section model representing a course offering for a specific semester."""
-    
-    SEMESTER_CHOICES = [
-        ('FALL', 'Fall'),
-        ('SPRING', 'Spring'),
-        ('SUMMER', 'Summer'),
-    ]
+    """Section model representing a course offering."""
     
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     section_number = models.CharField(max_length=3)
-    semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES)
-    year = models.IntegerField()
     instructor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, 
                                   limit_choices_to={'role': 'INSTRUCTOR'})
+    student_count = models.PositiveIntegerField(default=0)
     
     class Meta:
-        unique_together = ('course', 'section_number', 'semester', 'year')
+        unique_together = ('course', 'section_number')
     
     def __str__(self):
-        return f"{self.course.department.code}{self.course.code}-{self.section_number} ({self.semester} {self.year})"
+        return f"{self.course.department.code}{self.course.code}-{self.section_number}"
 
 
 class TAAssignment(models.Model):
@@ -282,7 +275,76 @@ class AuditLog(models.Model):
         return f"{self.timestamp} - {self.user} - {self.action} - {self.object_type}"
 
 
-# TA-Instructor ilişkisi için yeni model
+class Exam(models.Model):
+    """Model for course exams."""
+    
+    class ExamType(models.TextChoices):
+        MIDTERM = 'MIDTERM', _('Midterm')
+        FINAL = 'FINAL', _('Final')
+        QUIZ = 'QUIZ', _('Quiz')
+    
+    class Status(models.TextChoices):
+        WAITING_FOR_STUDENT_LIST = 'WAITING_FOR_STUDENT_LIST', _('Waiting for Student List')
+        WAITING_FOR_PLACES = 'WAITING_FOR_PLACES', _('Waiting for Places')
+        AWAITING_PROCTORS = 'AWAITING_PROCTORS', _('Awaiting Proctors')
+        READY = 'READY', _('Ready')
+    
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exams')
+    type = models.CharField(max_length=10, choices=ExamType.choices)
+    date = models.DateTimeField()
+    classroom = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True)
+    proctor_count = models.PositiveIntegerField(default=1)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_exams')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=25, choices=Status.choices, default=Status.WAITING_FOR_STUDENT_LIST)
+    student_count = models.PositiveIntegerField(default=0, help_text="Automatically calculated from the student list file if provided")
+    student_list_file = models.FileField(upload_to='exam_student_lists/', null=True, blank=True, 
+                                        help_text="Excel file containing the list of students for this exam")
+    has_student_list = models.BooleanField(default=False, help_text="Indicates if a student list has been uploaded")
+    
+    class Meta:
+        ordering = ['date']
+        verbose_name = 'Exam'
+        verbose_name_plural = 'Exams'
+    
+    def save(self, *args, **kwargs):
+        """Override save method to ensure status transitions happen correctly."""
+        
+        status_changed_by_this_method = False
+        # Update status to AWAITING_PROCTORS if a classroom is assigned, regardless of current status
+        if self.classroom:
+            # Instead of checking just WAITING_FOR_PLACES, allow any status to update when classroom is assigned
+            # if self.status == self.Status.WAITING_FOR_PLACES: 
+            old_status = self.status
+            self.status = self.Status.AWAITING_PROCTORS
+            
+            # Only mark as changed if status actually changed
+            if old_status != self.status:
+                status_changed_by_this_method = True
+            
+        if status_changed_by_this_method:
+            update_fields = kwargs.get('update_fields')
+            if update_fields is not None:
+                # Ensure 'status' is in update_fields if it was changed here
+                # and the caller specified update_fields.
+                update_fields = set(update_fields)
+                update_fields.add('status')
+                kwargs['update_fields'] = list(update_fields)
+            # If update_fields is None, super().save() will do a full save,
+            # which will include the status change.
+            
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.course} - {self.get_type_display()} on {self.date.strftime('%Y-%m-%d %H:%M')}"
+    
+    @property
+    def status_display(self):
+        return self.get_status_display()
+
+
+# TA-Instructor relation model
 class InstructorTAAssignment(models.Model):
     """Model for tracking which TAs are assigned to which instructors."""
     instructor = models.ForeignKey(

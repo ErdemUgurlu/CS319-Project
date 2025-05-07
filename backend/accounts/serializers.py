@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, Classroom, WeeklySchedule, InstructorTAAssignment
+    Section, TAAssignment, Classroom, WeeklySchedule, InstructorTAAssignment, Exam
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -275,7 +275,7 @@ class SectionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Section
-        fields = ('id', 'course', 'course_id', 'section_number', 'semester', 'year', 'instructor', 'instructor_id')
+        fields = ('id', 'course', 'course_id', 'section_number', 'instructor', 'instructor_id', 'student_count')
 
 
 class TASerializer(serializers.ModelSerializer):
@@ -320,6 +320,71 @@ class ClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
         fields = ('id', 'building', 'room_number', 'capacity')
+
+
+class ExamSerializer(serializers.ModelSerializer):
+    """
+    Serializer for exam data.
+    """
+    course = CourseSerializer(read_only=True)
+    course_id = serializers.PrimaryKeyRelatedField(
+        queryset=Course.objects.all(),
+        source='course',
+        write_only=True
+    )
+    classroom = ClassroomSerializer(read_only=True)
+    classroom_id = serializers.PrimaryKeyRelatedField(
+        queryset=Classroom.objects.all(),
+        source='classroom',
+        write_only=True,
+        required=False,
+        allow_null=True
+    )
+    created_by_name = serializers.SerializerMethodField()
+    type_display = serializers.CharField(source='get_type_display', read_only=True)
+    status = serializers.CharField(read_only=True, required=False, allow_null=True, default='WAITING_FOR_PLACES')
+    status_display = serializers.CharField(read_only=True, required=False, allow_null=True)
+    student_list_file = serializers.FileField(required=False, allow_null=True)
+    has_student_list = serializers.BooleanField(read_only=True)
+    
+    class Meta:
+        model = Exam
+        fields = (
+            'id', 'course', 'course_id', 'type', 'type_display', 
+            'date', 'classroom', 'classroom_id', 'proctor_count',
+            'created_by', 'created_by_name', 'created_at', 'updated_at',
+            'status', 'status_display', 'student_count', 'student_list_file',
+            'has_student_list'
+        )
+        read_only_fields = ('created_by', 'created_at', 'updated_at', 'has_student_list')
+    
+    def get_created_by_name(self, obj):
+        if obj.created_by:
+            return f"{obj.created_by.first_name} {obj.created_by.last_name}"
+        return None
+    
+    def create(self, validated_data):
+        # Set the created_by field from the request user
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+            
+        # Handle student list file
+        student_list_file = validated_data.get('student_list_file')
+        if student_list_file:
+            validated_data['has_student_list'] = True
+            # Student count will be calculated in a view or signal
+            
+        return super().create(validated_data)
+        
+    def update(self, instance, validated_data):
+        # Handle student list file
+        student_list_file = validated_data.get('student_list_file')
+        if student_list_file:
+            validated_data['has_student_list'] = True
+            # Student count will be calculated in a view or signal
+            
+        return super().update(instance, validated_data)
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):

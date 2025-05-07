@@ -43,10 +43,36 @@ urlpatterns = [
     # Department, Course, Section, etc.
     path('departments/', views.DepartmentListView.as_view(), name='department_list'),
     path('departments/<int:pk>/', views.DepartmentDetailView.as_view(), name='department_detail'),
+    
+    # Course endpoints
     path('courses/', views.CourseListView.as_view(), name='course_list'),
     path('courses/<int:pk>/', views.CourseDetailView.as_view(), name='course_detail'),
+    path('courses/create/', views.CourseCreateView.as_view(), name='course_create'),
+    path('courses/<int:pk>/update/', views.CourseUpdateView.as_view(), name='course_update'),
+    path('courses/<int:pk>/delete/', views.CourseDeleteView.as_view(), name='course_delete'),
+    path('courses/import-excel/', views.ImportCoursesFromExcelView.as_view(), name='import_courses_excel'),
+    
+    # Section endpoints
     path('sections/', views.SectionListView.as_view(), name='section_list'),
     path('sections/<int:pk>/', views.SectionDetailView.as_view(), name='section_detail'),
+    path('sections/create/', views.SectionCreateView.as_view(), name='section_create'),
+    path('sections/<int:pk>/update/', views.SectionUpdateView.as_view(), name='section_update'),
+    path('sections/<int:pk>/delete/', views.SectionDeleteView.as_view(), name='section_delete'),
+    
+    # Exam endpoints
+    path('exams/', views.ExamListView.as_view(), name='exam_list'),
+    path('exams/<int:pk>/', views.ExamDetailView.as_view(), name='exam_detail'),
+    path('exams/create/', views.ExamCreateView.as_view(), name='exam_create'),
+    path('exams/<int:pk>/update/', views.ExamUpdateView.as_view(), name='exam_update'),
+    path('exams/<int:pk>/delete/', views.ExamDeleteView.as_view(), name='exam_delete'),
+    path('exams/<int:pk>/assign-places/', views.ExamAssignClassroomView.as_view(), name='exam_assign_places'),
+    path('exams/<int:pk>/set-proctors/', views.ExamSetProctorsView.as_view(), name='exam_set_proctors'),
+    path('exams/<int:pk>/upload-student-list/', views.ExamStudentListUploadView.as_view(), name='exam_upload_student_list'),
+    path('exams/import-placements/', views.ExamPlacementImportView.as_view(), name='exam_import_placements'),
+    
+    # Classroom endpoints
+    path('classrooms/', views.ClassroomListView.as_view(), name='classroom_list'),
+    
     path('ta-assignments/', views.TAAssignmentListCreateView.as_view(), name='ta_assignment_list_create'),
     path('ta-assignments/<int:pk>/', views.TAAssignmentDetailView.as_view(), name='ta_assignment_detail'),
     

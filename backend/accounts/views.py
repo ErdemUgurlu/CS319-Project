@@ -17,7 +17,7 @@ import logging
 from . import serializers
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, WeeklySchedule, AuditLog, InstructorTAAssignment
+    Section, TAAssignment, WeeklySchedule, AuditLog, InstructorTAAssignment, Exam, Classroom
 )
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.password_validation import validate_password
@@ -38,11 +38,16 @@ from .serializers import (
     ChangePasswordSerializer, UserRegistrationSerializer, UserUpdateSerializer,
     WeeklyScheduleSerializer, StudentSerializer, DepartmentSerializer, CourseSerializer,
     SectionSerializer, TAAssignmentSerializer, ClassroomSerializer,
-    CustomTokenObtainPairSerializer, InstructorTAAssignmentSerializer, TADetailSerializer
+    CustomTokenObtainPairSerializer, InstructorTAAssignmentSerializer, TADetailSerializer,
+    ExamSerializer
 )
 import random
 from datetime import timedelta
 import re
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from decimal import Decimal
+import os
+from .utils import process_student_list_file
 
 logger = logging.getLogger(__name__)
 
@@ -694,6 +699,37 @@ class DepartmentListView(generics.ListAPIView):
     queryset = Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
     permission_classes = [IsAuthenticated]
+    
+    def list(self, request, *args, **kwargs):
+        """Override list method to add debugging"""
+        # Check if departments exist, if not create sample ones
+        dept_count = Department.objects.count()
+        print(f"Total department count: {dept_count}")
+        
+        # Create sample departments if none exist
+        if dept_count == 0:
+            print("No departments found. Creating sample departments...")
+            departments_to_create = [
+                {"code": "CS", "name": "Computer Science", "faculty": "Engineering"},
+                {"code": "IE", "name": "Industrial Engineering", "faculty": "Engineering"},
+                {"code": "EE", "name": "Electrical Engineering", "faculty": "Engineering"},
+                {"code": "ME", "name": "Mechanical Engineering", "faculty": "Engineering"},
+                {"code": "MATH", "name": "Mathematics", "faculty": "Science"},
+            ]
+            
+            for dept_data in departments_to_create:
+                Department.objects.create(**dept_data)
+                print(f"Created department: {dept_data['code']}")
+        
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        # Log the queryset details
+        print(f"Department queryset count after possible creation: {queryset.count()}")
+        
+        serializer = self.get_serializer(queryset, many=True)
+        
+        # Return an array directly rather than wrapping in an object
+        return Response(serializer.data)
 
 
 class DepartmentDetailView(generics.RetrieveAPIView):
@@ -715,6 +751,40 @@ class CourseListView(generics.ListAPIView):
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['department__code']
     search_fields = ['code', 'title']
+    
+    def get_queryset(self):
+        """Override get_queryset to filter by instructor_id if provided"""
+        queryset = super().get_queryset()
+        instructor_id = self.request.query_params.get('instructor_id')
+        
+        if instructor_id:
+            try:
+                # Convert to integer and filter courses where the instructor 
+                # is assigned to at least one section of the course
+                instructor_id = int(instructor_id)
+                queryset = queryset.filter(section__instructor_id=instructor_id).distinct()
+                print(f"Filtering courses for instructor_id={instructor_id}, found {queryset.count()} courses")
+            except (ValueError, TypeError):
+                print(f"Invalid instructor_id parameter: {instructor_id}")
+        
+        return queryset
+    
+    def list(self, request, *args, **kwargs):
+        """Override list method to add debugging"""
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        
+        # Log the queryset details
+        print(f"Course queryset count: {queryset.count()}")
+        
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        
+        serializer = self.get_serializer(queryset, many=True)
+        
+        # Return an array directly rather than wrapping in an object
+        return Response(serializer.data)
 
 
 class CourseDetailView(generics.RetrieveAPIView):
@@ -734,8 +804,24 @@ class SectionListView(generics.ListAPIView):
     serializer_class = serializers.SectionSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['course__department__code', 'course__code', 'semester', 'year', 'instructor']
+    filterset_fields = ['course__department__code', 'course__code', 'instructor']
     search_fields = ['course__code', 'section_number']
+    
+    def get_queryset(self):
+        """Override get_queryset to filter by instructor_id if provided"""
+        queryset = super().get_queryset()
+        instructor_id = self.request.query_params.get('instructor_id')
+        
+        if instructor_id:
+            try:
+                # Convert to integer and filter
+                instructor_id = int(instructor_id)
+                queryset = queryset.filter(instructor_id=instructor_id)
+                print(f"Filtering sections for instructor_id={instructor_id}, found {queryset.count()} sections")
+            except (ValueError, TypeError):
+                print(f"Invalid instructor_id parameter: {instructor_id}")
+        
+        return queryset
 
 
 class SectionDetailView(generics.RetrieveAPIView):
@@ -754,7 +840,7 @@ class TAAssignmentListCreateView(generics.ListCreateAPIView):
     serializer_class = serializers.TAAssignmentSerializer
     permission_classes = [IsStaffUser]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['section__course__department__code', 'section__course__code', 'section__semester', 'section__year']
+    filterset_fields = ['section__course__department__code', 'section__course__code']
     
     def get_queryset(self):
         user = self.request.user
@@ -2035,4 +2121,912 @@ class CreateTAFromEmailView(APIView):
                 'exists': False,
                 'created': False,
                 'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ImportCoursesFromExcelView(APIView):
+    """
+    View for importing courses from Excel file.
+    Staff users can upload an Excel file with course data to create or update courses and sections.
+    """
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    parser_classes = [MultiPartParser, FormParser]
+    
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        """Process course data from Excel and create courses and sections."""
+        # Check if file is provided
+        if 'file' not in request.FILES:
+            return Response(
+                {"detail": "No file provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        excel_file = request.FILES['file']
+        
+        # Validate file is Excel
+        if not excel_file.name.endswith(('.xls', '.xlsx')):
+            return Response(
+                {"detail": "File must be an Excel file (.xls or .xlsx)"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Read Excel file using pandas
+            import pandas as pd
+            df = pd.read_excel(excel_file)
+            
+            # Expected columns: Department, Course Code, Course Title, Credits, Section Count, Student Count
+            expected_columns = ['Department', 'Course Code', 'Course Title', 'Credits', 'Section Count', 'Student Count']
+            
+            # Validate all required columns exist
+            missing_columns = [col for col in expected_columns if col not in df.columns]
+            if missing_columns:
+                return Response(
+                    {"detail": f"Missing required columns: {', '.join(missing_columns)}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Process each row
+            created_courses = []
+            created_sections = []
+            errors = []
+            
+            for index, row in df.iterrows():
+                try:
+                    dept_code = row['Department']
+                    course_code = row['Course Code']
+                    course_title = row['Course Title']
+                    credits = row['Credits']
+                    section_count = int(row['Section Count'])
+                    student_count = int(row['Student Count'])
+                    
+                    # Validate numeric fields
+                    if section_count < 1:
+                        errors.append({
+                            "row": index + 2,  # +2 because Excel rows start at 1 and we have a header
+                            "error": "Section Count must be at least 1",
+                            "data": row.to_dict()
+                        })
+                        continue
+                    
+                    if student_count < 0:
+                        errors.append({
+                            "row": index + 2,
+                            "error": "Student Count cannot be negative",
+                            "data": row.to_dict()
+                        })
+                        continue
+                    
+                    # Check if the department exists, create if not
+                    try:
+                        department = Department.objects.get(code=dept_code)
+                    except Department.DoesNotExist:
+                        # Create a new department
+                        department = Department.objects.create(
+                            code=dept_code,
+                            name=f"{dept_code} Department",  # Generic name
+                            faculty="Unknown"  # Default faculty
+                        )
+                    
+                    # Create or update the course
+                    course, created = Course.objects.update_or_create(
+                        department=department,
+                        code=course_code,
+                        defaults={
+                            'title': course_title,
+                            'credit': Decimal(str(credits))
+                        }
+                    )
+                    
+                    if created:
+                        created_courses.append({
+                            "id": course.id,
+                            "code": f"{dept_code}{course_code}",
+                            "title": course_title
+                        })
+                    
+                    # Create sections for the course
+                    for i in range(1, section_count + 1):
+                        section_number = str(i)
+                        
+                        # Check if section already exists
+                        section, section_created = Section.objects.update_or_create(
+                            course=course,
+                            section_number=section_number,
+                            defaults={
+                                'student_count': student_count
+                            }
+                        )
+                        
+                        if section_created:
+                            created_sections.append({
+                                "id": section.id,
+                                "course": f"{dept_code}{course_code}",
+                                "section": section_number,
+                                "student_count": student_count
+                            })
+                    
+                except Exception as e:
+                    errors.append({
+                        "row": index + 2,
+                        "error": str(e),
+                        "data": row.to_dict() if hasattr(row, 'to_dict') else str(row)
+                    })
+            
+            # Log the import action
+            AuditLog.objects.create(
+                user=request.user,
+                action='IMPORT',
+                object_type='Course',
+                object_id=None,
+                description=f"Imported {len(created_courses)} courses and {len(created_sections)} sections from Excel",
+                ip_address=request.META.get('REMOTE_ADDR'),
+            )
+            
+            return Response({
+                "created_courses": created_courses,
+                "created_sections": created_sections,
+                "errors": errors,
+                "total_courses_created": len(created_courses),
+                "total_sections_created": len(created_sections),
+                "total_errors": len(errors)
+            }, status=status.HTTP_201_CREATED if created_courses or created_sections else status.HTTP_400_BAD_REQUEST)
+            
+        except Exception as e:
+            import traceback
+            return Response({
+                "detail": f"Error processing Excel file: {str(e)}",
+                "traceback": traceback.format_exc()
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CourseCreateView(generics.CreateAPIView):
+    """
+    API endpoint that allows staff to create courses.
+    """
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [IsStaffUser]
+    
+    def perform_create(self, serializer):
+        course = serializer.save()
+        
+        # Log the course creation
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='CREATE',
+            object_type='Course',
+            object_id=course.id,
+            description=f"Course {course.department.code}{course.code} created",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class CourseUpdateView(generics.UpdateAPIView):
+    """
+    API endpoint that allows staff to update courses.
+    """
+    queryset = Course.objects.all()
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [IsStaffUser]
+    
+    def perform_update(self, serializer):
+        course = serializer.save()
+        
+        # Log the course update
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='UPDATE',
+            object_type='Course',
+            object_id=course.id,
+            description=f"Course {course.department.code}{course.code} updated",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class SectionCreateView(generics.CreateAPIView):
+    """
+    API endpoint that allows staff to create sections.
+    """
+    serializer_class = serializers.SectionSerializer
+    permission_classes = [IsStaffUser]
+    
+    def perform_create(self, serializer):
+        section = serializer.save()
+        
+        # Log the section creation
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='CREATE',
+            object_type='Section',
+            object_id=section.id,
+            description=f"Section {section} created",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class SectionUpdateView(generics.UpdateAPIView):
+    """
+    API endpoint that allows staff to update sections.
+    """
+    queryset = Section.objects.all()
+    serializer_class = serializers.SectionSerializer
+    permission_classes = [IsStaffUser]
+    
+    def perform_update(self, serializer):
+        section = serializer.save()
+        
+        # Log the section update
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='UPDATE',
+            object_type='Section',
+            object_id=section.id,
+            description=f"Section {section} updated",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class SectionDeleteView(generics.DestroyAPIView):
+    """
+    API endpoint that allows staff to delete sections.
+    """
+    queryset = Section.objects.all()
+    permission_classes = [IsStaffUser]
+    
+    def perform_destroy(self, instance):
+        # Log the section deletion
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='DELETE',
+            object_type='Section',
+            object_id=instance.id,
+            description=f"Section {instance.course.department.code}{instance.course.code}-{instance.section_number} deleted by staff",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+        
+        instance.delete()
+        
+    def destroy(self, request, *args, **kwargs):
+        try:
+            # Check if section has TA assignments
+            instance = self.get_object()
+            assignments = TAAssignment.objects.filter(section=instance)
+            
+            if assignments.exists():
+                return Response(
+                    {"detail": f"Cannot delete section with {assignments.count()} TA assignments. Please remove the assignments first."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+                
+            self.perform_destroy(instance)
+            return Response({"detail": "Section deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error deleting section: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CourseDeleteView(generics.DestroyAPIView):
+    """
+    API endpoint that allows staff to delete courses.
+    """
+    queryset = Course.objects.all()
+    permission_classes = [IsStaffUser]
+    
+    def perform_destroy(self, instance):
+        # Log the course deletion
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='DELETE',
+            object_type='Course',
+            object_id=instance.id,
+            description=f"Course {instance.department.code}{instance.code} deleted by staff",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+        
+        instance.delete()
+        
+    def destroy(self, request, *args, **kwargs):
+        try:
+            # Check if course has sections
+            instance = self.get_object()
+            sections = Section.objects.filter(course=instance)
+            
+            if sections.exists():
+                return Response(
+                    {"detail": f"Cannot delete course with {sections.count()} sections. Please delete the sections first."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+                
+            self.perform_destroy(instance)
+            return Response({"detail": "Course deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error deleting course: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Exam Management Views
+
+class IsInstructorForCourse(permissions.BasePermission):
+    """
+    Custom permission to only allow instructors to manage exams for courses they teach.
+    Dean's Office can view all exams.
+    """
+    def has_permission(self, request, view):
+        # Staff, admin, and dean's office can do anything
+        if request.user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']:
+            return True
+        
+        # If it's an instructor, check if they're trying to access their own courses
+        if request.user.role == 'INSTRUCTOR':
+            # For list and create views, check request parameters
+            course_id = request.query_params.get('course_id') or request.data.get('course_id')
+            
+            if not course_id:
+                # If no course_id specified, only allow for staff
+                return request.user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']
+                
+            # Check if instructor teaches this course
+            return Section.objects.filter(
+                course_id=course_id,
+                instructor=request.user
+            ).exists()
+        
+        return False
+    
+    def has_object_permission(self, request, view, obj):
+        # Staff, admin, and dean's office can do anything
+        if request.user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']:
+            return True
+        
+        # If it's an instructor, check if the exam belongs to a course they teach
+        if request.user.role == 'INSTRUCTOR':
+            return Section.objects.filter(
+                course=obj.course,
+                instructor=request.user
+            ).exists()
+        
+        return False
+
+
+class ExamListView(generics.ListAPIView):
+    """
+    API endpoint that allows users to list exams.
+    Instructors can only see exams for courses they teach.
+    """
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['course', 'type', 'status']
+    search_fields = ['course__code', 'course__title']
+    
+    def get_queryset(self):
+        """Override get_queryset to filter by instructor access"""
+        user = self.request.user
+        
+        # For staff, admin, and dean's office, show all exams
+        if user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']:
+            # Allow filtering by status parameter if provided
+            status = self.request.query_params.get('status')
+            if status:
+                return Exam.objects.filter(status=status)
+            return Exam.objects.all()
+            
+        # For instructors, show only exams for courses they teach
+        if user.role == 'INSTRUCTOR':
+            # Get all courses where the user is an instructor
+            instructor_courses = Course.objects.filter(
+                section__instructor=user
+            ).distinct()
+            
+            return Exam.objects.filter(course__in=instructor_courses)
+            
+        # For other roles, return empty queryset
+        return Exam.objects.none()
+
+
+class ExamDetailView(generics.RetrieveAPIView):
+    """
+    API endpoint that allows users to view an exam.
+    Instructors can only view exams for courses they teach.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+
+
+class ExamCreateView(generics.CreateAPIView):
+    """
+    API endpoint that allows users to create exams.
+    Instructors can only create exams for courses they teach.
+    """
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    
+    def perform_create(self, serializer):
+        exam = serializer.save()
+        
+        # Process student list file if provided
+        if exam.student_list_file:
+            file_path = os.path.join(settings.MEDIA_ROOT, exam.student_list_file.name)
+            result = process_student_list_file(file_path)
+            
+            if result.get('error'):
+                # Log the error but don't fail the exam creation
+                logger.error(f"Error processing student list for exam {exam.id}: {result['error']}")
+            else:
+                # Update student count and status
+                exam.student_count = result['student_count']
+                exam.status = Exam.Status.WAITING_FOR_PLACES
+                exam.save(update_fields=['student_count', 'status'])
+        
+        # Log the exam creation
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='CREATE',
+            object_type='Exam',
+            object_id=exam.id,
+            description=f"Exam created for {exam.course} ({exam.get_type_display()})",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class ExamUpdateView(generics.UpdateAPIView):
+    """
+    API endpoint that allows users to update exams.
+    Instructors can only update exams for courses they teach.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    
+    def perform_update(self, serializer):
+        exam = serializer.save()
+        
+        # Process student list file if provided
+        if 'student_list_file' in self.request.FILES:
+            file_path = os.path.join(settings.MEDIA_ROOT, exam.student_list_file.name)
+            result = process_student_list_file(file_path)
+            
+            if result.get('error'):
+                # Log the error but don't fail the exam update
+                logger.error(f"Error processing student list for exam {exam.id}: {result['error']}")
+            else:
+                # Update student count and status
+                exam.student_count = result['student_count']
+                exam.status = Exam.Status.WAITING_FOR_PLACES
+                exam.save(update_fields=['student_count', 'status'])
+        
+        # Log the exam update
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='UPDATE',
+            object_type='Exam',
+            object_id=exam.id,
+            description=f"Exam updated for {exam.course} ({exam.get_type_display()})",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class ExamDeleteView(generics.DestroyAPIView):
+    """
+    API endpoint that allows users to delete exams.
+    Instructors can only delete exams for courses they teach.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    
+    def perform_destroy(self, instance):
+        # Log the exam deletion
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='DELETE',
+            object_type='Exam',
+            object_id=instance.id,
+            description=f"Exam deleted for {instance.course} ({instance.get_type_display()})",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+        
+        instance.delete()
+        
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return Response({"detail": "Exam deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error deleting exam: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class IsDeanOffice(permissions.BasePermission):
+    """
+    Custom permission to only allow the Dean's Office to assign classrooms to exams.
+    """
+    def has_permission(self, request, view):
+        # Only Dean's Office, Staff and Admin can assign classrooms
+        return request.user.role in ['DEAN_OFFICE', 'STAFF', 'ADMIN']
+
+
+class ExamAssignClassroomView(generics.UpdateAPIView):
+    """
+    API endpoint that allows the Dean's Office to assign classrooms to exams.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsDeanOffice]
+    
+    def update(self, request, *args, **kwargs):
+        try:
+            # Get the exam instance
+            instance = self.get_object()
+            
+            # Remove the student list requirement check
+            # Check if student list is provided
+            # if not instance.has_student_list or instance.status == Exam.Status.WAITING_FOR_STUDENT_LIST:
+            #     return Response(
+            #         {"detail": "Student list must be uploaded before assigning classrooms"}, 
+            #         status=status.HTTP_400_BAD_REQUEST
+            #     )
+            
+            # We still want to limit the status to waiting for places, but remove the strict check
+            # Ensure the exam is in the correct status
+            # if instance.status != Exam.Status.WAITING_FOR_PLACES:
+            #     return Response(
+            #         {"detail": f"Exam is in {instance.get_status_display()} status and cannot be assigned classrooms"}, 
+            #         status=status.HTTP_400_BAD_REQUEST
+            #     )
+            
+            # Extract classroom IDs from request data
+            classroom_ids = request.data.get('classrooms', [])
+            if not classroom_ids:
+                return Response({"detail": "No classrooms provided"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Convert to list if it's a single value
+            if not isinstance(classroom_ids, list):
+                classroom_ids = [classroom_ids]
+            
+            # Ensure all classrooms exist
+            classrooms = Classroom.objects.filter(id__in=classroom_ids)
+            if len(classrooms) != len(classroom_ids):
+                return Response({"detail": "One or more classrooms do not exist"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Assign the first classroom directly to the exam (to maintain backward compatibility)
+            instance.classroom = classrooms.first()
+            
+            # Update the status to AWAITING_PROCTORS - Logic moved to Exam.save()
+            # if instance.status == Exam.Status.WAITING_FOR_PLACES:
+            #     instance.status = Exam.Status.AWAITING_PROCTORS
+            
+            instance.save()
+            
+            # Log the classroom assignment
+            AuditLog.objects.create(
+                user=request.user,
+                action='UPDATE',
+                object_type='Exam',
+                object_id=instance.id,
+                description=f"Classrooms assigned to {instance.course} ({instance.get_type_display()}) by {request.user.full_name}",
+                ip_address=request.META.get('REMOTE_ADDR'),
+            )
+            
+            return Response({
+                "detail": "Classrooms assigned successfully",
+                "classrooms": [{"id": c.id, "building": c.building, "room_number": c.room_number, "capacity": c.capacity} for c in classrooms],
+                "status": instance.status,
+                "status_display": instance.status_display
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error assigning classrooms: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ClassroomListView(generics.ListAPIView):
+    """
+    API endpoint that allows users to view available classrooms.
+    """
+    queryset = Classroom.objects.all().order_by('building', 'room_number')
+    serializer_class = serializers.ClassroomSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['building', 'room_number']
+    filterset_fields = ['building']
+
+
+class ExamSetProctorsView(generics.UpdateAPIView):
+    """
+    API endpoint that allows instructors or staff to set the proctor count for an exam.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    
+    def update(self, request, *args, **kwargs):
+        try:
+            # Get the exam instance
+            instance = self.get_object()
+            
+            # Extract proctor count from request data
+            proctor_count = request.data.get('proctor_count')
+            if proctor_count is None:
+                return Response({"detail": "No proctor count provided"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            try:
+                proctor_count = int(proctor_count)
+                if proctor_count < 1:
+                    return Response({"detail": "Proctor count must be at least 1"}, status=status.HTTP_400_BAD_REQUEST)
+            except (ValueError, TypeError):
+                return Response({"detail": "Invalid proctor count"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update the proctor count
+            instance.proctor_count = proctor_count
+            
+            # Update the status to READY
+            instance.status = Exam.Status.READY
+            
+            instance.save()
+            
+            # Log the proctor count update
+            AuditLog.objects.create(
+                user=request.user,
+                action='UPDATE',
+                object_type='Exam',
+                object_id=instance.id,
+                description=f"Proctor count set to {proctor_count} for {instance.course} ({instance.get_type_display()}) by {request.user.full_name}",
+                ip_address=request.META.get('REMOTE_ADDR'),
+            )
+            
+            return Response({
+                "detail": "Proctor count set successfully",
+                "proctor_count": instance.proctor_count,
+                "status": instance.status,
+                "status_display": instance.status_display
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error setting proctor count: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ExamStudentListUploadView(generics.UpdateAPIView):
+    """
+    API endpoint that allows instructors to upload a student list for an existing exam.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    parser_classes = [MultiPartParser, FormParser]
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        # Check if the student list file is provided
+        if 'student_list_file' not in request.FILES:
+            return Response(
+                {"detail": "Student list file is required."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Update the instance with the new file
+        instance.student_list_file = request.FILES['student_list_file']
+        instance.has_student_list = True
+        instance.save()
+        
+        # Process the file
+        file_path = os.path.join(settings.MEDIA_ROOT, instance.student_list_file.name)
+        result = process_student_list_file(file_path)
+        
+        if result.get('error'):
+            return Response(
+                {"detail": f"Error processing student list: {result['error']}"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Update student count and status
+        instance.student_count = result['student_count']
+        instance.status = Exam.Status.WAITING_FOR_PLACES
+        instance.save(update_fields=['student_count', 'status'])
+        
+        # Log the student list upload
+        AuditLog.objects.create(
+            user=request.user,
+            action='UPDATE',
+            object_type='Exam',
+            object_id=instance.id,
+            description=f"Student list uploaded for {instance.course} ({instance.get_type_display()}) with {result['student_count']} students",
+            ip_address=request.META.get('REMOTE_ADDR'),
+        )
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+
+class ExamPlacementImportView(APIView):
+    """
+    API endpoint for importing exam classroom assignments from an Excel file.
+    Only Dean's Office, Staff, and Admin users can import exam placements.
+    """
+    permission_classes = [IsAuthenticated, IsDeanOffice]
+    parser_classes = [MultiPartParser, FormParser]
+    
+    def post(self, request, *args, **kwargs):
+        logger.info(f"ExamPlacementImportView: Received file import request from user {request.user.email}")
+        # Check if file is provided
+        if 'file' not in request.FILES:
+            logger.warning("ExamPlacementImportView: No file provided in request.")
+            return Response(
+                {"detail": "No file provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        excel_file = request.FILES['file']
+        
+        # Validate file is Excel
+        if not excel_file.name.endswith(('.xls', '.xlsx')):
+            logger.warning(f"ExamPlacementImportView: Invalid file type: {excel_file.name}")
+            return Response(
+                {"detail": "File must be an Excel file (.xls or .xlsx)"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            import pandas as pd
+            df = pd.read_excel(excel_file)
+            logger.info(f"ExamPlacementImportView: Successfully read Excel file. Shape: {df.shape}")
+            
+            # Fix NaN values that can cause JSON serialization issues
+            df = df.replace({pd.NA: None, float('nan'): None})
+            
+            required_columns = ['Exam ID', 'Building', 'Room Number']
+            missing_columns = [col for col in required_columns if col not in df.columns]
+            if missing_columns:
+                logger.warning(f"ExamPlacementImportView: Missing required columns: {missing_columns}")
+                return Response(
+                    {"detail": f"Missing required columns: {', '.join(missing_columns)}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            assignments = []
+            errors = []
+            
+            with transaction.atomic():
+                logger.info("ExamPlacementImportView: Starting transaction to process exam placements.")
+                for index, row in df.iterrows():
+                    row_num_for_logging = index + 2  # For user-friendly row numbers (1-indexed + header)
+                    exam_id_from_excel = None
+                    try:
+                        exam_id_from_excel = row.get('Exam ID')
+                        if pd.isna(exam_id_from_excel): # Handle empty/NaN Exam ID
+                            logger.warning(f"ExamPlacementImportView: Row {row_num_for_logging}: Skipping due to missing 'Exam ID'.")
+                            errors.append({
+                                "row": row_num_for_logging,
+                                "error": "Missing 'Exam ID' in this row.",
+                                "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                            })
+                            continue
+                        exam_id = int(exam_id_from_excel)
+                        
+                        building = str(row.get('Building', '')).strip()
+                        room_number = str(row.get('Room Number', '')).strip()
+
+                        if not building or not room_number:
+                            logger.warning(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID {exam_id}: Skipping due to missing 'Building' or 'Room Number'.")
+                            errors.append({
+                                "row": row_num_for_logging,
+                                "error": "Missing 'Building' or 'Room Number' in this row.",
+                                "exam_id": exam_id,
+                                "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                            })
+                            continue
+
+                        logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}: Processing Exam ID {exam_id}, Classroom {building}-{room_number}")
+
+                        # Get or create the classroom
+                        classroom_capacity = row.get('Capacity')
+                        if pd.isna(classroom_capacity) or classroom_capacity <= 0:
+                            classroom_capacity = 50 # Default capacity
+                        else:
+                            classroom_capacity = int(classroom_capacity)
+
+                        classroom, created = Classroom.objects.get_or_create(
+                            building=building,
+                            room_number=room_number,
+                            defaults={'capacity': classroom_capacity }
+                        )
+                        if created:
+                            logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}: Created new classroom {classroom} with capacity {classroom_capacity}")
+                        else:
+                            logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}: Found existing classroom {classroom}")
+                        
+                        # Get the exam
+                        exam = Exam.objects.get(id=exam_id)
+                        logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}: Found Exam {exam.id} ({exam.course}) with current status '{exam.status_display}' and classroom '{exam.classroom}'")
+                        
+                        # Capture status before potential modification by exam.save()
+                        status_before_save_display = exam.get_status_display()
+                        
+                        if exam.classroom and exam.classroom != classroom:
+                            logger.warning(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID {exam.id}: Already has classroom {exam.classroom}. It will be overwritten with {classroom}.")
+                            errors.append({ # This is a warning, not a critical error preventing assignment
+                                "row": row_num_for_logging,
+                                "warning": f"Exam {exam.id} already had classroom {exam.classroom}. Overwriting with {classroom}.",
+                                "exam_id": exam.id,
+                                "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                            })
+                        
+                        # Assign classroom to exam
+                        exam.classroom = classroom
+                        logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID {exam.id}: Classroom object {classroom} assigned to exam.classroom field. Status before save: '{status_before_save_display}'")
+                        
+                        # The Exam.save() method will handle the status transition
+                        exam.save() 
+                        logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID {exam.id}: Exam saved. New status: '{exam.status_display}', New classroom: '{exam.classroom}'")
+                        
+                        assignments.append({
+                            "row": row_num_for_logging,
+                            "exam_id": exam.id,
+                            "course": f"{exam.course.department.code}{exam.course.code}",
+                            "classroom": f"{classroom.building}-{classroom.room_number}",
+                            "capacity": classroom.capacity,
+                            "student_count": exam.student_count,
+                            "previous_status": status_before_save_display, # Use the captured display status
+                            "new_status": exam.status, 
+                            "status_display": exam.status_display 
+                        })
+                        
+                    except Exam.DoesNotExist:
+                        logger.warning(f"ExamPlacementImportView: Row {row_num_for_logging}: Exam with ID '{exam_id_from_excel}' not found.")
+                        errors.append({
+                            "row": row_num_for_logging,
+                            "error": f"Exam with ID '{exam_id_from_excel}' not found.",
+                            "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                        })
+                        continue # Skip to the next row
+                    except ValueError as ve: # Catches int(exam_id_from_excel) error if 'Exam ID' is not a number
+                        logger.error(f"ExamPlacementImportView: Row {row_num_for_logging}: Invalid 'Exam ID' format: '{exam_id_from_excel}'. Error: {ve}")
+                        errors.append({
+                            "row": row_num_for_logging,
+                            "error": f"Invalid 'Exam ID' format: '{exam_id_from_excel}'. Must be a number.",
+                            "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                        })
+                        continue
+                    except Exception as e:
+                        logger.error(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID '{exam_id_from_excel}': An unexpected error occurred: {type(e).__name__} - {str(e)}", exc_info=True)
+                        errors.append({
+                            "row": row_num_for_logging,
+                            "error": f"An unexpected error occurred: {str(e)}",
+                            "exam_id": exam_id_from_excel,
+                            "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                        })
+                        # Decide if you want to continue or re-raise to rollback transaction for unexpected errors
+                        # For now, we'll continue processing other rows.
+                        continue
+            
+            logger.info(f"ExamPlacementImportView: Transaction finished. Total assignments processed: {len(assignments)}, Total errors/warnings: {len(errors)}")
+            
+            if not assignments and errors:
+                 logger.warning("ExamPlacementImportView: No classrooms were assigned, and there were errors. Check the errors list.")
+            elif not assignments and not errors:
+                 logger.info("ExamPlacementImportView: No classrooms were assigned (e.g. empty Excel or all rows skipped for valid reasons like missing student lists), and no critical errors occurred during processing.")
+
+
+            # Log the import action
+            AuditLog.objects.create(
+                user=request.user,
+                action='IMPORT',
+                object_type='ExamPlacement', # Consider changing if it's more of an "attempt"
+                description=f"Attempted import of {df.shape[0]} exam classroom assignments. Successfully assigned: {len(assignments)}. Errors/Skipped: {len(errors)}.",
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            return Response({
+                "detail": f"Processed {df.shape[0]} rows. Successfully assigned classrooms to {len(assignments)} exams. Encountered {len(errors)} issues (errors or skipped rows).",
+                "assignments": assignments,
+                "errors": errors # This list is crucial for the user to understand what happened
+            }, status=status.HTTP_200_OK)
+            
+        except pd.errors.EmptyDataError:
+            logger.error("ExamPlacementImportView: Uploaded Excel file is empty.")
+            return Response({"detail": "The uploaded Excel file is empty."}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"ExamPlacementImportView: A critical error occurred while processing the Excel file: {type(e).__name__} - {str(e)}", exc_info=True)
+            return Response({
+                "detail": f"Error processing Excel file: {str(e)}"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
