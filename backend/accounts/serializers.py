@@ -240,10 +240,11 @@ class CourseSerializer(serializers.ModelSerializer):
         source='department',
         write_only=True
     )
+    level_display = serializers.CharField(source='get_level_display', read_only=True)
     
     class Meta:
         model = Course
-        fields = ('id', 'department', 'department_id', 'code', 'title', 'credit')
+        fields = ('id', 'department', 'department_id', 'code', 'title', 'credit', 'level', 'level_display')
 
 
 class InstructorSerializer(serializers.ModelSerializer):
@@ -334,13 +335,14 @@ class ExamSerializer(serializers.ModelSerializer):
         source='course',
         write_only=True
     )
-    classroom = ClassroomSerializer(read_only=True)
+    classroom = ClassroomSerializer(read_only=True, allow_null=True)
     classroom_id = serializers.PrimaryKeyRelatedField(
         queryset=Classroom.objects.all(),
         source='classroom',
         write_only=True,
         required=False,
-        allow_null=True
+        allow_null=True,
+        many=False
     )
     created_by_name = serializers.SerializerMethodField()
     type_display = serializers.CharField(source='get_type_display', read_only=True)

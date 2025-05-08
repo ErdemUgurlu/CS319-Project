@@ -180,6 +180,17 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     credit = models.DecimalField(max_digits=3, decimal_places=1)
     
+    class CourseLevel(models.TextChoices):
+        UNDERGRADUATE = 'UNDERGRADUATE', 'Undergraduate'
+        GRADUATE = 'GRADUATE', 'Graduate'
+        PHD = 'PHD', 'PhD'
+
+    level = models.CharField(
+        max_length=20,
+        choices=CourseLevel.choices,
+        default=CourseLevel.UNDERGRADUATE
+    )
+
     class Meta:
         unique_together = ('department', 'code')
     
@@ -190,7 +201,7 @@ class Course(models.Model):
 class Section(models.Model):
     """Section model representing a course offering."""
     
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='sections',)
     section_number = models.CharField(max_length=3)
     instructor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, 
                                   limit_choices_to={'role': 'INSTRUCTOR'})
@@ -388,6 +399,31 @@ class Exam(models.Model):
             print(f"[Exam.update_status_based_on_proctoring] Exam ID {self.id} status updated to: {self.status}")
         else:
             print(f"[Exam.update_status_based_on_proctoring] Exam ID {self.id} status ({self.status}) unchanged.")
+
+
+class Leave(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leaves')
+    start_date = models.DateField()
+    end_date = models.DateField()
+    reason = models.TextField(blank=True, null=True)
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    # Consider who approves leaves. If it's another User (e.g., admin/staff):
+    # approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_user_leaves') 
+    # Using a different related_name for approved_by to avoid conflict if approved_by can also take leave.
+
+    def __str__(self):
+        return f"{self.user.full_name} - {self.start_date} to {self.end_date} ({self.get_status_display()})"
+
+    class Meta:
+        verbose_name = "Leave Request"
+        verbose_name_plural = "Leave Requests"
+        ordering = ['-requested_at']
 
 
 # TA-Instructor relation model

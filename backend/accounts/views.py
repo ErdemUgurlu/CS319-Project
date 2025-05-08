@@ -2200,8 +2200,8 @@ class ImportCoursesFromExcelView(APIView):
             import pandas as pd
             df = pd.read_excel(excel_file)
             
-            # Expected columns: Department, Course Code, Course Title, Credits, Section Count, Student Count
-            expected_columns = ['Department', 'Course Code', 'Course Title', 'Credits', 'Section Count', 'Student Count']
+            # Expected columns: Department, Course Code, Course Title, Credits, Section Count, Student Count, Academic Level
+            expected_columns = ['Department', 'Course Code', 'Course Title', 'Credits', 'Section Count', 'Student Count', 'Academic Level']
             
             # Validate all required columns exist
             missing_columns = [col for col in expected_columns if col not in df.columns]
@@ -2224,7 +2224,23 @@ class ImportCoursesFromExcelView(APIView):
                     credits = row['Credits']
                     section_count = int(row['Section Count'])
                     student_count = int(row['Student Count'])
+                    academic_level_str = row['Academic Level']
+
+                    # Validate academic level (case-insensitive)
+                    valid_levels_display = {choice[1]: choice[0] for choice in Course.CourseLevel.choices} # {Display: Key}
+                    valid_levels_lower = {k.lower(): v for k, v in valid_levels_display.items()} # {display_lower: Key}
+                    normalized_excel_level = str(academic_level_str).strip().lower()
+
+                    if normalized_excel_level not in valid_levels_lower:
+                        errors.append({
+                            "row": index + 2,
+                            "error": f"Invalid Academic Level: '{academic_level_str}'. Must be one of {', '.join(valid_levels_display.keys())}", # Show original expected display names
+                            "data": row.to_dict()
+                        })
+                        continue
                     
+                    course_level_enum_key = valid_levels_lower[normalized_excel_level]
+
                     # Validate numeric fields
                     if section_count < 1:
                         errors.append({
@@ -2259,7 +2275,8 @@ class ImportCoursesFromExcelView(APIView):
                         code=course_code,
                         defaults={
                             'title': course_title,
-                            'credit': Decimal(str(credits))
+                            'credit': Decimal(str(credits)),
+                            'level': course_level_enum_key
                         }
                     )
                     
@@ -2471,19 +2488,21 @@ class CourseDeleteView(generics.DestroyAPIView):
         
     def destroy(self, request, *args, **kwargs):
         try:
-            # Check if course has sections
+            # Check if course has sections - REMOVED CHECK TO ALLOW CASCADE DELETE
             instance = self.get_object()
-            sections = Section.objects.filter(course=instance)
-            
-            if sections.exists():
-                return Response(
-                    {"detail": f"Cannot delete course with {sections.count()} sections. Please delete the sections first."},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+            # sections = Section.objects.filter(course=instance)
+            # 
+            # if sections.exists():
+            #     return Response(
+            #         {"detail": f"Cannot delete course with {sections.count()} sections. Please delete the sections first."},
+            #         status=status.HTTP_400_BAD_REQUEST
+            #     )
                 
-            self.perform_destroy(instance)
+            self.perform_destroy(instance) # This calls instance.delete(), which triggers CASCADE
             return Response({"detail": "Course deleted successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
+            # Log the error for debugging
+            logger.error(f"Error deleting course {kwargs.get('pk')}: {str(e)}", exc_info=True)
             return Response({"detail": f"Error deleting course: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -2700,68 +2719,32 @@ class ExamAssignClassroomView(generics.UpdateAPIView):
     serializer_class = serializers.ExamSerializer
     permission_classes = [IsAuthenticated, IsDeanOffice]
     
-    def update(self, request, *args, **kwargs):
-        try:
-            # Get the exam instance
-            instance = self.get_object()
-            
-            # Remove the student list requirement check
-            # Check if student list is provided
-            # if not instance.has_student_list or instance.status == Exam.Status.WAITING_FOR_STUDENT_LIST:
-            #     return Response(
-            #         {"detail": "Student list must be uploaded before assigning classrooms"}, 
-            #         status=status.HTTP_400_BAD_REQUEST
-            #     )
-            
-            # We still want to limit the status to waiting for places, but remove the strict check
-            # Ensure the exam is in the correct status
-            # if instance.status != Exam.Status.WAITING_FOR_PLACES:
-            #     return Response(
-            #         {"detail": f"Exam is in {instance.get_status_display()} status and cannot be assigned classrooms"}, 
-            #         status=status.HTTP_400_BAD_REQUEST
-            #     )
-            
-            # Extract classroom IDs from request data
-            classroom_ids = request.data.get('classrooms', [])
-            if not classroom_ids:
-                return Response({"detail": "No classrooms provided"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Convert to list if it's a single value
-            if not isinstance(classroom_ids, list):
-                classroom_ids = [classroom_ids]
-            
-            # Ensure all classrooms exist
-            classrooms = Classroom.objects.filter(id__in=classroom_ids)
-            if len(classrooms) != len(classroom_ids):
-                return Response({"detail": "One or more classrooms do not exist"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Assign the first classroom directly to the exam (to maintain backward compatibility)
-            instance.classroom = classrooms.first()
-            
-            # Update the status to AWAITING_PROCTORS - Logic moved to Exam.save()
-            # if instance.status == Exam.Status.WAITING_FOR_PLACES:
-            #     instance.status = Exam.Status.AWAITING_PROCTORS
-            
-            instance.save()
-            
-            # Log the classroom assignment
-            AuditLog.objects.create(
-                user=request.user,
-                action='UPDATE',
-                object_type='Exam',
-                object_id=instance.id,
-                description=f"Classrooms assigned to {instance.course} ({instance.get_type_display()}) by {request.user.full_name}",
-                ip_address=request.META.get('REMOTE_ADDR'),
-            )
-            
-            return Response({
-                "detail": "Classrooms assigned successfully",
-                "classrooms": [{"id": c.id, "building": c.building, "room_number": c.room_number, "capacity": c.capacity} for c in classrooms],
-                "status": instance.status,
-                "status_display": instance.status_display
-            }, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({"detail": f"Error assigning classrooms: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Ensure student list is uploaded before assigning classroom
+        # This check can be here or in the serializer's validate method if preferred
+        if not instance.has_student_list:
+             return Response(
+                 {"detail": "Student list must be uploaded before assigning classrooms"}, 
+                 status=status.HTTP_400_BAD_REQUEST
+             )
+
+        # The ExamSerializer will handle 'classroom_id' from request.data
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        # Log the classroom assignment
+        AuditLog.objects.create(
+            user=request.user,
+            action='UPDATE',
+            object_type='Exam',
+            object_id=instance.id,
+            description=f"Classroom assignment updated for {instance.course} ({instance.get_type_display()}) by {request.user.full_name}. New classroom: {instance.classroom}",
+            ip_address=request.META.get('REMOTE_ADDR'),
+        )
+        return Response(serializer.data)
 
 
 class ClassroomListView(generics.ListAPIView):

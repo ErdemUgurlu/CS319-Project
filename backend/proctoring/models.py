@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from accounts.models import Exam, TAProfile
+from accounts.models import Exam, TAProfile, User
 from django.utils.translation import gettext_lazy as _
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
@@ -99,14 +99,28 @@ class ProctorAssignment(models.Model):
 def decrement_workload_on_delete(sender, instance, **kwargs):
     if instance.status == ProctorAssignment.Status.ASSIGNED:
         try:
-            profile = TAProfile.objects.get(user=instance.ta)
+            ta_user = instance.ta 
+            profile = TAProfile.objects.get(user=ta_user)
             if profile.workload_credits > 0:
                 profile.workload_credits -= 1
                 profile.save(update_fields=['workload_credits'])
-                logger.info(f"Workload credit -1 for TA {instance.ta.id} (Deleted Assignment ID: {instance.id}). New total: {profile.workload_credits}")
+                logger.info(f"Workload credit -1 for TA {ta_user.id} (Deleted Assignment ID: {instance.id}). New total: {profile.workload_credits}")
             else:
-                 logger.warning(f"Attempted to decrement workload credit below zero for TA {instance.ta.id} on deleting Assignment ID {instance.id}.")
+                 logger.warning(f"Attempted to decrement workload credit below zero for TA {ta_user.id} on deleting Assignment ID {instance.id}.")
+        except User.DoesNotExist:
+            ta_id_for_log = instance.ta_id if hasattr(instance, 'ta_id') else 'unknown'
+            logger.error(f"TA User (ID: {ta_id_for_log}) not found for deleted Assignment ID: {instance.id}. Skipping workload update.")
         except TAProfile.DoesNotExist:
-             logger.error(f"TAProfile not found for TA {instance.ta.id} when updating workload credits for deleted Assignment ID {instance.id}")
+            ta_id_for_log = 'unknown'
+            try:
+                if instance.ta and hasattr(instance.ta, 'id'):
+                    ta_id_for_log = instance.ta.id
+                elif hasattr(instance, 'ta_id'):
+                    ta_id_for_log = instance.ta_id
+            except User.DoesNotExist:
+                if hasattr(instance, 'ta_id'):
+                    ta_id_for_log = instance.ta_id
+
+            logger.error(f"TAProfile not found for TA (ID: {ta_id_for_log}) when updating workload credits for deleted Assignment ID: {instance.id}")
         except Exception as e:
              logger.error(f"Error updating workload credits for TA {instance.ta.id} on Assignment {instance.id} delete: {e}")

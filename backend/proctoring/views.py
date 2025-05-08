@@ -5,7 +5,7 @@ from datetime import timedelta
 from rest_framework import generics, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from accounts.models import User, Exam
+from accounts.models import User, Exam, Course
 from accounts.permissions import IsStaffOrInstructor
 from .models import ProctorAssignment
 from .serializers import (
@@ -22,14 +22,24 @@ class ExamEligibleTAsView(APIView):
     
     def get(self, request, pk=None):
         exam = get_object_or_404(Exam, pk=pk)
+        exam_department_code = exam.course.department.code # Get the department code (e.g., 'CS')
         
-        # First, get all TAs
-        tas = User.objects.filter(role='TA', is_active=True)
+        # First, get all TAs from the same department as the exam's course
+        tas = User.objects.filter(
+            role='TA', 
+            is_active=True,
+            department=exam_department_code  # Filter by the exam's course department code
+        )
         
-        # Get the exam date and create day before/after
-        exam_date = exam.date
-        day_before = exam_date - timedelta(days=1)
-        day_after = exam_date + timedelta(days=1)
+        # Filter by academic level based on the exam's course level
+        exam_course_level = exam.course.level.upper() # Ensure comparison is case-insensitive (e.g., 'UNDERGRADUATE')
+
+        if exam_course_level == Course.CourseLevel.UNDERGRADUATE.upper():
+            tas = tas.filter(academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD])
+        elif exam_course_level in [Course.CourseLevel.GRADUATE.upper(), Course.CourseLevel.PHD.upper()]:
+            tas = tas.filter(academic_level=User.AcademicLevel.PHD)
+        # If exam_course_level is something else, no further academic level filtering is applied by default.
+        # This assumes Course.level will always be one of the defined choices.
         
         # Calculate current proctor workload for each TA
         tas = tas.annotate(
@@ -41,80 +51,14 @@ class ExamEligibleTAsView(APIView):
         for ta in tas:
             # Initialize details
             details = {
-                'constraints': [],
-                'is_cross_department': False,
+                'constraints': [], # No constraints will be added
+                'is_cross_department': False, # Default value
                 'workload': {
                     'current': ta.current_workload,
                 }
             }
             
-            # Check eligibility based on criteria
-            is_eligible = True
-            
-            # a. The exam is at the MS/PhD level and the TA is not a PhD student
-            if exam.course.level.upper() in ['GRADUATE', 'PHD'] and ta.academic_level != 'PHD':
-                is_eligible = False
-                details['constraints'].append({
-                    'type': 'academic_level',
-                    'message': 'TA is not a PhD student but the exam is for a graduate-level course'
-                })
-            
-            # b. The TA is on approved leave during the exam
-            has_leave = ta.leaves.filter(
-                start_date__lte=exam_date.date(),
-                end_date__gte=exam_date.date(),
-                status='APPROVED'
-            ).exists()
-            
-            if has_leave:
-                is_eligible = False
-                details['constraints'].append({
-                    'type': 'on_leave',
-                    'message': 'TA is on approved leave during this exam'
-                })
-            
-            # c. The TA is enrolled as a student in that same course
-            is_enrolled = ta.is_student_in_course(exam.course)
-            if is_enrolled:
-                is_eligible = False
-                details['constraints'].append({
-                    'type': 'student_in_course',
-                    'message': 'TA is enrolled as a student in this course'
-                })
-            
-            # d. The TA has another exam or scheduled lecture at the same time
-            exam_conflict = ProctorAssignment.objects.filter(
-                ta=ta,
-                exam__date=exam_date,
-                status='ASSIGNED'
-            ).exists()
-            
-            teaching_conflict = ta.teaching_duties.filter(
-                day_of_week=exam_date.weekday(),
-                start_time__lte=exam_date.time(),
-                end_time__gte=exam_date.time()
-            ).exists()
-            
-            if exam_conflict or teaching_conflict:
-                is_eligible = False
-                details['constraints'].append({
-                    'type': 'schedule_conflict',
-                    'message': 'TA has another exam or lecture scheduled at the same time'
-                })
-            
-            # e. The TA has a proctoring assignment either the day before or after the exam
-            adjacent_day_conflict = ProctorAssignment.objects.filter(
-                ta=ta,
-                exam__date__date__in=[day_before.date(), day_after.date()],
-                status='ASSIGNED'
-            ).exists()
-            
-            if adjacent_day_conflict:
-                is_eligible = False
-                details['constraints'].append({
-                    'type': 'adjacent_day_conflict',
-                    'message': 'TA has a proctoring assignment the day before or after this exam'
-                })
+            is_eligible = True # All TAs are considered eligible
             
             # Append this TA to result
             serializer = EligibleProctorSerializer(ta)
@@ -124,7 +68,8 @@ class ExamEligibleTAsView(APIView):
             data['current_workload'] = ta.current_workload
             result.append(data)
         
-        # Return sorted by workload (ascending) and eligibility (eligible first)
+        # Return sorted by workload (ascending)
+        # Since all are eligible, secondary sort by eligibility is not strictly needed but harmless
         result = sorted(result, key=lambda x: (not x['is_eligible'], x['current_workload']))
         
         return Response(result)

@@ -18,7 +18,7 @@ from datetime import datetime
 from .models import (
     User, Student, Department, Course, 
     Section, TAAssignment, Classroom, WeeklySchedule, AuditLog, InstructorTAAssignment, Exam,
-    TAProfile
+    TAProfile, Leave
 )
 
 
@@ -141,7 +141,7 @@ deactivate_users.short_description = "Deactivate selected users"
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     """Custom admin for the User model."""
-    
+    readonly_fields = ('date_joined',)
     def assigned_to_instructor(self, obj):
         """Returns the instructor that the TA is assigned to, or 'Not Assigned' for unassigned TAs."""
         if obj.role != 'TA':
@@ -201,7 +201,7 @@ class CourseImportForm(forms.Form):
     """Form for importing courses from Excel file."""
     excel_file = forms.FileField(
         label="Excel File",
-        help_text="Upload an Excel file (.xlsx, .xls) containing course information. Required columns: Department, Course Code, Course Title, Credits, Section Count, Student Count"
+        help_text="Upload an Excel file (.xlsx, .xls) containing course information. Required columns: Department, Course Code, Course Title, Credits, Section Count, Student Count, Academic Level"
     )
 
 
@@ -209,8 +209,8 @@ class CourseImportForm(forms.Form):
 class CourseAdmin(admin.ModelAdmin):
     """Admin for the Course model."""
     
-    list_display = ('department', 'code', 'title', 'credit')
-    list_filter = ('department',)
+    list_display = ('department', 'code', 'title', 'credit', 'level')
+    list_filter = ('department', 'level')
     search_fields = ('code', 'title', 'department__code')
     actions = ['import_courses_action']
     
@@ -244,7 +244,7 @@ class CourseAdmin(admin.ModelAdmin):
                     df = pd.read_excel(excel_file)
                     
                     # Validate required columns
-                    required_columns = ['Department', 'Course Code', 'Course Title', 'Credits', 'Section Count', 'Student Count']
+                    required_columns = ['Department', 'Course Code', 'Course Title', 'Credits', 'Section Count', 'Student Count', 'Academic Level']
                     missing_columns = [col for col in required_columns if col not in df.columns]
                     
                     if missing_columns:
@@ -269,7 +269,19 @@ class CourseAdmin(admin.ModelAdmin):
                                 credits = row['Credits']
                                 section_count = int(row['Section Count'])
                                 student_count = int(row['Student Count'])
+                                academic_level_str = row['Academic Level']
+
+                                # Validate academic level (case-insensitive)
+                                valid_levels_display = {choice[1]: choice[0] for choice in Course.CourseLevel.choices} # {Display: Key}
+                                valid_levels_lower = {k.lower(): v for k, v in valid_levels_display.items()} # {display_lower: Key}
+                                normalized_excel_level = str(academic_level_str).strip().lower()
                                 
+                                if normalized_excel_level not in valid_levels_lower:
+                                    errors.append(f"Row {index + 2}: Invalid Academic Level: '{academic_level_str}'. Must be one of {', '.join(valid_levels_display.keys())}") # Show original expected display names
+                                    continue
+                                
+                                course_level_enum_key = valid_levels_lower[normalized_excel_level]
+
                                 # Validate numeric fields
                                 if section_count < 1:
                                     errors.append(f"Row {index + 2}: Section Count must be at least 1")
@@ -295,7 +307,8 @@ class CourseAdmin(admin.ModelAdmin):
                                     code=course_code,
                                     defaults={
                                         'title': course_title,
-                                        'credit': Decimal(str(credits))
+                                        'credit': Decimal(str(credits)),
+                                        'level': course_level_enum_key
                                     }
                                 )
                                 
@@ -466,3 +479,19 @@ class TAProfileAdmin(admin.ModelAdmin):
     def has_add_permission(self, request):
         # Profiles are created automatically, so disable manual creation
         return False
+
+
+@admin.register(Leave)
+class LeaveAdmin(admin.ModelAdmin):
+    list_display = ('user', 'start_date', 'end_date', 'status', 'requested_at')
+    list_filter = ('status', 'start_date', 'end_date')
+    search_fields = ('user__email', 'user__first_name', 'user__last_name', 'reason')
+    actions = ['approve_leaves', 'reject_leaves']
+
+    def approve_leaves(self, request, queryset):
+        queryset.update(status='APPROVED')
+    approve_leaves.short_description = "Approve selected leaves"
+
+    def reject_leaves(self, request, queryset):
+        queryset.update(status='REJECTED')
+    reject_leaves.short_description = "Reject selected leaves"
