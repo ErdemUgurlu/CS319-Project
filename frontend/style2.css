@@ -1,0 +1,62 @@
+.auto-proctor-container {
+    font-family: sans-serif;
+    padding: 20px;
+    background-color: #f5f5f5;
+  }
+  
+  .form-box {
+    display: flex;
+    background: #dde6e8;
+    padding: 20px;
+    border-radius: 10px;
+    justify-content: space-between;
+  }
+  
+  .left-section input,
+  .right-section button {
+    display: block;
+    margin-top: 8px;
+    margin-bottom: 12px;
+  }
+  
+  table {
+    background: white;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  th, td {
+    border: 1px solid #999;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .assign-btn {
+    margin-top: 20px;
+    background-color: #3c6e71;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .error-popup {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 8px;
+    position: relative;
+  }
+  
+  .error-popup button {
+    background-color: white;
+    color: red;
+    border: none;
+    padding: 5px 10px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+  }
