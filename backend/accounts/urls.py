@@ -39,6 +39,7 @@ urlpatterns = [
     # TA specific endpoints
     path('weekly-schedule/', views.WeeklyScheduleListCreateView.as_view(), name='weekly_schedule_list_create'),
     path('weekly-schedule/<int:pk>/', views.WeeklyScheduleDetailView.as_view(), name='weekly_schedule_detail'),
+    path('schedule/course-options/', views.ScheduleCourseOptionsView.as_view(), name='schedule_course_options'),
     
     # Department, Course, Section, etc.
     path('departments/', views.DepartmentListView.as_view(), name='department_list'),

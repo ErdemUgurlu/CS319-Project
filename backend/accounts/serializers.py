@@ -20,13 +20,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'password', 'password_confirm', 'first_name', 'last_name', 
-                  'role', 'phone', 'department', 'iban', 'academic_level', 'employment_type')
+                  'role', 'phone', 'department', 'iban', 'academic_level', 'employment_type', 'bilkent_id')
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
             'role': {'required': True},
             'phone': {'required': True},
             'department': {'required': True},
+            'bilkent_id': {'required': True},
             'iban': {'required': False},
             'academic_level': {'required': False},
             'employment_type': {'required': False},
@@ -71,6 +72,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             role=validated_data['role'],
             phone=validated_data['phone'],
             department=validated_data['department'],
+            bilkent_id=validated_data['bilkent_id'],
             iban=validated_data.get('iban', ''),
             academic_level=validated_data.get('academic_level', User.AcademicLevel.NOT_APPLICABLE),
             employment_type=validated_data.get('employment_type', User.EmploymentType.NOT_APPLICABLE),
@@ -111,7 +113,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'full_name', 'role', 'role_display',
                   'phone', 'iban', 'academic_level', 'academic_level_display', 'employment_type',
-                  'employment_type_display', 'is_approved', 'email_verified', 'date_joined', 'last_login')
+                  'employment_type_display', 'is_approved', 'email_verified', 'date_joined', 'last_login', 'bilkent_id')
         read_only_fields = ('id', 'email', 'role', 'is_approved', 'email_verified', 
                             'date_joined', 'last_login')
 
@@ -135,7 +137,7 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'full_name', 'role', 'role_display',
-                  'is_approved', 'email_verified', 'date_joined')
+                  'is_approved', 'email_verified', 'date_joined', 'bilkent_id')
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -152,7 +154,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'username', 'first_name', 'last_name', 'full_name', 
                   'role', 'role_display', 'phone', 'iban', 'academic_level', 
                   'academic_level_display', 'employment_type', 'employment_type_display', 
-                  'is_approved', 'email_verified', 'is_active', 'is_staff', 'date_joined', 'last_login')
+                  'is_approved', 'email_verified', 'is_active', 'is_staff', 'date_joined', 'last_login', 'bilkent_id')
         read_only_fields = ('id', 'email', 'username', 'date_joined', 'last_login')
 
 
@@ -315,6 +317,45 @@ class TAAssignmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'ta', 'ta_id', 'section', 'section_id', 'assigned_date')
         read_only_fields = ('assigned_date',)
 
+    def validate(self, data):
+        """
+        Check that the TA and the Section's course are from the same department.
+        """
+        ta = data.get('ta') # This will be a User instance because source='ta'
+        section = data.get('section') # This will be a Section instance
+
+        # The ta and section fields are populated from ta_id and section_id respectively
+        # during the PrimaryKeyRelatedField's to_internal_value method.
+        # So, by the time validate() is called, 'ta' and 'section' should be model instances.
+
+        if not ta:
+            # This case should ideally be caught by 'ta_id' being required,
+            # but as a safeguard if ta_id was valid but user fetching failed.
+            raise serializers.ValidationError({"ta_id": "TA not found."})
+
+        if not section:
+            # Similar safeguard for section.
+            raise serializers.ValidationError({"section_id": "Section not found."})
+
+        # User.department is a CharField (e.g., 'CS', 'IE')
+        # Section.course.department is a ForeignKey to Department model, which has a 'code' attribute.
+        if ta.department != section.course.department.code:
+            raise serializers.ValidationError(
+                {"non_field_errors": f"TA ({ta.email}, Dept: {ta.department}) and Course ({section.course.code}, Dept: {section.course.department.code}) must be in the same department."}
+            )
+        
+        # Check for existing assignment to prevent duplicates (already handled by unique_together in model)
+        # However, explicit check here can give a friendlier message if needed,
+        # but usually not necessary if unique_together is set.
+        # if TAAssignment.objects.filter(ta=ta, section=section).exists():
+        #     # If instance is present, we are updating, so allow same ta-section
+        #     if not self.instance or (self.instance.ta != ta or self.instance.section != section) :
+        #         raise serializers.ValidationError(
+        #             {"non_field_errors": "This TA is already assigned to this section."}
+        #         )
+
+        return data
+
 
 class ClassroomSerializer(serializers.ModelSerializer):
     """
@@ -356,7 +397,7 @@ class ExamSerializer(serializers.ModelSerializer):
         model = Exam
         fields = (
             'id', 'course', 'course_id', 'type', 'type_display', 
-            'date', 'classroom', 'classroom_id', 'proctor_count',
+            'date', 'duration', 'classroom', 'classroom_id', 'proctor_count',
             'created_by', 'created_by_name', 'created_at', 'updated_at',
             'status', 'status_display', 'student_count', 'student_list_file',
             'has_student_list', 'assigned_proctor_count'

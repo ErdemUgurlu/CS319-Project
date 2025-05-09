@@ -76,6 +76,28 @@ class IsAdminOrStaff(permissions.BasePermission):
         )
 
 
+class IsInstructorForThisCourseOrStaff(permissions.BasePermission):
+    """
+    Allows access if user is Staff/Admin/DeanOffice OR if they are an Instructor for the given Course.
+    Used for object-level permissions (retrieve, update, delete).
+    """
+    def has_object_permission(self, request, view, obj): # obj is expected to be a Course instance
+        if not request.user or not request.user.is_authenticated:
+            return False
+        
+        # Superusers, Admins, Staff, and Dean's Office have full access
+        if request.user.is_superuser or \
+           (hasattr(request.user, 'role') and request.user.role in [User.Role.ADMIN, User.Role.STAFF, User.Role.DEAN_OFFICE]):
+            return True
+        
+        # Instructors can access if they teach a section of this course
+        if hasattr(request.user, 'role') and request.user.role == User.Role.INSTRUCTOR:
+            if isinstance(obj, Course):
+                return Section.objects.filter(course=obj, instructor=request.user).exists()
+        
+        return False
+
+
 class UserRegistrationView(generics.CreateAPIView):
     """
     API endpoint that allows users to register.
@@ -746,7 +768,6 @@ class CourseListView(generics.ListAPIView):
     """
     API endpoint that allows users to list courses.
     """
-    queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -754,38 +775,29 @@ class CourseListView(generics.ListAPIView):
     search_fields = ['code', 'title']
     
     def get_queryset(self):
-        """Override get_queryset to filter by instructor_id if provided"""
-        queryset = super().get_queryset()
-        instructor_id = self.request.query_params.get('instructor_id')
-        
-        if instructor_id:
+        user = self.request.user
+        queryset = Course.objects.all() # Start with all
+
+        if user.is_superuser or (hasattr(user, 'role') and user.role == User.Role.ADMIN):
+            pass  # Superusers and ADMIN role see all courses
+        elif hasattr(user, 'role') and user.role == User.Role.STAFF:
+            queryset = queryset.filter(department__code=user.department)
+        elif hasattr(user, 'role') and user.role == User.Role.INSTRUCTOR:
+            # Instructors see courses they are assigned to via sections
+            queryset = queryset.filter(sections__instructor=user).distinct() # Changed section to sections
+        else:
+            queryset = Course.objects.none() # Restrict by default for unhandled roles
+
+        # Additional filtering based on query parameters
+        instructor_id_param = self.request.query_params.get('instructor_id')
+        if instructor_id_param:
             try:
-                # Convert to integer and filter courses where the instructor 
-                # is assigned to at least one section of the course
-                instructor_id = int(instructor_id)
-                queryset = queryset.filter(section__instructor_id=instructor_id).distinct()
-                print(f"Filtering courses for instructor_id={instructor_id}, found {queryset.count()} courses")
+                instructor_id_int = int(instructor_id_param)
+                queryset = queryset.filter(sections__instructor_id=instructor_id_int).distinct() # Changed section to sections
             except (ValueError, TypeError):
-                print(f"Invalid instructor_id parameter: {instructor_id}")
+                logger.warning(f"Invalid instructor_id parameter: {instructor_id_param}")
         
         return queryset
-    
-    def list(self, request, *args, **kwargs):
-        """Override list method to add debugging"""
-        queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        
-        # Log the queryset details
-        print(f"Course queryset count: {queryset.count()}")
-        
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-        
-        serializer = self.get_serializer(queryset, many=True)
-        
-        # Return an array directly rather than wrapping in an object
-        return Response(serializer.data)
 
 
 class CourseDetailView(generics.RetrieveAPIView):
@@ -794,7 +806,7 @@ class CourseDetailView(generics.RetrieveAPIView):
     """
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsInstructorForThisCourseOrStaff] # Changed
 
 
 class SectionListView(generics.ListAPIView):
@@ -805,7 +817,7 @@ class SectionListView(generics.ListAPIView):
     serializer_class = serializers.SectionSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['course__department__code', 'course__code', 'instructor']
+    filterset_fields = ['course', 'course__department__code', 'course__code', 'instructor'] # Added 'course' for filtering by course ID
     search_fields = ['course__code', 'section_number']
     
     def get_queryset(self):
@@ -2348,28 +2360,45 @@ class CourseCreateView(generics.CreateAPIView):
     """
     serializer_class = serializers.CourseSerializer
     permission_classes = [IsStaffUser]
-    
+
     def perform_create(self, serializer):
         course = serializer.save()
         
-        # Log the course creation
+        # Automatically create Section 1 for the new course
+        new_section = Section.objects.create(
+            course=course,
+            section_number="1",
+            instructor=None,
+            student_count=0 
+        )
+        
         AuditLog.objects.create(
             user=self.request.user,
             action='CREATE',
             object_type='Course',
             object_id=course.id,
-            description=f"Course {course.department.code}{course.code} created",
-            ip_address=self.request.META.get('REMOTE_ADDR'),
+            description=f"Course '{course.code} - {course.title}' created.",
+            ip_address=self.request.META.get('REMOTE_ADDR') # Restoring IP address logging
+        )
+        
+        # Also log section creation
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='CREATE',
+            object_type='Section',
+            object_id=new_section.id, # Use the actual ID of the created section
+            description=f"Section '{new_section.section_number}' for course '{course.code} - {course.title}' automatically created.",
+            ip_address=self.request.META.get('REMOTE_ADDR') # Restoring IP address logging
         )
 
 
 class CourseUpdateView(generics.UpdateAPIView):
     """
-    API endpoint that allows staff to update courses.
+    API endpoint that allows staff or authorized instructors to update courses.
     """
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [IsStaffUser]
+    permission_classes = [IsAuthenticated, IsInstructorForThisCourseOrStaff] # Changed
     
     def perform_update(self, serializer):
         course = serializer.save()
@@ -2511,39 +2540,37 @@ class CourseDeleteView(generics.DestroyAPIView):
 class IsInstructorForCourse(permissions.BasePermission):
     """
     Custom permission to only allow instructors to manage exams for courses they teach.
-    Dean's Office can view all exams.
+    Staff, Admin, and Dean's Office have broader access.
     """
     def has_permission(self, request, view):
-        # Staff, admin, and dean's office can do anything
-        if request.user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']:
+        # Basic authentication check, detailed checks happen at object level or in view logic
+        if not request.user or not request.user.is_authenticated:
+            return False
+        
+        # For list/create views that don't have an object yet, more specific checks might be needed if this permission is used there.
+        # For views that operate on an object (Retrieve, Update, Delete), has_object_permission is key.
+        # Let's assume for now that if it reaches here for an object-specific view, basic auth is enough.
+        # Staff, admin, and dean's office are generally allowed broader access by default in this permission.
+        if request.user.role in [User.Role.STAFF, User.Role.ADMIN, User.Role.DEAN_OFFICE]:
             return True
         
-        # If it's an instructor, check if they're trying to access their own courses
-        if request.user.role == 'INSTRUCTOR':
-            # For list and create views, check request parameters
-            course_id = request.query_params.get('course_id') or request.data.get('course_id')
-            
-            if not course_id:
-                # If no course_id specified, only allow for staff
-                return request.user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']
-                
-            # Check if instructor teaches this course
-            return Section.objects.filter(
-                course_id=course_id,
-                instructor=request.user
-            ).exists()
-        
-        return False
+        # If it's an instructor, allow proceeding to object-level check for relevant views
+        if request.user.role == User.Role.INSTRUCTOR:
+            return True # Defer to has_object_permission for specific exam
+
+        return False # Other roles not explicitly handled are denied by default by this permission
     
-    def has_object_permission(self, request, view, obj):
-        # Staff, admin, and dean's office can do anything
-        if request.user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']:
+    def has_object_permission(self, request, view, obj): # obj here is an Exam instance
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        if request.user.role in [User.Role.STAFF, User.Role.ADMIN, User.Role.DEAN_OFFICE]:
             return True
         
-        # If it's an instructor, check if the exam belongs to a course they teach
-        if request.user.role == 'INSTRUCTOR':
+        if request.user.role == User.Role.INSTRUCTOR:
+            # Check if the exam (obj) belongs to a course the instructor teaches
             return Section.objects.filter(
-                course=obj.course,
+                course=obj.course, 
                 instructor=request.user
             ).exists()
         
@@ -2562,28 +2589,31 @@ class ExamListView(generics.ListAPIView):
     search_fields = ['course__code', 'course__title']
     
     def get_queryset(self):
-        """Override get_queryset to filter by instructor access"""
+        """Override get_queryset to filter by user role and department for staff"""
         user = self.request.user
-        
-        # For staff, admin, and dean's office, show all exams
-        if user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']:
-            # Allow filtering by status parameter if provided
-            status = self.request.query_params.get('status')
-            if status:
-                return Exam.objects.filter(status=status)
-            return Exam.objects.all()
-            
-        # For instructors, show only exams for courses they teach
-        if user.role == 'INSTRUCTOR':
+        queryset = Exam.objects.all()
+
+        status_param = self.request.query_params.get('status')
+
+        if user.is_superuser or (hasattr(user, 'role') and user.role == User.Role.ADMIN):
+            # Superusers and ADMIN role see all exams
+            pass 
+        elif hasattr(user, 'role') and user.role == User.Role.STAFF:
+            queryset = queryset.filter(course__department__code=user.department)
+        elif hasattr(user, 'role') and user.role == User.Role.DEAN_OFFICE:
+            pass # Retains current behavior of seeing all for Dean's Office
+        elif hasattr(user, 'role') and user.role == User.Role.INSTRUCTOR:
             # Get all courses where the user is an instructor
-            instructor_courses = Course.objects.filter(
-                section__instructor=user
-            ).distinct()
+            instructor_courses = Course.objects.filter(sections__instructor=user).distinct() # Changed section to sections
+            queryset = queryset.filter(course__in=instructor_courses)
+        else:
+            # Default for other authenticated users (e.g., TAs)
+            return Exam.objects.none() # No exams for others by default
+
+        if status_param:
+            queryset = queryset.filter(status=status_param)
             
-            return Exam.objects.filter(course__in=instructor_courses)
-            
-        # For other roles, return empty queryset
-        return Exam.objects.none()
+        return queryset
 
 
 class ExamDetailView(generics.RetrieveAPIView):
@@ -3065,3 +3095,60 @@ class ExamPlacementImportView(APIView):
             return Response({
                 "detail": f"Error processing Excel file: {str(e)}"
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ScheduleCourseOptionsView(APIView):
+    """
+    API endpoint to get available course options for a TA's weekly schedule.
+    For TAs, it shows their enrolled courses.
+    The options also include "Other Course" and, for Part-Time TAs, "Non-academic".
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        options = []
+
+        if user.role == 'TA':
+            try:
+                # Attempt to get TAProfile and their enrolled courses
+                ta_profile = user.ta_profile
+                enrolled_courses = ta_profile.enrolled_courses.all().order_by('department__code', 'code')
+                for course in enrolled_courses:
+                    options.append(f"{course.department.code}{course.code} - {course.title}")
+            except TAProfile.DoesNotExist:
+                # If TAProfile does not exist, this TA has no specific enrolled courses to list
+                # They will still get "Other Course" and potentially "Non-academic"
+                pass
+            except AttributeError: 
+                # Handles cases where user might not have ta_profile (e.g., if user is not a TA but somehow hits this logic)
+                # Or if ta_profile exists but enrolled_courses is not set up as expected (should not happen with M2M)
+                logger.warning(f"User {user.email} (ID: {user.id}) with role TA has no ta_profile or an issue with enrolled_courses.")
+                pass # Proceed to add default options
+
+            options.append("Other Course")
+            if user.employment_type == User.EmploymentType.PART_TIME:
+                options.append("Non-academic")
+        
+        elif user.role in [User.Role.STAFF, User.Role.ADMIN, User.Role.DEAN_OFFICE]:
+            # For Staff/Admin/Dean, list all courses (as before, or handle as needed for their context)
+            # For now, replicating previous behavior for non-TAs for safety, though this view is TA-centric.
+            all_system_courses = Course.objects.all().order_by('department__code', 'code')
+            for course in all_system_courses:
+                options.append(f"{course.department.code}{course.code} - {course.title}")
+            options.append("Other Course") # Staff might also need this
+            # "Non-academic" might not be relevant for Staff scheduling their own tasks here, adjust if needed.
+
+        else: # Other roles (e.g. Instructor) - what should they see?
+              # For now, returning empty or a generic message might be safest if they aren't supposed to use this.
+              # Or, provide "Other Course" as a minimum.
+            options.append("Other Course")
+
+
+        # If user is not a TA and no options were added (e.g. Instructor, or TA with no profile/courses)
+        # ensure at least "Other Course" is available.
+        if not options and "Other Course" not in options:
+             options.append("Other Course")
+
+
+        return Response(options, status=status.HTTP_200_OK)

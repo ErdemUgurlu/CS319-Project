@@ -77,6 +77,7 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=150)
     last_name = models.CharField(_('last name'), max_length=150)
+    bilkent_id = models.IntegerField(_('Bilkent ID'), unique=True, null=True, blank=True)
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.TA)
     department = models.CharField(max_length=10, choices=Department.choices, default=Department.OTHER)
     
@@ -116,7 +117,7 @@ class User(AbstractUser):
     
     # Set login field to email
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'role', 'phone']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'role', 'phone', 'bilkent_id']
     
     # Use custom user manager
     objects = UserManager()
@@ -312,6 +313,7 @@ class Exam(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exams')
     type = models.CharField(max_length=10, choices=ExamType.choices)
     date = models.DateTimeField()
+    duration = models.PositiveIntegerField(default=120, help_text="Duration of the exam in minutes")
     classroom = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True)
     proctor_count = models.PositiveIntegerField(default=1)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_exams')
@@ -467,6 +469,12 @@ class TAProfile(models.Model):
         on_delete=models.CASCADE, 
         related_name='ta_profile',
         limit_choices_to={'role': 'TA'}
+    )
+    enrolled_courses = models.ManyToManyField(
+        Course, # Direct reference to Course model
+        blank=True,
+        related_name='enrolled_tas_profiles', # Changed related_name to avoid conflict if Course has enrolled_tas
+        help_text="Courses this TA is currently enrolled in as a student."
     )
     
     # Additional TA-specific fields

@@ -40,6 +40,7 @@ class ProctorAssignment(models.Model):
         choices=Status.choices,
         default=Status.ASSIGNED
     )
+    is_paid = models.BooleanField(default=False, help_text="Is this a paid proctoring assignment?")
     notes = models.TextField(blank=True)
     
     _original_status = None 

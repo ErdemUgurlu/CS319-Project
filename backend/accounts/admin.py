@@ -159,7 +159,7 @@ class UserAdmin(BaseUserAdmin):
     
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone', 'role', 'department', 'academic_level', 'employment_type', 'iban')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone', 'bilkent_id', 'role', 'department', 'academic_level', 'employment_type', 'iban')}),
         (_('Permissions'), {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'is_approved', 'email_verified',
                        'groups', 'user_permissions'),
@@ -173,7 +173,7 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'role', 'department', 'phone'),
         }),
     )
-    list_display = ('email', 'first_name', 'last_name', 'role', 'department', 'employment_type', 'assigned_to_instructor', 'is_approved', 'email_verified', 'is_staff', 'is_active')
+    list_display = ('email', 'first_name', 'last_name', 'bilkent_id', 'role', 'department', 'employment_type', 'assigned_to_instructor', 'is_approved', 'email_verified', 'is_staff', 'is_active')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'is_approved', 'email_verified', 'role', 'department', 'academic_level', 'employment_type')
     search_fields = ('email', 'first_name', 'last_name', 'phone')
     ordering = ('email',)
@@ -465,6 +465,7 @@ class TAProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'get_department', 'undergrad_university', 'supervisor', 'workload_number', 'workload_credits')
     list_filter = ('user__department', 'user__academic_level', 'user__employment_type')
     search_fields = ('user__email', 'user__first_name', 'user__last_name', 'undergrad_university')
+    filter_horizontal = ('enrolled_courses',)
     
     def get_department(self, obj):
         return obj.user.department
