@@ -38559,3 +38559,8 @@ INFO 2025-05-10 23:06:23,925 basehttp "POST /api/proctoring/exams/9/assign-proct
 INFO 2025-05-10 23:06:23,936 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
 INFO 2025-05-10 23:06:23,940 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
 INFO 2025-05-10 23:06:32,866 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-11 00:28:21,061 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 00:28:23,967 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-11 00:28:23,973 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-11 00:28:23,979 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-11 00:28:23,990 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
