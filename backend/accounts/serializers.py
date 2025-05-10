@@ -2,10 +2,12 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, Classroom, WeeklySchedule, InstructorTAAssignment
+    Section, TAAssignment, Classroom, WeeklySchedule, InstructorTAAssignment, Exam,
+    TAProfile
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
+from proctoring.models import ProctorAssignment
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -18,13 +20,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'password', 'password_confirm', 'first_name', 'last_name', 
-                  'role', 'phone', 'department', 'iban', 'academic_level', 'employment_type')
+                  'role', 'phone', 'department', 'iban', 'academic_level', 'employment_type', 'bilkent_id')
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
             'role': {'required': True},
             'phone': {'required': True},
             'department': {'required': True},
+            'bilkent_id': {'required': True},
             'iban': {'required': False},
             'academic_level': {'required': False},
             'employment_type': {'required': False},
@@ -69,6 +72,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             role=validated_data['role'],
             phone=validated_data['phone'],
             department=validated_data['department'],
+            bilkent_id=validated_data['bilkent_id'],
             iban=validated_data.get('iban', ''),
             academic_level=validated_data.get('academic_level', User.AcademicLevel.NOT_APPLICABLE),
             employment_type=validated_data.get('employment_type', User.EmploymentType.NOT_APPLICABLE),
@@ -109,7 +113,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'full_name', 'role', 'role_display',
                   'phone', 'iban', 'academic_level', 'academic_level_display', 'employment_type',
-                  'employment_type_display', 'is_approved', 'email_verified', 'date_joined', 'last_login')
+                  'employment_type_display', 'is_approved', 'email_verified', 'date_joined', 'last_login', 'bilkent_id')
         read_only_fields = ('id', 'email', 'role', 'is_approved', 'email_verified', 
                             'date_joined', 'last_login')
 
@@ -133,7 +137,7 @@ class UserListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email', 'first_name', 'last_name', 'full_name', 'role', 'role_display',
-                  'is_approved', 'email_verified', 'date_joined')
+                  'is_approved', 'email_verified', 'date_joined', 'bilkent_id')
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
@@ -150,7 +154,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'email', 'username', 'first_name', 'last_name', 'full_name', 
                   'role', 'role_display', 'phone', 'iban', 'academic_level', 
                   'academic_level_display', 'employment_type', 'employment_type_display', 
-                  'is_approved', 'email_verified', 'is_active', 'is_staff', 'date_joined', 'last_login')
+                  'is_approved', 'email_verified', 'is_active', 'is_staff', 'date_joined', 'last_login', 'bilkent_id')
         read_only_fields = ('id', 'email', 'username', 'date_joined', 'last_login')
 
 
@@ -238,10 +242,11 @@ class CourseSerializer(serializers.ModelSerializer):
         source='department',
         write_only=True
     )
+    level_display = serializers.CharField(source='get_level_display', read_only=True)
     
     class Meta:
         model = Course
-        fields = ('id', 'department', 'department_id', 'code', 'title', 'credit')
+        fields = ('id', 'department', 'department_id', 'code', 'title', 'credit', 'level', 'level_display')
 
 
 class InstructorSerializer(serializers.ModelSerializer):
@@ -275,7 +280,7 @@ class SectionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Section
-        fields = ('id', 'course', 'course_id', 'section_number', 'semester', 'year', 'instructor', 'instructor_id')
+        fields = ('id', 'course', 'course_id', 'section_number', 'instructor', 'instructor_id', 'student_count')
 
 
 class TASerializer(serializers.ModelSerializer):
@@ -312,6 +317,45 @@ class TAAssignmentSerializer(serializers.ModelSerializer):
         fields = ('id', 'ta', 'ta_id', 'section', 'section_id', 'assigned_date')
         read_only_fields = ('assigned_date',)
 
+    def validate(self, data):
+        """
+        Check that the TA and the Section's course are from the same department.
+        """
+        ta = data.get('ta') # This will be a User instance because source='ta'
+        section = data.get('section') # This will be a Section instance
+
+        # The ta and section fields are populated from ta_id and section_id respectively
+        # during the PrimaryKeyRelatedField's to_internal_value method.
+        # So, by the time validate() is called, 'ta' and 'section' should be model instances.
+
+        if not ta:
+            # This case should ideally be caught by 'ta_id' being required,
+            # but as a safeguard if ta_id was valid but user fetching failed.
+            raise serializers.ValidationError({"ta_id": "TA not found."})
+
+        if not section:
+            # Similar safeguard for section.
+            raise serializers.ValidationError({"section_id": "Section not found."})
+
+        # User.department is a CharField (e.g., 'CS', 'IE')
+        # Section.course.department is a ForeignKey to Department model, which has a 'code' attribute.
+        if ta.department != section.course.department.code:
+            raise serializers.ValidationError(
+                {"non_field_errors": f"TA ({ta.email}, Dept: {ta.department}) and Course ({section.course.code}, Dept: {section.course.department.code}) must be in the same department."}
+            )
+        
+        # Check for existing assignment to prevent duplicates (already handled by unique_together in model)
+        # However, explicit check here can give a friendlier message if needed,
+        # but usually not necessary if unique_together is set.
+        # if TAAssignment.objects.filter(ta=ta, section=section).exists():
+        #     # If instance is present, we are updating, so allow same ta-section
+        #     if not self.instance or (self.instance.ta != ta or self.instance.section != section) :
+        #         raise serializers.ValidationError(
+        #             {"non_field_errors": "This TA is already assigned to this section."}
+        #         )
+
+        return data
+
 
 class ClassroomSerializer(serializers.ModelSerializer):
     """
@@ -320,6 +364,77 @@ class ClassroomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Classroom
         fields = ('id', 'building', 'room_number', 'capacity')
+
+
+class ExamSerializer(serializers.ModelSerializer):
+    """
+    Serializer for exam data.
+    """
+    course = CourseSerializer(read_only=True)
+    course_id = serializers.PrimaryKeyRelatedField(
+        queryset=Course.objects.all(),
+        source='course',
+        write_only=True
+    )
+    classroom = ClassroomSerializer(read_only=True, allow_null=True)
+    classroom_id = serializers.PrimaryKeyRelatedField(
+        queryset=Classroom.objects.all(),
+        source='classroom',
+        write_only=True,
+        required=False,
+        allow_null=True,
+        many=False
+    )
+    created_by_name = serializers.SerializerMethodField()
+    type_display = serializers.CharField(source='get_type_display', read_only=True)
+    status = serializers.CharField(read_only=True, required=False, allow_null=True, default='WAITING_FOR_PLACES')
+    status_display = serializers.CharField(read_only=True, required=False, allow_null=True)
+    student_list_file = serializers.FileField(required=False, allow_null=True)
+    has_student_list = serializers.BooleanField(read_only=True)
+    assigned_proctor_count = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Exam
+        fields = (
+            'id', 'course', 'course_id', 'type', 'type_display', 
+            'date', 'duration', 'classroom', 'classroom_id', 'proctor_count',
+            'created_by', 'created_by_name', 'created_at', 'updated_at',
+            'status', 'status_display', 'student_count', 'student_list_file',
+            'has_student_list', 'assigned_proctor_count'
+        )
+        read_only_fields = ('created_by', 'created_at', 'updated_at', 'has_student_list')
+    
+    def get_created_by_name(self, obj):
+        if obj.created_by:
+            return f"{obj.created_by.first_name} {obj.created_by.last_name}"
+        return None
+    
+    def get_assigned_proctor_count(self, obj):
+        """Returns the count of currently ASSIGNED proctors for this exam."""
+        return ProctorAssignment.objects.filter(exam=obj, status=ProctorAssignment.Status.ASSIGNED).count()
+    
+    def create(self, validated_data):
+        # Set the created_by field from the request user
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            validated_data['created_by'] = request.user
+            
+        # Handle student list file
+        student_list_file = validated_data.get('student_list_file')
+        if student_list_file:
+            validated_data['has_student_list'] = True
+            # Student count will be calculated in a view or signal
+            
+        return super().create(validated_data)
+        
+    def update(self, instance, validated_data):
+        # Handle student list file
+        student_list_file = validated_data.get('student_list_file')
+        if student_list_file:
+            validated_data['has_student_list'] = True
+            # Student count will be calculated in a view or signal
+            
+        return super().update(instance, validated_data)
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -464,9 +579,67 @@ class InstructorTAAssignmentSerializer(serializers.ModelSerializer):
 
 
 class TADetailSerializer(serializers.ModelSerializer):
+    """
+    Enhanced serializer for TA details including profile information.
+    """
     full_name = serializers.CharField(read_only=True)
-    department_name = serializers.CharField(source='department.name', read_only=True)
+    department_name = serializers.SerializerMethodField()
+    academic_level_display = serializers.CharField(source='get_academic_level_display', read_only=True)
+    employment_type_display = serializers.CharField(source='get_employment_type_display', read_only=True)
+    profile = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ('id', 'email', 'full_name', 'department', 'department_name', 'academic_level', 'employment_type') 
+        fields = (
+            'id', 'email', 'first_name', 'last_name', 'full_name', 
+            'department', 'department_name', 'academic_level', 'academic_level_display',
+            'employment_type', 'employment_type_display', 'profile'
+        )
+    
+    def get_department_name(self, obj):
+        if obj.department:
+            try:
+                dept = Department.objects.get(code=obj.department)
+                return dept.name
+            except Department.DoesNotExist:
+                return None
+        return None
+    
+    def get_profile(self, obj):
+        try:
+            profile = TAProfile.objects.get(user=obj)
+            return {
+                'undergrad_university': profile.undergrad_university,
+                'supervisor': profile.supervisor.id if profile.supervisor else None,
+                'supervisor_name': profile.supervisor.full_name if profile.supervisor else None,
+                'workload_number': profile.workload_number,
+                'workload_credits': profile.workload_credits
+            }
+        except TAProfile.DoesNotExist:
+            return None
+
+
+class TAProfileSerializer(serializers.ModelSerializer):
+    """
+    Serializer for TA profile data.
+    """
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+    first_name = serializers.CharField(source='user.first_name', read_only=True)
+    last_name = serializers.CharField(source='user.last_name', read_only=True)
+    full_name = serializers.CharField(source='user.full_name', read_only=True)
+    department = serializers.CharField(source='user.department', read_only=True)
+    academic_level = serializers.CharField(source='user.academic_level', read_only=True)
+    academic_level_display = serializers.CharField(source='user.get_academic_level_display', read_only=True)
+    employment_type = serializers.CharField(source='user.employment_type', read_only=True)
+    employment_type_display = serializers.CharField(source='user.get_employment_type_display', read_only=True)
+    
+    class Meta:
+        model = TAProfile
+        fields = (
+            'id', 'user_id', 'email', 'first_name', 'last_name', 'full_name',
+            'department', 'academic_level', 'academic_level_display',
+            'employment_type', 'employment_type_display',
+            'undergrad_university', 'supervisor', 'workload_number', 'workload_credits', 'schedule_json'
+        )
+        read_only_fields = ('id', 'user_id', 'workload_number') 

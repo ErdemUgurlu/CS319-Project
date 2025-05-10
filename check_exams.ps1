@@ -1,3 +1,10 @@
+# This script has been deprecated
+Write-Output "The proctoring module has been removed from the project."
+Write-Output "This script is no longer functional and should be updated or removed."
+Write-Output "Exam-related functionality is no longer available."
+
+# Original script preserved below as comments for reference
+<# 
 # Change to backend directory
 cd backend
 
@@ -61,3 +68,4 @@ print(f'Created sample exam: {exam.title} for {exam.section}')
 Write-Output "Checking the API endpoint..."
 cd ..
 curl http://localhost:8000/proctoring/exams/ -H "Authorization: Bearer YOUR_TOKEN_HERE" | ConvertFrom-Json 
+#> 

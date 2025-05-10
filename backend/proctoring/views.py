@@ -1,985 +1,356 @@
 from django.shortcuts import render, get_object_or_404
+from django.db.models import Count, Q, F
 from django.utils import timezone
-from django.db import transaction
-from django.http import Http404, HttpResponse
-from django.core.files.storage import default_storage
-from rest_framework import status, viewsets, generics, permissions
+from datetime import timedelta, datetime
+from rest_framework import generics, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
-from django_filters.rest_framework import DjangoFilterBackend
-
-from accounts.models import User, AuditLog, Classroom, Section, Department
-from .models import Exam, ExamRoom, ProctorAssignment, SwapRequest, ProctorConstraint
-from workload.models import TAWorkload
-from . import serializers
-from .utils import (
-    process_swap_request, 
-    send_swap_notification_emails,
-    check_ta_eligibility,
-    assign_proctors_to_exam,
-    find_available_tas_for_exam,
-    generate_seating_plan
+from accounts.models import User, Exam, Course, WeeklySchedule, TAAssignment
+from accounts.permissions import IsStaffOrInstructor
+from .models import ProctorAssignment
+from .serializers import (
+    ProctorAssignmentSerializer,
+    EligibleProctorSerializer,
+    ProctorAssignmentCreateSerializer
 )
 
-
-class IsTA(permissions.BasePermission):
+class ExamEligibleTAsView(APIView):
     """
-    Custom permission to only allow TAs to access a view.
+    API endpoint to get all eligible TAs for an exam.
     """
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role == 'TA'
-
-
-class IsStaffOrInstructor(permissions.BasePermission):
-    """
-    Custom permission to only allow staff and instructors to access a view.
-    """
-    def has_permission(self, request, view):
-        return request.user.is_authenticated and request.user.role in ['STAFF', 'ADMIN', 'INSTRUCTOR']
-
-
-class IsStaffOrInstructorOfCourse(permissions.BasePermission):
-    """
-    Permission to only allow staff or the instructor of the course to access a view.
-    """
-    def has_object_permission(self, request, view, obj):
-        # Staff and admin can access any exam
-        if request.user.role in ['STAFF', 'ADMIN']:
-            return True
-        
-        # Instructors can only access exams they created
-        if request.user.role == 'INSTRUCTOR':
-            return obj.created_by == request.user or obj.section.course.instructor == request.user
-        
-        return False
-
-
-class MyProctoringsView(generics.ListAPIView):
-    """
-    API endpoint for TAs to view their proctor assignments.
-    """
-    serializer_class = serializers.ProctorAssignmentSerializer
-    permission_classes = [IsAuthenticated, IsTA]
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrInstructor]
     
-    def get_queryset(self):
-        return ProctorAssignment.objects.filter(
-            proctor=self.request.user
-        ).select_related(
-            'exam', 'exam_room', 'exam_room__classroom'
-        ).order_by('exam__date', 'exam__start_time')
-
-
-class SwapRequestCreateView(generics.CreateAPIView):
-    """
-    API endpoint for TAs to create swap requests.
-    
-    For direct swaps (with a target TA specified), the request is processed immediately.
-    For self-initiated swaps (no target), the request is posted as 'available'.
-    """
-    serializer_class = serializers.SwapRequestCreateSerializer
-    permission_classes = [IsAuthenticated, IsTA]
-    
-    @transaction.atomic
-    def perform_create(self, serializer):
-        # Save the swap request instance but don't commit to DB yet
-        swap_request = serializer.save()
+    def get(self, request, pk=None):
+        exam = get_object_or_404(Exam, pk=pk)
+        exam_department_code = exam.course.department.code # Get the department code (e.g., 'CS')
+        exam_course = exam.course # Get the exam's course instance
         
-        # Set the requesting proctor
-        swap_request.requesting_proctor = self.request.user
+        # Get IDs of TAs teaching sections of this specific course
+        ta_ids_teaching_this_course = set(
+            TAAssignment.objects.filter(section__course=exam_course)
+                                .values_list('ta_id', flat=True)
+        )
         
-        # Process differently based on whether a target TA is specified
-        if swap_request.requested_proctor:
-            swap_request.is_auto_swap = True  # Mark as automatic swap
-            swap_request.save()
-            
-            # Process the swap request
-            result = process_swap_request(swap_request)
-            
-            # Send email notifications
-            if result['success']:
-                send_swap_notification_emails(swap_request, success=True)
-            else:
-                send_swap_notification_emails(swap_request, success=False)
-            
-            # Store the result for the response
-            self.swap_result = result
-        else:
-            # This is a self-initiated swap without a target, just save it as available
-            swap_request.status = 'AVAILABLE'
-            swap_request.save()
-            
-            # Log the availability posting
-            AuditLog.objects.create(
-                user=self.request.user,
-                action='post_swap_availability',
-                object_type='SwapRequest',
-                object_id=swap_request.id,
-                description=f"TA {self.request.user.email} posted availability to swap {swap_request.original_assignment.exam.title}"
+        # Convert exam datetimes to current (local) timezone
+        # This assumes WeeklySchedule times are entered in the project's current timezone (settings.TIME_ZONE)
+        # and USE_TZ is True, so exam.date is timezone-aware (likely UTC).
+        exam_dt_start_utc = exam.date
+        exam_dt_end_utc = exam.date + timedelta(minutes=exam.duration)
+
+        # Use timezone.get_current_timezone() if you want to be dynamic based on activation,
+        # or parse settings.TIME_ZONE for a fixed project timezone.
+        # For simplicity, timezone.localtime() without a specific tz will use current active timezone if one is set,
+        # or settings.TIME_ZONE if USE_TZ=True and no active timezone.
+        exam_dt_start_local = timezone.localtime(exam_dt_start_utc)
+        exam_dt_end_local = timezone.localtime(exam_dt_end_utc)
+        
+        # Determine exam day of week and time range from local times
+        exam_day_of_week_num = exam_dt_start_local.weekday() # Monday is 0 and Sunday is 6
+        day_mapping = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN']
+        exam_day_short_code = day_mapping[exam_day_of_week_num]
+        
+        exam_start_time_local = exam_dt_start_local.time()
+        exam_end_time_local = exam_dt_end_local.time()
+
+        # Get IDs of TAs currently assigned to this specific exam
+        currently_assigned_ta_ids_for_this_exam = set(
+            ProctorAssignment.objects.filter(exam=exam, status=ProctorAssignment.Status.ASSIGNED)
+                                    .values_list('ta_id', flat=True)
+        )
+
+        # First, get all TAs from the same department as the exam's course
+        tas = User.objects.filter(
+            role='TA', 
+            is_active=True,
+            department=exam_department_code  # Filter by the exam's course department code
+        )
+        
+        # Exclude TAs who are enrolled in the exam's course
+        # This uses the 'enrolled_courses' field on the TAProfile model
+        tas = tas.exclude(ta_profile__enrolled_courses=exam.course)
+
+        # Exclude TAs with WeeklySchedule conflicts
+        # A TA has a conflict if any of their schedule entries on that day overlap with the exam time
+        # Overlap condition: (schedule_start < exam_end) AND (schedule_end > exam_start)
+        
+        conflicting_schedule_ta_ids_set = set()
+        if exam_dt_start_local.date() == exam_dt_end_local.date():
+            # Exam is entirely on one day (local time)
+            qs = WeeklySchedule.objects.filter(
+                day=exam_day_short_code,
+                start_time__lt=exam_end_time_local,
+                end_time__gt=exam_start_time_local
             )
+            conflicting_schedule_ta_ids_set.update(qs.values_list('ta_id', flat=True))
+        else:
+            # Exam spans midnight (local time)
+            # Part 1: Conflict on the start day (from exam_time_start until midnight)
+            qs_part1 = WeeklySchedule.objects.filter(
+                day=exam_day_short_code, # Day of exam_dt_start_local
+                start_time__lt=datetime.time(23, 59, 59, 999999), # End of day
+                end_time__gt=exam_start_time_local
+            )
+            conflicting_schedule_ta_ids_set.update(qs_part1.values_list('ta_id', flat=True))
+
+            # Part 2: Conflict on the end day (from midnight until exam_time_end)
+            exam_day_end_local_code = day_mapping[exam_dt_end_local.weekday()]
+            exam_time_end_on_end_day = exam_dt_end_local.time()
+            qs_part2 = WeeklySchedule.objects.filter(
+                day=exam_day_end_local_code,
+                start_time__lt=exam_time_end_on_end_day,
+                end_time__gt=datetime.time(0, 0, 0) # Start of day
+            )
+            conflicting_schedule_ta_ids_set.update(qs_part2.values_list('ta_id', flat=True))
+        
+        tas = tas.exclude(id__in=list(conflicting_schedule_ta_ids_set))
+
+        # Exclude TAs with conflicting existing Proctoring Duties
+        potential_ta_ids = list(tas.values_list('id', flat=True)) # IDs of TAs not yet ruled out
+        
+        ta_ids_with_conflicting_proctor_duties = set()
+        if potential_ta_ids:
+            # Fetch other 'ASSIGNED' proctor duties for these TAs
+            # Exclude assignments for the current target exam itself
+            existing_proctor_assignments = ProctorAssignment.objects.filter(
+                ta_id__in=potential_ta_ids,
+                status=ProctorAssignment.Status.ASSIGNED
+            ).exclude(exam=exam).select_related('exam') # exam.duration and exam.date are needed
+
+            target_exam_date_local = exam_dt_start_local.date()
+            day_before_target = target_exam_date_local - timedelta(days=1)
+            day_after_target = target_exam_date_local + timedelta(days=1)
+
+            for assignment in existing_proctor_assignments:
+                assigned_exam = assignment.exam
+                
+                # Convert assigned exam's datetime to local timezone
+                assigned_exam_start_utc = assigned_exam.date
+                # Ensure assigned_exam.duration is not None before using it
+                duration_minutes = assigned_exam.duration if assigned_exam.duration is not None else 0 
+                assigned_exam_end_utc = assigned_exam_start_utc + timedelta(minutes=duration_minutes)
+                
+                assigned_exam_start_local = timezone.localtime(assigned_exam_start_utc)
+                assigned_exam_end_local = timezone.localtime(assigned_exam_end_utc)
+                
+                assigned_exam_date_local = assigned_exam_start_local.date()
+
+                is_conflict = False
+
+                # 1. Check if the assigned exam is on the day before the target exam
+                if assigned_exam_date_local == day_before_target:
+                    is_conflict = True
+                # 2. Check if the assigned exam is on the day after the target exam
+                elif assigned_exam_date_local == day_after_target:
+                    is_conflict = True
+                # 3. Check if the assigned exam is on the same day as the target exam (check for time overlap)
+                elif assigned_exam_date_local == target_exam_date_local:
+                    # Overlap: (existing_duty_start_local < target_exam_end_local) AND (existing_duty_end_local > target_exam_start_local)
+                    if (assigned_exam_start_local < exam_dt_end_local and
+                            assigned_exam_end_local > exam_dt_start_local):
+                        is_conflict = True
+                
+                if is_conflict:
+                    ta_ids_with_conflicting_proctor_duties.add(assignment.ta_id)
             
-            # Store a simple result
-            self.swap_result = {
-                'success': True,
-                'message': 'Swap availability posted successfully',
-                'swap_request': swap_request,
-                'details': {'status': 'AVAILABLE'}
+            if ta_ids_with_conflicting_proctor_duties:
+                tas = tas.exclude(id__in=list(ta_ids_with_conflicting_proctor_duties))
+
+        # Filter by academic level based on the exam's course level
+        exam_course_level = exam.course.level.upper() # Ensure comparison is case-insensitive (e.g., 'UNDERGRADUATE')
+
+        if exam_course_level == Course.CourseLevel.UNDERGRADUATE.upper():
+            tas = tas.filter(academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD])
+        elif exam_course_level in [Course.CourseLevel.GRADUATE.upper(), Course.CourseLevel.PHD.upper()]:
+            tas = tas.filter(academic_level=User.AcademicLevel.PHD)
+        # If exam_course_level is something else, no further academic level filtering is applied by default.
+        # This assumes Course.level will always be one of the defined choices.
+        
+        # Calculate current proctor workload for each TA
+        tas = tas.annotate(
+            current_workload=Count('proctoring_assignments', 
+                                  filter=Q(proctoring_assignments__status__in=['ASSIGNED', 'COMPLETED']))
+        ).order_by('current_workload')  # Order by workload (ascending)
+        
+        result = []
+        # Prepare context for the serializer
+        serializer_context = {
+            'request': request,
+            'exam': exam,
+            'currently_assigned_ta_ids_for_this_exam': currently_assigned_ta_ids_for_this_exam,
+            'exam_course': exam_course,
+            'ta_ids_teaching_this_course': ta_ids_teaching_this_course
+        }
+
+        for ta in tas:
+            # Initialize details (as it was before, can be refactored if details are also sourced from serializer)
+            # For now, keeping this logic here as it was.
+            # The serializer methods for is_eligible, is_assigned_to_current_exam, is_teaching_course_sections
+            # will use the context. The direct field access like ta.current_workload remains.
+            
+            serializer = EligibleProctorSerializer(ta, context=serializer_context)
+            data = serializer.data # This will now include is_teaching_course_sections
+            
+            # The original manual overrides/additions for is_eligible, details, current_workload,
+            # and is_assigned_to_current_exam in the view can be removed if the serializer handles them fully
+            # or if the serializer's output is directly used.
+            # Given the serializer already defines methods for is_eligible and is_assigned_to_current_exam,
+            # and fields for details and current_workload, we can simplify this loop.
+
+            # Simpler approach: directly use serializer.data which should be complete
+            # Ensure 'details' and 'current_workload' are correctly sourced by the serializer
+            # For now, let's assume EligibleProctorSerializer is updated or correctly sources these.
+            # The provided EligibleProctorSerializer already has fields for details and current_workload (read_only=True),
+            # meaning they are expected to be on the 'ta' instance or annotated.
+            # 'is_eligible' and 'is_assigned_to_current_exam' are SerializerMethodFields.
+            
+            # Current_workload is annotated on 'ta' object. Details seems to be static in the view.
+            # Let's keep the manual addition of 'details' for now if it's not meant to come from the TA model directly.
+            # The problem asks for sorting based on 'is_teaching_course_sections', which is now in serializer.data
+
+            current_ta_details = { # This was the previous static detail structure
+                'constraints': [], 
+                'is_cross_department': False, 
+                'workload': {
+                    'current': ta.current_workload,
+                }
             }
-    
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+            data['details'] = current_ta_details # Override if serializer doesn't provide this structure or it's static.
+            data['current_workload'] = ta.current_workload # Ensure this is from the annotation
+            # 'is_eligible' and 'is_assigned_to_current_exam' and 'is_teaching_course_sections' come from serializer context methods.
+            
+            result.append(data)
         
-        # Get the result from the swap processing
-        result = getattr(self, 'swap_result', {'success': False, 'message': 'Unknown error'})
+        # The sorting in the view was:
+        # result = sorted(result, key=lambda x: (not x['is_eligible'], x['current_workload']))
+        # The frontend will now handle the primary sort by 'is_teaching_course_sections'.
+        # The backend can still apply a default sort, e.g., by workload.
+        # The .order_by('current_workload') on the 'tas' queryset already handles initial sorting.
+        # The final sort in the view for 'is_eligible' might be redundant if all are eligible.
+        # Let's rely on the queryset order and frontend sort for now.
         
-        if result['success']:
-            return Response({
-                'message': result['message'],
-                'swap_request_id': result['swap_request'].id,
-                'details': result.get('details', {})
-            }, status=status.HTTP_201_CREATED)
-        else:
-            return Response({
-                'error': result['message'],
-                'swap_request_id': result['swap_request'].id,
-                'details': result.get('details', {})
-            }, status=status.HTTP_400_BAD_REQUEST)
+        return Response(result)
 
-
-class AvailableSwapsView(generics.ListAPIView):
+class AssignProctorsToExamView(APIView):
     """
-    API endpoint to view available swaps that TAs can claim.
+    API endpoint to assign proctors to an exam.
     """
-    serializer_class = serializers.SwapRequestSerializer
-    permission_classes = [IsAuthenticated, IsTA]
+    permission_classes = [permissions.IsAuthenticated, IsStaffOrInstructor]
     
-    def get_queryset(self):
-        """
-        Return all swap requests with status AVAILABLE that are not the current user's.
-        """
-        return SwapRequest.objects.filter(
-            status='AVAILABLE'
-        ).exclude(
-            requesting_proctor=self.request.user
-        ).select_related(
-            'requesting_proctor',
-            'original_assignment',
-            'original_assignment__exam'
-        ).order_by('-created_at')
-
-
-class ClaimSwapView(APIView):
-    """
-    API endpoint for TAs to claim a posted swap request.
-    """
-    permission_classes = [IsAuthenticated, IsTA]
-    
-    @transaction.atomic
-    def post(self, request, swap_request_id):
-        try:
-            # Get the swap request
-            swap_request = SwapRequest.objects.get(id=swap_request_id, status='AVAILABLE')
-            
-            # Update the swap request with the claiming TA
-            swap_request.requested_proctor = request.user
-            swap_request.status = 'PENDING'  # Change to PENDING while we process
-            swap_request.save()
-            
-            # Process the swap
-            result = process_swap_request(swap_request)
-            
-            # Send email notifications
-            if result['success']:
-                send_swap_notification_emails(swap_request, success=True)
-                
-                # Log the claim
-                AuditLog.objects.create(
-                    user=request.user,
-                    action='claim_swap',
-                    object_type='SwapRequest',
-                    object_id=swap_request.id,
-                    description=f"TA {request.user.email} claimed swap for {swap_request.original_assignment.exam.title}"
-                )
-                
-                return Response({
-                    'message': 'Swap claimed and processed successfully',
-                    'swap_request_id': swap_request.id,
-                    'details': result.get('details', {})
-                }, status=status.HTTP_200_OK)
-            else:
-                # If processing failed, reset to AVAILABLE
-                swap_request.requested_proctor = None
-                swap_request.status = 'AVAILABLE'
-                swap_request.save()
-                
-                return Response({
-                    'error': result['message'],
-                    'swap_request_id': swap_request.id,
-                    'details': result.get('details', {})
-                }, status=status.HTTP_400_BAD_REQUEST)
-                
-        except SwapRequest.DoesNotExist:
-            return Response({
-                'error': 'Available swap request not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-class AcceptExistingSwapView(APIView):
-    """
-    API endpoint for TAs to accept an existing swap request.
-    """
-    permission_classes = [IsAuthenticated, IsTA]
-    
-    @transaction.atomic
-    def post(self, request, swap_request_id):
-        try:
-            # Get the swap request
-            swap_request = SwapRequest.objects.get(id=swap_request_id)
-            
-            # Check if the request is already processed
-            if swap_request.status != 'PENDING':
-                return Response({
-                    'error': 'This swap request has already been processed'
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Check if the current user is the requested proctor
-            if swap_request.requested_proctor.id != request.user.id:
-                return Response({
-                    'error': 'You are not the requested proctor for this swap'
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            # Process the swap request
-            result = process_swap_request(swap_request)
-            
-            # Send email notifications
-            if result['success']:
-                send_swap_notification_emails(swap_request, success=True)
-            else:
-                send_swap_notification_emails(swap_request, success=False)
-            
-            if result['success']:
-                return Response({
-                    'message': result['message'],
-                    'swap_request_id': swap_request.id,
-                    'details': result.get('details', {})
-                }, status=status.HTTP_200_OK)
-            else:
-                return Response({
-                    'error': result['message'],
-                    'swap_request_id': swap_request.id,
-                    'details': result.get('details', {})
-                }, status=status.HTTP_400_BAD_REQUEST)
-                
-        except SwapRequest.DoesNotExist:
-            return Response({
-                'error': 'Swap request not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-class EligibleProctorsView(APIView):
-    """
-    API endpoint to get a list of eligible TAs for a proctor swap.
-    """
-    permission_classes = [IsAuthenticated, IsTA]
-    
-    def get(self, request, assignment_id):
-        try:
-            # Get the assignment
-            assignment = ProctorAssignment.objects.get(id=assignment_id)
-            
-            # Check if the current user is the assigned proctor
-            if assignment.proctor.id != request.user.id:
-                return Response({
-                    'error': 'You can only view eligible TAs for your own assignments'
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            # Get all TAs
-            tas = User.objects.filter(role='TA')
-            
-            # Check eligibility for each TA
-            eligible_tas = []
-            
-            for ta in tas:
-                # Skip the current proctor
-                if ta.id == request.user.id:
-                    continue
-                
-                is_eligible, details = check_ta_eligibility(ta, assignment.exam, assignment)
-                
-                eligible_tas.append({
-                    'id': ta.id,
-                    'email': ta.email,
-                    'full_name': ta.full_name,
-                    'academic_level': ta.academic_level,
-                    'is_eligible': is_eligible,
-                    'details': details
-                })
-            
-            return Response(eligible_tas)
-            
-        except ProctorAssignment.DoesNotExist:
-            return Response({
-                'error': 'Assignment not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-class ConfirmAssignmentView(APIView):
-    """
-    API endpoint for TAs to confirm their proctoring assignments.
-    """
-    permission_classes = [IsAuthenticated, IsTA]
-    
-    def post(self, request, assignment_id):
-        try:
-            # Get the assignment
-            assignment = ProctorAssignment.objects.get(id=assignment_id)
-            
-            # Check if the current user is the assigned proctor
-            if assignment.proctor.id != request.user.id:
-                return Response({
-                    'error': 'You can only confirm your own assignments'
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            # Check if the assignment is already confirmed
-            if assignment.status != 'ASSIGNED':
-                return Response({
-                    'error': f'This assignment is already in {assignment.get_status_display()} status'
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Update the assignment
-            assignment.status = 'CONFIRMED'
-            assignment.confirmation_date = timezone.now()
-            assignment.save()
-            
-            # Log the confirmation
-            AuditLog.objects.create(
-                user=request.user,
-                action='confirm_proctoring',
-                object_type='ProctorAssignment',
-                object_id=assignment.id,
-                description=f"Proctor {request.user.email} confirmed assignment for {assignment.exam.title}"
-            )
-            
-            return Response({
-                'message': 'Assignment confirmed successfully',
-                'assignment_id': assignment.id,
-                'status': assignment.status
-            }, status=status.HTTP_200_OK)
-                
-        except ProctorAssignment.DoesNotExist:
-            return Response({
-                'error': 'Assignment not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-class SwapHistoryView(generics.ListAPIView):
-    """
-    API endpoint to view swap history for a TA.
-    """
-    serializer_class = serializers.SwapRequestSerializer
-    permission_classes = [IsAuthenticated]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['status', 'is_auto_swap', 'is_cross_department']
-    
-    def get_queryset(self):
-        user = self.request.user
+    def post(self, request, pk=None):
+        exam = get_object_or_404(Exam, pk=pk)
         
-        if user.role == 'TA':
-            # TAs can see only their own swap requests
-            return SwapRequest.objects.filter(
-                requesting_proctor=user
-            ).select_related(
-                'requesting_proctor',
-                'requested_proctor',
-                'original_assignment',
-                'original_assignment__exam',
-                'original_assignment__exam_room'
-            ).order_by('-created_at')
-        elif user.role in ['STAFF', 'ADMIN', 'INSTRUCTOR']:
-            # Staff and instructors can see all swap requests
-            return SwapRequest.objects.all().select_related(
-                'requesting_proctor',
-                'requested_proctor',
-                'original_assignment',
-                'original_assignment__exam',
-                'original_assignment__exam_room'
-            ).order_by('-created_at')
-        else:
-            return SwapRequest.objects.none()
-
-
-class ExamCreateView(APIView):
-    """
-    API endpoint for creating new exams.
-    """
-    serializer_class = serializers.ExamCreateSerializer
-    permission_classes = [IsAuthenticated, IsStaffOrInstructor]
-    
-    def get(self, request):
-        """List all exams for the user based on their role."""
-        user = request.user
-        print(f"ExamCreateView.get called by user {user.email} with role {user.role}")
+        serializer = ProctorAssignmentCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
-        try:
-            if user.role == 'INSTRUCTOR':
-                # Instructors can only see exams for their sections
-                print(f"Looking for sections with instructor: {user.email} (ID: {user.id})")
-                sections = Section.objects.filter(instructor=user)
-                print(f"Found {sections.count()} sections for instructor {user.email}")
-                
-                # List the sections found
-                if sections.count() > 0:
-                    for section in sections:
-                        print(f"  - Section: {section.course.department.code}{section.course.code}-{section.section_number}")
-                
-                exams = Exam.objects.filter(section__in=sections)
-                print(f"Found {exams.count()} exams for instructor {user.email}")
-                
-                # List the exams found
-                if exams.count() > 0:
-                    for exam in exams:
-                        print(f"  - Exam: {exam.title} (ID: {exam.id}) for {exam.section}")
-                
-                # If no exams found, try to debug why
-                if exams.count() == 0:
-                    # Try to find all exams in the system
-                    all_exams = Exam.objects.all()
-                    print(f"Total exams in the system: {all_exams.count()}")
-                    if all_exams.count() > 0:
-                        print("Examples of exams in the system:")
-                        for exam in all_exams[:3]:  # Show first 3 exams
-                            print(f"  - Exam: {exam.title} for {exam.section} (Created by: {exam.created_by.email})")
-            elif user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE']:
-                # Staff can see all exams in their department
-                if user.role == 'DEAN_OFFICE':
-                    # Dean's office can see exams with cross-department requests
-                    exams = Exam.objects.filter(dean_office_request=True)
-                    print(f"Found {exams.count()} exams for dean's office {user.email}")
-                elif user.role == 'ADMIN':
-                    # Admins can see all exams
-                    exams = Exam.objects.all()
-                    print(f"Found {exams.count()} exams for admin {user.email}")
-                else:
-                    # Department staff can see all exams in their department
-                    print(f"Staff user: {user.email}, Department: {user.department}")
-                    
-                    # Get all departments in the system
-                    all_departments = Department.objects.all()
-                    print(f"Available departments: {[d.code for d in all_departments]}")
-                    
-                    # Debug user department value
-                    print(f"User department value type: {type(user.department)}")
-                    
-                    # Get all exams for debugging
-                    all_exams = Exam.objects.all()
-                    for exam in all_exams[:5]:
-                        print(f"Exam: {exam.title}, Section: {exam.section}, Course Dept: {exam.section.course.department.code}")
-                    
-                    # First try to get the exact department match
-                    dept_exams = Exam.objects.filter(section__course__department__code=user.department)
-                    print(f"Found {dept_exams.count()} exams for department exact match {user.department}")
-                    
-                    if dept_exams.count() == 0:
-                        # If no exact match, try with case-insensitive comparison
-                        dept_exams = Exam.objects.filter(section__course__department__code__iexact=user.department)
-                        print(f"Found {dept_exams.count()} exams with case-insensitive match")
-                        
-                        if dept_exams.count() == 0:
-                            # If still no match, return all exams for now (temporary)
-                            dept_exams = Exam.objects.all()
-                            print(f"Temporarily returning all {dept_exams.count()} exams since no department match found")
-                    
-                    exams = dept_exams
-            else:
-                # TAs cannot access this endpoint
-                return Response(
-                    {"error": "You do not have permission to view exams."},
-                    status=status.HTTP_403_FORBIDDEN
-                )
-                
-            serializer = serializers.ExamListSerializer(exams, many=True)
-            print(f"Returning {len(serializer.data)} exams")
-            return Response(serializer.data)
-        except Exception as e:
-            print(f"Error in ExamCreateView.get: {e}")
-            import traceback
-            traceback.print_exc()
+        validated_data = serializer.validated_data
+        assignment_type = validated_data.get('assignment_type') # Currently only 'MANUAL' is handled
+        manual_proctor_ids = validated_data.get('manual_proctors', [])
+        replace_existing = validated_data.get('replace_existing', False)
+        is_paid_assignment = validated_data.get('is_paid', False) # Get is_paid, default to False
+
+        # Allow changes if AWAITING_PROCTORS or READY.
+        # The subsequent logic will handle replace_existing and counts.
+        if not (exam.status == Exam.Status.AWAITING_PROCTORS or exam.status == Exam.Status.READY):
             return Response(
-                {"error": str(e)},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                {"error": f"Exam is currently '{exam.get_status_display()}'. Proctors can only be modified if status is 'Awaiting Proctors' or 'Ready'."},
+                status=status.HTTP_400_BAD_REQUEST
             )
-    
-    def perform_create(self, serializer):
-        exam = serializer.save(created_by=self.request.user, status='DRAFT')
-        
-        # Create exam rooms if specified
-        if 'rooms' in self.request.data:
-            rooms_data = self.request.data.get('rooms', [])
-            
-            for room_data in rooms_data:
-                try:
-                    classroom = Classroom.objects.get(id=room_data.get('classroom_id'))
-                    ExamRoom.objects.create(
-                        exam=exam,
-                        classroom=classroom,
-                        student_count=room_data.get('student_count', 0),
-                        proctor_count=room_data.get('proctor_count', 1)
+
+        if assignment_type == 'MANUAL':
+            existing_assignments = ProctorAssignment.objects.filter(exam=exam, status=ProctorAssignment.Status.ASSIGNED)
+            current_assigned_count = existing_assignments.count()
+
+            if replace_existing:
+                # If replacing, the number of new proctors cannot exceed the required count.
+                if len(manual_proctor_ids) > exam.proctor_count:
+                    return Response(
+                        {"error": f"The number of selected proctors ({len(manual_proctor_ids)}) exceeds the required count ({exam.proctor_count}) for this exam."},
+                        status=status.HTTP_400_BAD_REQUEST
                     )
-                except Classroom.DoesNotExist:
-                    pass  # Skip invalid classrooms
-        
-        # Log exam creation
-        AuditLog.objects.create(
-            user=self.request.user,
-            action='create_exam',
-            object_type='Exam',
-            object_id=exam.id,
-            description=f"Exam created: {exam.title} for {exam.section}"
-        )
-        
-        return exam
-
-
-class ExamDetailView(generics.RetrieveUpdateDestroyAPIView):
-    """
-    API endpoint for retrieving, updating, or deleting an exam.
-    """
-    queryset = Exam.objects.all()
-    serializer_class = serializers.ExamDetailSerializer
-    permission_classes = [IsAuthenticated, IsStaffOrInstructorOfCourse]
-    
-    def get_object(self):
-        """
-        Returns the object the view is displaying.
-        Adds additional error handling and debugging.
-        """
-        try:
-            obj = super().get_object()
-            return obj
-        except Http404:
-            print(f"Exam with ID {self.kwargs.get('pk')} not found")
-            raise  # Re-raise the Http404
-        except Exception as e:
-            print(f"Error in ExamDetailView.get_object: {e}")
-            import traceback
-            traceback.print_exc()
-            raise
-    
-    def retrieve(self, request, *args, **kwargs):
-        """
-        Retrieve an exam with detailed error handling.
-        """
-        try:
-            instance = self.get_object()
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-        except Exception as e:
-            print(f"Error in ExamDetailView.retrieve: {e}")
-            print(f"Request user: {request.user.email}, Request data: {request.data}")
-            import traceback
-            traceback.print_exc()
-            
-            # Return a more helpful error message
-            return Response(
-                {"detail": f"Could not retrieve exam data: {str(e)}"},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-    
-    def perform_update(self, serializer):
-        exam = serializer.save()
-        
-        # Log exam update
-        AuditLog.objects.create(
-            user=self.request.user,
-            action='update_exam',
-            object_type='Exam',
-            object_id=exam.id,
-            description=f"Exam updated: {exam.title}"
-        )
-    
-    def perform_destroy(self, instance):
-        # Log exam deletion before deletion
-        AuditLog.objects.create(
-            user=self.request.user,
-            action='delete_exam',
-            object_type='Exam',
-            object_id=instance.id,
-            description=f"Exam deleted: {instance.title}"
-        )
-        
-        instance.delete()
-
-
-class ExamRoomUpdateView(APIView):
-    """
-    API endpoint for updating exam rooms.
-    """
-    permission_classes = [IsAuthenticated, IsStaffOrInstructor]
-    
-    def post(self, request, exam_id):
-        try:
-            exam = Exam.objects.get(id=exam_id)
-            
-            # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and not (
-                exam.created_by == request.user or
-                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
-            ):
-                return Response({
-                    'error': 'You do not have permission to update rooms for this exam'
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            # Get rooms data
-            rooms_data = request.data.get('rooms', [])
-            
-            # Clear existing rooms
-            ExamRoom.objects.filter(exam=exam).delete()
-            
-            # Create new rooms
-            for room_data in rooms_data:
-                try:
-                    classroom = Classroom.objects.get(id=room_data.get('classroom_id'))
-                    ExamRoom.objects.create(
-                        exam=exam,
-                        classroom=classroom,
-                        student_count=room_data.get('student_count', 0),
-                        proctor_count=room_data.get('proctor_count', 1)
-                    )
-                except Classroom.DoesNotExist:
-                    pass  # Skip invalid classrooms
-            
-            # Log room update
-            AuditLog.objects.create(
-                user=request.user,
-                action='update_exam_rooms',
-                object_type='Exam',
-                object_id=exam.id,
-                description=f"Exam rooms updated for {exam.title}"
-            )
-            
-            return Response({
-                'success': True,
-                'message': 'Rooms updated successfully',
-                'exam_id': exam.id
-            })
-            
-        except Exam.DoesNotExist:
-            return Response({
-                'error': 'Exam not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-
-class ProctorAssignmentView(APIView):
-    """
-    API endpoint for assigning proctors to an exam (manual, automatic, or hybrid).
-    """
-    permission_classes = [IsAuthenticated, IsStaffOrInstructor]
-    
-    @transaction.atomic
-    def post(self, request, exam_id):
-        try:
-            exam = Exam.objects.get(id=exam_id)
-            
-            # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and not (
-                exam.created_by == request.user or
-                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
-            ):
-                return Response({
-                    'error': 'You do not have permission to assign proctors for this exam'
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            # Get assignment data
-            assignment_type = request.data.get('assignment_type', 'MANUAL')  # MANUAL, AUTO, HYBRID
-            manual_proctors = request.data.get('manual_proctors', [])
-            auto_assign = assignment_type in ['AUTO', 'HYBRID']
-            
-            # Check if there are existing assignments
-            if ProctorAssignment.objects.filter(exam=exam).exists():
-                # Delete existing assignments if requested
-                if request.data.get('replace_existing', False):
-                    ProctorAssignment.objects.filter(exam=exam).delete()
-                    
-                    # Log deletion
-                    AuditLog.objects.create(
-                        user=request.user,
-                        action='delete_proctor_assignments',
-                        object_type='Exam',
-                        object_id=exam.id,
-                        description=f"All proctor assignments deleted for {exam.title}"
-                    )
-                else:
-                    return Response({
-                        'error': 'Exam already has proctor assignments',
-                        'detail': 'Set replace_existing=true to replace them'
-                    }, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Assign proctors
-            success, assigned_proctors, details = assign_proctors_to_exam(
-                exam=exam,
-                manual_proctors=manual_proctors,
-                auto_assign=auto_assign,
-                assigned_by=request.user
-            )
-            
-            if success:
-                return Response({
-                    'success': True,
-                    'message': 'Proctors assigned successfully',
-                    'exam_id': exam.id,
-                    'assignment_details': details,
-                    'assigned_count': len(assigned_proctors)
-                })
+                # Delete existing assignments before adding new ones
+                existing_assignments.delete()
+                current_assigned_count = 0 # Reset after deletion
             else:
-                return Response({
-                    'success': False,
-                    'message': 'Not all required proctors could be assigned',
-                    'exam_id': exam.id,
-                    'assignment_details': details,
-                    'assigned_count': len(assigned_proctors)
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
-        except Exam.DoesNotExist:
-            return Response({
-                'error': 'Exam not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_400_BAD_REQUEST)
+                # If not replacing, check if exam already has enough proctors.
+                if current_assigned_count >= exam.proctor_count:
+                    return Response(
+                        {"error": f"Exam already has {current_assigned_count}/{exam.proctor_count} proctors. No more can be assigned without replacing existing ones."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                # Check if adding these proctors would exceed the limit.
+                if current_assigned_count + len(manual_proctor_ids) > exam.proctor_count:
+                    return Response(
+                        {"error": f"Assigning {len(manual_proctor_ids)} new proctor(s) would exceed the required {exam.proctor_count} proctors. Exam currently has {current_assigned_count}. Please select at most {exam.proctor_count - current_assigned_count} more."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                if not manual_proctor_ids: # No new TAs selected to add
+                     return Response({"error": "No new proctors selected to assign."}, status=status.HTTP_400_BAD_REQUEST)
 
+            # Proceed with creating assignments
+            assigned_tas_in_this_operation = []
+            successfully_created_count = 0
 
-class EligibleProctorsForExamView(APIView):
-    """
-    API endpoint to get a list of eligible TAs for an exam.
-    """
-    permission_classes = [IsAuthenticated, IsStaffOrInstructor]
-    
-    def get(self, request, exam_id):
-        try:
-            exam = Exam.objects.get(id=exam_id)
-            
-            # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and not (
-                exam.created_by == request.user or
-                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
-            ):
-                return Response({
-                    'error': 'You do not have permission to view eligible proctors for this exam'
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            # Get all TAs
-            all_tas = User.objects.filter(role='TA')
-            
-            # Check eligibility for each TA
-            eligible_tas = []
-            
-            for ta in all_tas:
-                is_eligible, details = check_ta_eligibility(ta, exam)
-                
-                eligible_tas.append({
-                    'id': ta.id,
-                    'email': ta.email,
-                    'full_name': ta.full_name,
-                    'academic_level': ta.academic_level,
-                    'department': ta.department,
-                    'is_eligible': is_eligible,
-                    'is_from_course': TAWorkload.objects.filter(
-                        ta=ta, 
-                        activities__course_code=exam.section.course.code
-                    ).exists(),
-                    'is_from_department': ta.department == exam.section.course.department.code,
-                    'current_workload': details.get('workload', {}).get('current', 0),
-                    'constraints': details.get('constraints', [])
-                })
-            
-            return Response(eligible_tas)
-            
-        except Exam.DoesNotExist:
-            return Response({
-                'error': 'Exam not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-class SeatingPlanView(APIView):
-    """
-    API endpoint to generate and download a seating plan for an exam.
-    """
-    permission_classes = [IsAuthenticated, IsStaffOrInstructor]
-    
-    def get(self, request, exam_id):
-        try:
-            exam = Exam.objects.get(id=exam_id)
-            
-            # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and not (
-                exam.created_by == request.user or
-                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
-            ):
-                return Response({
-                    'error': 'You do not have permission to generate seating plan for this exam'
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            # Check if randomize is requested
-            randomize = request.query_params.get('randomize', 'false').lower() == 'true'
-            
-            # Generate seating plan
-            seating_plan = generate_seating_plan(exam, randomize=randomize)
-            
-            if 'error' in seating_plan:
-                return Response(seating_plan, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Log seating plan generation
-            AuditLog.objects.create(
-                user=request.user,
-                action='generate_seating_plan',
-                object_type='Exam',
-                object_id=exam.id,
-                description=f"Seating plan generated for {exam.title} ({'randomized' if randomize else 'alphabetical'})"
-            )
-            
-            # Check if download is requested
-            if request.query_params.get('download', 'false').lower() == 'true':
-                # Generate a printable seating plan (in a real system, this would create a PDF or Excel file)
-                import pandas as pd
-                import io
-                
-                # Create a DataFrame from the seating plan
-                all_students = []
-                
-                for classroom in seating_plan['classrooms']:
-                    for student in classroom['students']:
-                        student_entry = {
-                            'Student ID': student['student_id'],
-                            'First Name': student['first_name'],
-                            'Last Name': student['last_name'],
-                            'Classroom': classroom['room_name']
+            for ta_id in manual_proctor_ids:
+                try:
+                    ta_user = User.objects.get(id=ta_id, role='TA')
+                    # If not replacing, ensure TA is not already assigned (get_or_create handles this by not creating)
+                    # If replacing, all existing were deleted, so create will always make a new one here.
+                    assignment, created = ProctorAssignment.objects.get_or_create(
+                        exam=exam,
+                        ta=ta_user,
+                        defaults={
+                            'assigned_by': request.user,
+                            'status': ProctorAssignment.Status.ASSIGNED,
+                            'is_paid': is_paid_assignment # Set is_paid status
                         }
-                        all_students.append(student_entry)
-                
-                df = pd.DataFrame(all_students)
-                
-                # Create an Excel file
-                output = io.BytesIO()
-                with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                    df.to_excel(writer, sheet_name='Seating Plan', index=False)
-                    
-                    # Access the workbook and the worksheet
-                    workbook = writer.book
-                    worksheet = writer.sheets['Seating Plan']
-                    
-                    # Add a header with exam information
-                    header_format = workbook.add_format({
-                        'bold': True,
-                        'font_size': 14,
-                        'align': 'center',
-                        'valign': 'vcenter'
-                    })
-                    
-                    # Merge cells for the header
-                    worksheet.merge_range('A1:D1', f"Seating Plan: {exam.title}", header_format)
-                    worksheet.merge_range('A2:D2', f"Date: {exam.date.strftime('%Y-%m-%d')}, Time: {exam.start_time.strftime('%H:%M')}", header_format)
-                
-                # Set up the response for file download
-                output.seek(0)
-                response = HttpResponse(
-                    output.read(),
-                    content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-                )
-                response['Content-Disposition'] = f'attachment; filename="seating_plan_{exam.id}.xlsx"'
-                return response
-            
-            # Otherwise return the seating plan as JSON
-            return Response(seating_plan)
-            
-        except Exam.DoesNotExist:
-            return Response({
-                'error': 'Exam not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    )
+                    if created:
+                        successfully_created_count += 1
+                        assigned_tas_in_this_operation.append(assignment)
+                    elif replace_existing:
+                        # If it wasn't "created" but we are replacing, it means an old record with same exam+ta existed.
+                        # We should ensure its is_paid status is updated to the current request's value.
+                        if assignment.is_paid != is_paid_assignment:
+                            assignment.is_paid = is_paid_assignment
+                            assignment.save(update_fields=['is_paid'])
+                        successfully_created_count += 1 # Count it as part of this operation
+                        assigned_tas_in_this_operation.append(assignment)
+                    # If not created and not replacing, it means it was already there, skip.
+                    # If we wanted to update is_paid for existing (non-replaced) assignments, 
+                    # that would be a different logic branch, typically not done via get_or_create.
 
+                except User.DoesNotExist:
+                    # Log this or add to a list of errors if partial success is allowed
+                    # For now, we'll let it skip and the final count will reflect reality
+                    pass 
+            
+            # Recalculate final assigned count from DB for accuracy
+            final_assigned_proctor_count = ProctorAssignment.objects.filter(exam=exam, status=ProctorAssignment.Status.ASSIGNED).count()
 
-class CrossDepartmentRequestView(APIView):
-    """
-    API endpoint for handling cross-department proctoring requests.
-    """
-    permission_classes = [IsAuthenticated, IsStaffOrInstructor]
-    
-    def post(self, request, exam_id):
-        try:
-            exam = Exam.objects.get(id=exam_id)
+            # Update exam status based on the final count of assigned proctors
+            if final_assigned_proctor_count >= exam.proctor_count and exam.proctor_count > 0:
+                exam.status = Exam.Status.READY
+            elif exam.proctor_count == 0: # If 0 proctors are needed, it's always ready.
+                exam.status = Exam.Status.READY
+            else:
+                exam.status = Exam.Status.AWAITING_PROCTORS
+            exam.save(update_fields=['status'])
             
-            # Check permission
-            if request.user.role not in ['STAFF', 'ADMIN'] and not (
-                exam.created_by == request.user or
-                (hasattr(exam.section.course, 'instructor') and exam.section.course.instructor == request.user)
-            ):
-                return Response({
-                    'error': 'You do not have permission to request cross-department proctoring'
-                }, status=status.HTTP_403_FORBIDDEN)
-            
-            # Get request details
-            target_department = request.data.get('department')
-            ta_count = request.data.get('ta_count', 1)
-            request_note = request.data.get('note', '')
-            
-            # Update exam with cross-department request
-            exam.is_cross_department = True
-            exam.requested_from_department = target_department
-            exam.dean_office_request = True
-            exam.dean_office_comments = request_note
-            exam.save()
-            
-            # Log the cross-department request
-            AuditLog.objects.create(
-                user=request.user,
-                action='cross_department_request',
-                object_type='Exam',
-                object_id=exam.id,
-                description=f"Cross-department proctoring requested for {exam.title} from {target_department}: {ta_count} TAs"
+            # Fetch all current assignments for the response
+            all_current_assignments = ProctorAssignment.objects.filter(exam=exam)
+
+            return Response({
+                "message": f"Proctor assignments processed. Exam has {final_assigned_proctor_count}/{exam.proctor_count} proctors. Status: {exam.get_status_display()}",
+                "assignments": ProctorAssignmentSerializer(all_current_assignments, many=True).data
+            }, status=status.HTTP_200_OK)
+        
+        else:  # AUTO assignment (Not implemented)
+            return Response(
+                {"error": "Automatic assignment is not yet implemented"},
+                status=status.HTTP_501_NOT_IMPLEMENTED
             )
-            
-            return Response({
-                'success': True,
-                'message': 'Cross-department proctoring request submitted',
-                'exam_id': exam.id
-            })
-            
-        except Exam.DoesNotExist:
-            return Response({
-                'error': 'Exam not found'
-            }, status=status.HTTP_404_NOT_FOUND)
-        except Exception as e:
-            return Response({
-                'error': str(e)
-            }, status=status.HTTP_400_BAD_REQUEST)
+
+# Register this in your urls.py:
+# path('exams/<int:pk>/eligible-tas/', ExamEligibleTAsView.as_view(), name='exam-eligible-tas'),
+# path('exams/<int:pk>/assign-proctors/', AssignProctorsToExamView.as_view(), name='assign-proctors-to-exam'),

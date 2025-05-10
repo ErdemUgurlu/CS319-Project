@@ -4,7 +4,6 @@ import datetime
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ta_management_system.settings')
 django.setup()
 
-from proctoring.models import Exam
 from accounts.models import User, Section, Course
 from django.utils import timezone
 
@@ -25,14 +24,9 @@ def check_data():
         print(f"  - {section.course.department.code}{section.course.code}-{section.section_number}")
         print(f"    Instructor: {instructor_email}")
     
-    # Check exams
-    exams = Exam.objects.all()
-    print(f"\nTotal exams: {exams.count()}")
-    for exam in exams:
-        print(f"  - {exam.title} (ID: {exam.id})")
-        print(f"    Section: {exam.section}")
-        print(f"    Created by: {exam.created_by.email}")
-        print(f"    Status: {exam.status}")
+    # Exam checks removed since proctoring app has been removed
+    print("\nProctoring module has been removed from the project.")
+    print("Exam-related functionality is no longer available.")
     
     # Create test data for the testinstructor@gmail.com user if needed
     test_instructor = User.objects.filter(email='testinstructor@gmail.com').first()
@@ -72,47 +66,11 @@ def check_data():
             )
             print(f"Created section: {section}")
             
-            # Create exam for this section
-            exam = Exam.objects.create(
-                title='Final Exam',
-                section=section,
-                exam_type='FINAL',
-                date=timezone.now().date() + datetime.timedelta(days=14),
-                start_time=timezone.now().time(),
-                end_time=(timezone.now() + datetime.timedelta(hours=3)).time(),
-                duration_minutes=180,
-                student_count=75,
-                proctor_count_needed=3,
-                room_count=2,
-                status='PENDING',
-                created_by=test_instructor,
-                notes='This is a test final exam created for demo purposes.'
-            )
-            print(f"Created exam: {exam.title} for {exam.section}")
+            # Exam creation removed since proctoring app has been removed
+            print("Note: Exam creation skipped as proctoring module has been removed.")
         else:
-            # Check if this instructor has exams
-            instructor_exams = Exam.objects.filter(section__in=instructor_sections)
-            if instructor_exams.count() == 0:
-                print("\nCreating test exam for testinstructor@gmail.com...")
-                section = instructor_sections.first()
-                
-                # Create exam for this section
-                exam = Exam.objects.create(
-                    title='Final Exam',
-                    section=section,
-                    exam_type='FINAL',
-                    date=timezone.now().date() + datetime.timedelta(days=14),
-                    start_time=timezone.now().time(),
-                    end_time=(timezone.now() + datetime.timedelta(hours=3)).time(),
-                    duration_minutes=180,
-                    student_count=75,
-                    proctor_count_needed=3,
-                    room_count=2,
-                    status='PENDING',
-                    created_by=test_instructor,
-                    notes='This is a test final exam created for demo purposes.'
-                )
-                print(f"Created exam: {exam.title} for {exam.section}")
+            print(f"Test instructor already has {instructor_sections.count()} sections.")
+            # Exam checks removed since proctoring app has been removed
     
     print("\n=== DATA CHECK COMPLETE ===")
 

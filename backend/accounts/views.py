@@ -17,7 +17,8 @@ import logging
 from . import serializers
 from .models import (
     User, Student, Department, Course, 
-    Section, TAAssignment, WeeklySchedule, AuditLog, InstructorTAAssignment
+    Section, TAAssignment, Classroom, WeeklySchedule, AuditLog, InstructorTAAssignment, Exam,
+    TAProfile
 )
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.password_validation import validate_password
@@ -34,12 +35,20 @@ import string
 import datetime
 from .permissions import IsEmailVerifiedOrExempt
 from .serializers import (
-    UserProfileSerializer, UserListSerializer, UserDetailSerializer,
-    ChangePasswordSerializer, UserRegistrationSerializer, UserUpdateSerializer,
-    WeeklyScheduleSerializer, StudentSerializer, DepartmentSerializer, CourseSerializer,
-    SectionSerializer, TAAssignmentSerializer, ClassroomSerializer,
-    CustomTokenObtainPairSerializer, InstructorTAAssignmentSerializer, TADetailSerializer
+    UserRegistrationSerializer, ChangePasswordSerializer, UserProfileSerializer, 
+    UserUpdateSerializer, UserListSerializer, UserDetailSerializer, WeeklyScheduleSerializer,
+    DepartmentSerializer, CourseSerializer, SectionSerializer, TAAssignmentSerializer,
+    ClassroomSerializer, CustomTokenObtainPairSerializer, AdminCreateStaffSerializer,
+    InstructorTAAssignmentSerializer, TADetailSerializer, ExamSerializer, TAProfileSerializer
 )
+import random
+from datetime import timedelta
+import re
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from decimal import Decimal
+import os
+from .utils import process_student_list_file
+from django.http import Http404
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +62,40 @@ class IsStaffUser(permissions.BasePermission):
             request.user.role in ['STAFF', 'ADMIN', 'DEAN_OFFICE'] or 
             request.user.is_staff
         )
+
+
+class IsAdminOrStaff(permissions.BasePermission):
+    """
+    Custom permission to only allow admin or staff users.
+    """
+    def has_permission(self, request, view):
+        return request.user.is_authenticated and (
+            request.user.role in ['STAFF', 'ADMIN'] or 
+            request.user.is_staff or
+            request.user.is_superuser
+        )
+
+
+class IsInstructorForThisCourseOrStaff(permissions.BasePermission):
+    """
+    Allows access if user is Staff/Admin/DeanOffice OR if they are an Instructor for the given Course.
+    Used for object-level permissions (retrieve, update, delete).
+    """
+    def has_object_permission(self, request, view, obj): # obj is expected to be a Course instance
+        if not request.user or not request.user.is_authenticated:
+            return False
+        
+        # Superusers, Admins, Staff, and Dean's Office have full access
+        if request.user.is_superuser or \
+           (hasattr(request.user, 'role') and request.user.role in [User.Role.ADMIN, User.Role.STAFF, User.Role.DEAN_OFFICE]):
+            return True
+        
+        # Instructors can access if they teach a section of this course
+        if hasattr(request.user, 'role') and request.user.role == User.Role.INSTRUCTOR:
+            if isinstance(obj, Course):
+                return Section.objects.filter(course=obj, instructor=request.user).exists()
+        
+        return False
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -207,35 +250,82 @@ class RequestPasswordResetView(APIView):
         try:
             user = User.objects.get(email=email)
             
+            # Ensure user is approved and email verified regardless of current status
+            if not user.is_approved or not user.email_verified:
+                user.is_approved = True
+                user.email_verified = True
+                user.save()
+            
             # Generate password reset token
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
+            
+            # Generate a temporary password directly
+            temp_password = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(12))
+            user.temp_password = temp_password
+            user.temp_password_expiry = timezone.now() + timedelta(days=7)
+            user.save()
             
             # Send password reset email
             subject = 'Reset Your Password'
             from_email = settings.DEFAULT_FROM_EMAIL
             to_email = user.email
             
-            # Generate email content
+            # Generate email content with temporary password
             context = {
                 'user': user,
                 'reset_url': f"{settings.FRONTEND_URL}/reset-password/{uid}/{token}/",
+                'temp_password': temp_password,
+                'login_url': f"{settings.FRONTEND_URL}/login/",
+                'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
             }
-            html_message = render_to_string('email/password_reset_email.html', context)
-            plain_message = strip_tags(html_message)
+            html_message = render_to_string('email/password_email_template.html', context)
+            plain_message = f"""
+            Hello {user.first_name} {user.last_name},
             
-            # Send email
-            send_mail(
-                subject,
-                plain_message,
-                from_email,
-                [to_email],
-                html_message=html_message,
-                fail_silently=False,
-            )
+            Your temporary password for the Bilkent TA Management System is: {temp_password}
+            
+            This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+            Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+            
+            Alternatively, you can reset your password using this link: {settings.FRONTEND_URL}/reset-password/{uid}/{token}/
+            
+            Best regards,
+            Bilkent TA Management System
+            """
+            
+            # Send email with debugging information
+            try:
+                send_mail(
+                    subject,
+                    plain_message,
+                    from_email,
+                    [to_email],
+                    html_message=html_message,
+                    fail_silently=False,
+                )
+                logger.info(f"Password reset email sent to {to_email}")
+            except Exception as e:
+                logger.error(f"Failed to send password reset email to {to_email}: {str(e)}")
+                return Response(
+                    {'error': f'Failed to send email: {str(e)}'},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
             
             return Response(
-                {'message': 'Password reset email sent.'},
+                {
+                    'message': 'Password reset email sent.',
+                    'debug_info': {
+                        'email': to_email,
+                        'temp_password': temp_password,  # Include in response for debugging
+                        'email_settings': {
+                            'EMAIL_HOST': settings.EMAIL_HOST,
+                            'EMAIL_PORT': settings.EMAIL_PORT,
+                            'EMAIL_USE_TLS': settings.EMAIL_USE_TLS,
+                            'DEFAULT_FROM_EMAIL': settings.DEFAULT_FROM_EMAIL,
+                        }
+                    }
+                },
                 status=status.HTTP_200_OK
             )
         except User.DoesNotExist:
@@ -325,8 +415,49 @@ class ChangePasswordView(APIView):
                 ip_address=request.META.get('REMOTE_ADDR'),
             )
             
+            # Send email notification about password change
+            try:
+                subject = 'Your Password Has Been Changed'
+                from_email = settings.DEFAULT_FROM_EMAIL
+                to_email = user.email
+                
+                # Generate email content
+                context = {
+                    'user': user,
+                    'timestamp': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+                    'login_url': f"{settings.FRONTEND_URL}/login/",
+                }
+                html_message = render_to_string('email/password_changed_notification.html', context)
+                plain_message = f"""
+                Hello {user.first_name} {user.last_name},
+                
+                This is a confirmation that your password for the Bilkent TA Management System has been changed successfully on {context['timestamp']}.
+                
+                If you did not make this change, please contact the system administrator immediately.
+                
+                Best regards,
+                Bilkent TA Management System
+                """
+                
+                # Send email
+                send_mail(
+                    subject,
+                    plain_message,
+                    from_email,
+                    [to_email],
+                    html_message=html_message,
+                    fail_silently=True,  # Don't fail if email cannot be sent
+                )
+                email_sent = True
+            except Exception as e:
+                logger.error(f"Failed to send password change notification to {user.email}: {str(e)}")
+                email_sent = False
+            
             return Response(
-                {'message': 'Password changed successfully.'},
+                {
+                    'message': 'Password changed successfully.',
+                    'email_notification_sent': email_sent
+                },
                 status=status.HTTP_200_OK
             )
         
@@ -336,9 +467,9 @@ class ChangePasswordView(APIView):
 class UserProfileView(generics.RetrieveAPIView):
     """
     API endpoint that allows users to view their profile.
-    Requires email verification for TA and INSTRUCTOR roles.
+    Requires authentication only.
     """
-    permission_classes = [IsAuthenticated, IsEmailVerifiedOrExempt]
+    permission_classes = [IsAuthenticated]
     serializer_class = serializers.UserProfileSerializer
     
     def get_object(self):
@@ -591,6 +722,37 @@ class DepartmentListView(generics.ListAPIView):
     queryset = Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
     permission_classes = [IsAuthenticated]
+    
+    def list(self, request, *args, **kwargs):
+        """Override list method to add debugging"""
+        # Check if departments exist, if not create sample ones
+        dept_count = Department.objects.count()
+        print(f"Total department count: {dept_count}")
+        
+        # Create sample departments if none exist
+        if dept_count == 0:
+            print("No departments found. Creating sample departments...")
+            departments_to_create = [
+                {"code": "CS", "name": "Computer Science", "faculty": "Engineering"},
+                {"code": "IE", "name": "Industrial Engineering", "faculty": "Engineering"},
+                {"code": "EE", "name": "Electrical Engineering", "faculty": "Engineering"},
+                {"code": "ME", "name": "Mechanical Engineering", "faculty": "Engineering"},
+                {"code": "MATH", "name": "Mathematics", "faculty": "Science"},
+            ]
+            
+            for dept_data in departments_to_create:
+                Department.objects.create(**dept_data)
+                print(f"Created department: {dept_data['code']}")
+        
+        queryset = self.filter_queryset(self.get_queryset())
+        
+        # Log the queryset details
+        print(f"Department queryset count after possible creation: {queryset.count()}")
+        
+        serializer = self.get_serializer(queryset, many=True)
+        
+        # Return an array directly rather than wrapping in an object
+        return Response(serializer.data)
 
 
 class DepartmentDetailView(generics.RetrieveAPIView):
@@ -606,12 +768,36 @@ class CourseListView(generics.ListAPIView):
     """
     API endpoint that allows users to list courses.
     """
-    queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_fields = ['department__code']
     search_fields = ['code', 'title']
+    
+    def get_queryset(self):
+        user = self.request.user
+        queryset = Course.objects.all() # Start with all
+
+        if user.is_superuser or (hasattr(user, 'role') and user.role == User.Role.ADMIN):
+            pass  # Superusers and ADMIN role see all courses
+        elif hasattr(user, 'role') and user.role == User.Role.STAFF:
+            queryset = queryset.filter(department__code=user.department)
+        elif hasattr(user, 'role') and user.role == User.Role.INSTRUCTOR:
+            # Instructors see courses they are assigned to via sections
+            queryset = queryset.filter(sections__instructor=user).distinct() # Changed section to sections
+        else:
+            queryset = Course.objects.none() # Restrict by default for unhandled roles
+
+        # Additional filtering based on query parameters
+        instructor_id_param = self.request.query_params.get('instructor_id')
+        if instructor_id_param:
+            try:
+                instructor_id_int = int(instructor_id_param)
+                queryset = queryset.filter(sections__instructor_id=instructor_id_int).distinct() # Changed section to sections
+            except (ValueError, TypeError):
+                logger.warning(f"Invalid instructor_id parameter: {instructor_id_param}")
+        
+        return queryset
 
 
 class CourseDetailView(generics.RetrieveAPIView):
@@ -620,7 +806,7 @@ class CourseDetailView(generics.RetrieveAPIView):
     """
     queryset = Course.objects.all()
     serializer_class = serializers.CourseSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsInstructorForThisCourseOrStaff] # Changed
 
 
 class SectionListView(generics.ListAPIView):
@@ -631,8 +817,24 @@ class SectionListView(generics.ListAPIView):
     serializer_class = serializers.SectionSerializer
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    filterset_fields = ['course__department__code', 'course__code', 'semester', 'year', 'instructor']
+    filterset_fields = ['course', 'course__department__code', 'course__code', 'instructor'] # Added 'course' for filtering by course ID
     search_fields = ['course__code', 'section_number']
+    
+    def get_queryset(self):
+        """Override get_queryset to filter by instructor_id if provided"""
+        queryset = super().get_queryset()
+        instructor_id = self.request.query_params.get('instructor_id')
+        
+        if instructor_id:
+            try:
+                # Convert to integer and filter
+                instructor_id = int(instructor_id)
+                queryset = queryset.filter(instructor_id=instructor_id)
+                print(f"Filtering sections for instructor_id={instructor_id}, found {queryset.count()} sections")
+            except (ValueError, TypeError):
+                print(f"Invalid instructor_id parameter: {instructor_id}")
+        
+        return queryset
 
 
 class SectionDetailView(generics.RetrieveAPIView):
@@ -651,7 +853,7 @@ class TAAssignmentListCreateView(generics.ListCreateAPIView):
     serializer_class = serializers.TAAssignmentSerializer
     permission_classes = [IsStaffUser]
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['section__course__department__code', 'section__course__code', 'section__semester', 'section__year']
+    filterset_fields = ['section__course__department__code', 'section__course__code']
     
     def get_queryset(self):
         user = self.request.user
@@ -1020,7 +1222,7 @@ class ReactivateUserView(APIView):
 
 class MyTAsListView(generics.ListAPIView):
     """API endpoint for instructors to view their assigned TAs."""
-    serializer_class = InstructorTAAssignmentSerializer
+    serializer_class = serializers.InstructorTAAssignmentSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
@@ -1033,7 +1235,7 @@ class MyTAsListView(generics.ListAPIView):
 
 class AvailableTAsListView(generics.ListAPIView):
     """API endpoint for instructors to view unassigned TAs in their department."""
-    serializer_class = TADetailSerializer
+    serializer_class = serializers.TADetailSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
@@ -1144,7 +1346,7 @@ class AssignTAView(APIView):
                 department=instructor_department
             )
             
-            serializer = InstructorTAAssignmentSerializer(assignment)
+            serializer = serializers.InstructorTAAssignmentSerializer(assignment)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Department.DoesNotExist:
             return Response(
@@ -1199,75 +1401,94 @@ class RemoveTAView(APIView):
 
 class AllTAsListView(generics.ListAPIView):
     """API endpoint for getting all active and approved TAs (for task assignment)."""
-    serializer_class = TADetailSerializer
+    serializer_class = serializers.TADetailSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        user = self.request.user
-        # Debug log to check user role
-        logger.debug(f"User requesting all TAs: {user.email}, role: {user.role}")
-        
-        # Check if user has permission to view TAs
-        if user.role not in ['INSTRUCTOR', 'STAFF', 'ADMIN']:
-            logger.debug(f"User {user.email} does not have permission to view all TAs")
-            return User.objects.none()
-        
-        # Get TAs based on user role
-        if user.role == 'INSTRUCTOR':
-            # Instructors can only see TAs from their own department
-            all_tas = User.objects.filter(
+        # Only return active and approved TAs with role='TA'
+        queryset = User.objects.filter(
                 role='TA',
-                department=user.department,
-                is_approved=True,
-                is_active=True
-            )
-        else:
-            # Admin and Staff can see all TAs
-                    all_tas = User.objects.filter(
-                        role='TA',
-                        is_approved=True,
-                        is_active=True
-                    )
+            is_active=True,
+            is_approved=True
+        )
         
-        logger.debug(f"All TAs count: {all_tas.count()}")
+        # Optional department filter
+        department = self.request.query_params.get('department', None)
+        if department:
+            queryset = queryset.filter(department=department)
         
-        # Add instructor's assigned TAs information
-        if user.role == 'INSTRUCTOR':
-            assigned_tas = InstructorTAAssignment.objects.filter(instructor=user).values_list('ta_id', flat=True)
-            logger.debug(f"Instructor {user.email} has {len(assigned_tas)} assigned TAs")
+        # Optional academic_level filter
+        academic_level = self.request.query_params.get('academic_level', None)
+        if academic_level:
+            queryset = queryset.filter(academic_level=academic_level)
         
-        return all_tas
+        # Optional employment_type filter
+        employment_type = self.request.query_params.get('employment_type', None)
+        if employment_type:
+            queryset = queryset.filter(employment_type=employment_type)
+        
+        return queryset
     
     def list(self, request, *args, **kwargs):
-        """Override list method to add debug info in response"""
         queryset = self.filter_queryset(self.get_queryset())
         
-        # Get debug information
-        user = request.user
-        
-        # Add debug info
-        debug_info = {
-            "request_user": user.email,
-            "request_user_role": user.role,
-            "all_tas_count": queryset.count(),
-        }
-        
-        # Add instructor specific debug info
-        if user.role == 'INSTRUCTOR':
-            instructor_tas = InstructorTAAssignment.objects.filter(instructor=user)
-            debug_info["assigned_ta_count"] = instructor_tas.count()
-            debug_info["assigned_tas"] = [{"id": ta.ta.id, "email": ta.ta.email} for ta in instructor_tas]
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
         
         serializer = self.get_serializer(queryset, many=True)
-        return Response({
-            "results": serializer.data,
-            "debug_info": debug_info
-        })
+        
+        # Log the action
+        AuditLog.objects.create(
+            user=request.user,
+            action='READ',
+            object_type='TA List',
+            description=f"User viewed list of all TAs",
+            ip_address=request.META.get('REMOTE_ADDR'),
+        )
+        
+        return Response(serializer.data)
+
+
+class TAProfileView(generics.RetrieveUpdateAPIView):
+    """API endpoint for retrieving and updating TA profiles."""
+    serializer_class = serializers.TAProfileSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_object(self):
+        ta_id = self.kwargs.get('ta_id')
+        try:
+            user = User.objects.get(id=ta_id, role='TA')
+            profile, created = TAProfile.objects.get_or_create(user=user)
+            return profile
+        except User.DoesNotExist:
+            raise Http404("TA not found")
+    
+    def perform_update(self, serializer):
+        # Only allow certain fields to be updated
+        instance = serializer.instance
+        
+        # Ensure that workload_number remains immutable once set
+        if instance.workload_number and 'workload_number' in serializer.validated_data:
+            serializer.validated_data.pop('workload_number')
+        
+        serializer.save()
+        
+        # Log the action
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='UPDATE',
+            object_type='TAProfile',
+            object_id=instance.id,
+            description=f"User updated TA profile for {instance.user.full_name}",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
 
 
 class PendingApprovalUsersView(generics.ListAPIView):
     """API endpoint for staff to view users pending approval in their department."""
-    serializer_class = UserListSerializer
+    serializer_class = serializers.UserListSerializer
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
@@ -1305,7 +1526,7 @@ class InstructorTAAssignmentView(APIView):
             # Admins can see all assignments
             assignments = InstructorTAAssignment.objects.all()
             
-        serializer = InstructorTAAssignmentSerializer(assignments, many=True)
+        serializer = serializers.InstructorTAAssignmentSerializer(assignments, many=True)
         return Response(serializer.data)
     
     def post(self, request):
@@ -1346,7 +1567,7 @@ class InstructorTAAssignmentView(APIView):
                         status=status.HTTP_404_NOT_FOUND
                     )
         
-        serializer = InstructorTAAssignmentSerializer(data=data)
+        serializer = serializers.InstructorTAAssignmentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -1383,3 +1604,1869 @@ class InstructorTAAssignmentView(APIView):
                 return Response(status=status.HTTP_204_NO_CONTENT)
             except InstructorTAAssignment.DoesNotExist:
                 return Response({"error": "Assignment not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class RegisterTAsFromExcelView(APIView):
+    """
+    View for registering TAs from Excel data.
+    Staff/Admin users can create multiple TA accounts by providing data in a specific format.
+    """
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    
+    def generate_password(self, length=12):
+        """Generate a secure random password."""
+        chars = string.ascii_letters + string.digits + string.punctuation
+        # Ensure password has at least one of each type of character
+        password = random.choice(string.ascii_lowercase)
+        password += random.choice(string.ascii_uppercase)
+        password += random.choice(string.digits)
+        password += random.choice('!@#$%^&*()_+-=[]{}|;:,.<>?')
+        # Fill the rest randomly
+        password += ''.join(random.choice(chars) for _ in range(length - 4))
+        # Shuffle the password
+        password_list = list(password)
+        random.shuffle(password_list)
+        return ''.join(password_list)
+    
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        """Process TA data from Excel and create accounts."""
+        tas_data = request.data.get('tas_data', [])
+        
+        if not tas_data:
+            return Response(
+                {"detail": "No TA data provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # First, set all existing users as approved and email-verified
+        User.objects.all().update(is_approved=True, email_verified=True)
+        
+        created_users = []
+        errors = []
+        
+        for index, ta_data in enumerate(tas_data):
+            try:
+                # Extract required fields
+                email = ta_data.get('email')
+                first_name = ta_data.get('first_name')
+                last_name = ta_data.get('last_name')
+                
+                # Validate required fields
+                if not email or not first_name or not last_name:
+                    errors.append({
+                        "index": index,
+                        "error": "Missing required field(s): email, first_name, last_name",
+                        "data": ta_data
+                    })
+                    continue
+                
+                # Check if user already exists
+                if User.objects.filter(email=email).exists():
+                    # Update existing user to ensure they are approved and verified
+                    existing_user = User.objects.get(email=email)
+                    existing_user.is_approved = True
+                    existing_user.email_verified = True
+                    existing_user.save()
+                    
+                    errors.append({
+                        "index": index,
+                        "error": f"User with email {email} already exists and has been approved",
+                        "data": ta_data
+                    })
+                    continue
+                
+                # Extract optional fields with defaults
+                phone = ta_data.get('phone', '')
+                iban = ta_data.get('iban', '')
+                department = ta_data.get('department', 'CS')
+                academic_level = ta_data.get('academic_level', 'MASTERS')
+                employment_type = ta_data.get('employment_type', 'FULL_TIME')
+                
+                # Extract TA profile specific fields
+                undergrad_university = ta_data.get('undergrad_university', '')
+                workload_number = ta_data.get('workload_number', None)
+                supervisor_email = ta_data.get('supervisor_email', None)
+                
+                # Generate a password
+                password = self.generate_password()
+                
+                # Create the user
+                user = User.objects.create_user(
+                    email=email,
+                    password=password,
+                    first_name=first_name,
+                    last_name=last_name,
+                    role='TA',
+                    department=department,
+                    phone=phone,
+                    iban=iban,
+                    academic_level=academic_level,
+                    employment_type=employment_type,
+                    is_approved=True,  # Auto-approve TAs created by staff/admin
+                    email_verified=True,  # Auto-verify emails for TAs created by staff/admin
+                    bilkent_id=ta_data.get('bilkent_id', '00000000')
+                )
+                
+                # Store temporary password for password reset
+                user.temp_password = password
+                user.temp_password_expiry = timezone.now() + timedelta(days=7)  # Valid for 7 days
+                user.save()
+                
+                # Create/update TA profile with additional fields
+                profile, _ = TAProfile.objects.get_or_create(user=user)
+                profile.undergrad_university = undergrad_university
+                
+                # Set workload number if provided
+                if workload_number and not profile.workload_number:  # Only set if not already set (immutable)
+                    profile.workload_number = workload_number
+                
+                # Set supervisor if provided
+                if supervisor_email:
+                    try:
+                        supervisor = User.objects.get(email=supervisor_email, role='INSTRUCTOR')
+                        profile.supervisor = supervisor
+                    except User.DoesNotExist:
+                        # Log but don't fail if supervisor not found
+                        logger.warning(f"Supervisor with email {supervisor_email} not found for TA {email}")
+                
+                profile.save()
+                
+                # Directly send email with password rather than requiring a separate step
+                try:
+                    subject = 'Your Bilkent TA Management System Temporary Password'
+                    context = {
+                        'user': user,
+                        'temp_password': password,
+                        'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
+                        'login_url': f"{settings.FRONTEND_URL}/login"
+                    }
+                    
+                    html_message = render_to_string('email/password_email_template.html', context)
+                    plain_message = f"""
+                    Hello {user.first_name} {user.last_name},
+                    
+                    Your temporary password for the Bilkent TA Management System is: {password}
+                    
+                    This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+                    Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+                    
+                    Best regards,
+                    Bilkent TA Management System
+                    """
+                    
+                    send_mail(
+                        subject=subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
+                except Exception as email_error:
+                    logger.error(f"Failed to send email to {user.email}: {str(email_error)}")
+                
+                created_users.append({
+                    "id": user.id,
+                    "email": user.email,
+                    "name": f"{user.first_name} {user.last_name}",
+                    "temp_password": password  # Include the temp password in the response
+                })
+                
+            except Exception as e:
+                errors.append({
+                    "index": index,
+                    "error": str(e),
+                    "data": ta_data
+                })
+        
+        return Response({
+            "created_users": created_users,
+            "errors": errors,
+            "total_created": len(created_users),
+            "total_errors": len(errors)
+        }, status=status.HTTP_201_CREATED if created_users else status.HTTP_400_BAD_REQUEST)
+
+
+class SendPasswordEmailsView(APIView):
+    """
+    View for sending password emails to TAs.
+    This endpoint accepts a list of email addresses and sends password reset instructions.
+    """
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    
+    def post(self, request, *args, **kwargs):
+        """Send password emails to specified users."""
+        emails = request.data.get('emails', [])
+        
+        if not emails:
+            return Response(
+                {"detail": "No email addresses provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Update all users to ensure they're approved and verified
+        User.objects.filter(email__in=emails).update(is_approved=True, email_verified=True)
+        
+        success = []
+        errors = []
+        debug_info = []
+        
+        # Check if using console backend
+        is_console_backend = 'console' in settings.EMAIL_BACKEND
+        logger.info(f"Using email backend: {settings.EMAIL_BACKEND}")
+        
+        for email in emails:
+            try:
+                # Find the user
+                user = User.objects.get(email=email)
+                
+                # Ensure user is approved and verified
+                if not user.is_approved or not user.email_verified:
+                    user.is_approved = True
+                    user.email_verified = True
+                    user.save()
+                
+                # Generate a new temporary password
+                temp_password = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(12))
+                user.temp_password = temp_password
+                user.temp_password_expiry = timezone.now() + timedelta(days=7)
+                user.save()
+                
+                # Send email with temporary password
+                subject = 'Your Bilkent TA Management System Temporary Password'
+                context = {
+                    'user': user,
+                    'temp_password': temp_password,
+                    'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
+                    'login_url': f"{settings.FRONTEND_URL}/login"
+                }
+                
+                html_message = render_to_string('email/password_email_template.html', context)
+                plain_message = f"""
+                Hello {user.first_name} {user.last_name},
+                
+                Your temporary password for the Bilkent TA Management System is: {temp_password}
+                
+                This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+                Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+                
+                Best regards,
+                Bilkent TA Management System
+                """
+                
+                # Log details before sending
+                logger.info(f"Attempting to send email to {user.email} with subject: '{subject}'")
+                
+                try:
+                    send_mail(
+                        subject=subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
+                    log_msg = f"Password email sent to {user.email}"
+                    if is_console_backend:
+                        log_msg += " (Using console backend - check your server logs)"
+                    logger.info(log_msg)
+                    success.append(email)
+                    
+                    # Add debug info for successful email
+                    debug_info.append({
+                        "email": email,
+                        "temp_password": temp_password,
+                        "status": "sent",
+                        "timestamp": timezone.now().isoformat()
+                    })
+                except Exception as email_error:
+                    error_msg = f"Email sending failed: {str(email_error)}"
+                    detailed_error = f"Error type: {type(email_error).__name__}, Details: {str(email_error)}"
+                    logger.error(f"Failed to send email to {user.email}: {detailed_error}")
+                    errors.append({
+                        "email": email,
+                        "error": error_msg,
+                        "detailed_error": detailed_error
+                    })
+                
+            except User.DoesNotExist:
+                errors.append({
+                    "email": email,
+                    "error": "User not found"
+                })
+            except Exception as e:
+                detailed_error = f"Error type: {type(e).__name__}, Details: {str(e)}"
+                logger.error(f"Error processing {email}: {detailed_error}")
+                errors.append({
+                    "email": email,
+                    "error": str(e),
+                    "detailed_error": detailed_error
+                })
+        
+        return Response({
+            "success": success,
+            "errors": errors,
+            "total_success": len(success),
+            "total_errors": len(errors),
+            "debug_info": {
+                "email_settings": {
+                    "EMAIL_HOST": settings.EMAIL_HOST,
+                    "EMAIL_PORT": settings.EMAIL_PORT,
+                    "EMAIL_USE_TLS": settings.EMAIL_USE_TLS,
+                    "DEFAULT_FROM_EMAIL": settings.DEFAULT_FROM_EMAIL,
+                    "EMAIL_BACKEND": settings.EMAIL_BACKEND,
+                    "using_console_backend": is_console_backend
+                },
+                "sent_emails": debug_info
+            }
+        }, status=status.HTTP_200_OK)
+
+
+class FixAllUsersView(APIView):
+    """
+    API endpoint to fix all users by setting them as approved and email-verified.
+    This is a utility endpoint to help recover from issues with user status.
+    """
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    
+    def post(self, request):
+        """Set all users as approved and email verified."""
+        try:
+            # Get count before update
+            total_users = User.objects.count()
+            unapproved_count = User.objects.filter(is_approved=False).count()
+            unverified_count = User.objects.filter(email_verified=False).count()
+            
+            # Update all users
+            User.objects.all().update(is_approved=True, email_verified=True)
+            
+            # Log the action
+            logger.info(f"All users set to approved and email verified by {request.user.email}")
+            
+            return Response({
+                "message": "All users have been marked as approved and email verified.",
+                "details": {
+                    "total_users": total_users,
+                    "previously_unapproved": unapproved_count,
+                    "previously_unverified": unverified_count
+                }
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            logger.error(f"Error in FixAllUsersView: {str(e)}")
+            return Response({
+                "error": f"An error occurred: {str(e)}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CheckEmailExistsView(APIView):
+    """
+    API endpoint to check if an email exists in the system.
+    For security reasons, this endpoint only reveals if an email exists when
+    used for the first-time login flow.
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response(
+                {'error': 'Email is required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if the email exists in the system
+        exists = User.objects.filter(email=email).exists()
+        
+        # We are allowing the frontend to know if the user exists
+        # This is needed for first-time login flow
+        return Response({'exists': exists}, status=status.HTTP_200_OK)
+
+
+class CreateTAFromEmailView(APIView):
+    """
+    API endpoint to create a TA account from an email address.
+    This will look up the email in existing Excel import data or create a minimal account.
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def _extract_domain_info(self, email):
+        """Extract department information from email domain"""
+        if '@ug.bilkent.edu.tr' in email:
+            # Extract department code from university email
+            # Example: john.doe@cs.ug.bilkent.edu.tr -> CS department
+            try:
+                parts = email.split('@')
+                if len(parts) == 2:
+                    domain_parts = parts[1].split('.')
+                    if len(domain_parts) > 3:  # Has department subdomain
+                        dept_code = domain_parts[0].upper()
+                        # Check if it's a valid department code
+                        if Department.objects.filter(code=dept_code).exists():
+                            return {
+                                'department': dept_code,
+                                'academic_level': 'MASTERS',  # Default
+                                'employment_type': 'PART_TIME'  # Default
+                            }
+            except Exception as e:
+                logger.error(f"Error extracting domain info: {str(e)}")
+                
+        # Default to CS department if we can't extract
+        return {
+            'department': 'CS',
+            'academic_level': 'MASTERS',
+            'employment_type': 'PART_TIME'
+        }
+    
+    def _extract_name_from_email(self, email):
+        """Extract first and last name from email address"""
+        try:
+            # Remove domain part
+            username = email.split('@')[0]
+            
+            # Common formats: firstname.lastname, firstname_lastname, first.m.last
+            name_parts = re.split(r'[._]', username)
+            
+            if len(name_parts) >= 2:
+                first_name = name_parts[0].capitalize()
+                last_name = name_parts[-1].capitalize()
+                
+                # If last part is a single character, use the part before it as last name
+                if len(last_name) == 1 and len(name_parts) > 2:
+                    last_name = name_parts[-2].capitalize()
+                
+                return {
+                    'first_name': first_name,
+                    'last_name': last_name
+                }
+        except Exception as e:
+            logger.error(f"Error extracting name from email: {str(e)}")
+        
+        # Default: use email as first name and "User" as last name
+        return {
+            'first_name': email.split('@')[0],
+            'last_name': 'User'
+        }
+    
+    def generate_password(self, length=12):
+        """Generate a secure random password."""
+        chars = string.ascii_letters + string.digits + string.punctuation
+        # Ensure password has at least one of each type of character
+        password = random.choice(string.ascii_lowercase)
+        password += random.choice(string.ascii_uppercase)
+        password += random.choice(string.digits)
+        password += random.choice('!@#$%^&*()_+-=[]{}|;:,.<>?')
+        # Fill the rest randomly
+        password += ''.join(random.choice(chars) for _ in range(length - 4))
+        # Shuffle the password
+        password_list = list(password)
+        random.shuffle(password_list)
+        return ''.join(password_list)
+    
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response(
+                {'error': 'Email is required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            return Response({
+                'exists': True,
+                'created': False,
+                'message': 'User with this email already exists'
+            }, status=status.HTTP_200_OK)
+        
+        try:
+            with transaction.atomic():
+                # Extract basic info from email
+                domain_info = self._extract_domain_info(email)
+                name_info = self._extract_name_from_email(email)
+                
+                # Generate password
+                password = self.generate_password()
+                
+                # Create the user
+                user = User.objects.create_user(
+                    email=email,
+                    password=password,
+                    first_name=name_info['first_name'],
+                    last_name=name_info['last_name'],
+                    role='TA',
+                    department=domain_info['department'],
+                    academic_level=domain_info['academic_level'],
+                    employment_type=domain_info['employment_type'],
+                    is_approved=True,  # Auto-approve TAs
+                    email_verified=True,  # Auto-verify emails
+                    bilkent_id=ta_data.get('bilkent_id', '00000000')
+                )
+                
+                # Store temporary password
+                user.temp_password = password
+                user.temp_password_expiry = timezone.now() + timedelta(days=7)  # Valid for 7 days
+                user.save()
+                
+                # Send email with temporary password
+                subject = 'Your Bilkent TA Management System Account'
+                context = {
+                    'user': user,
+                    'temp_password': password,
+                    'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
+                    'login_url': f"{settings.FRONTEND_URL}/login"
+                }
+                
+                html_message = render_to_string('email/password_email_template.html', context)
+                plain_message = f"""
+                Hello {user.first_name} {user.last_name},
+                
+                Your account has been created in the Bilkent TA Management System.
+                
+                Your temporary password is: {password}
+                
+                This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+                Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+                
+                Best regards,
+                Bilkent TA Management System
+                """
+                
+                try:
+                    send_mail(
+                        subject=subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
+                    email_sent = True
+                except Exception as e:
+                    logger.error(f"Failed to send email to {user.email}: {str(e)}")
+                    email_sent = False
+                
+                return Response({
+                    'exists': False,
+                    'created': True,
+                    'message': 'User created successfully',
+                    'email_sent': email_sent,
+                    'user_info': {
+                        'id': user.id,
+                        'email': user.email,
+                        'name': f"{user.first_name} {user.last_name}",
+                        'temp_password': password if settings.DEBUG else None  # Only include password in debug mode
+                    }
+                }, status=status.HTTP_201_CREATED)
+                
+        except Exception as e:
+            logger.error(f"Error creating user from email: {str(e)}")
+            return Response({
+                'exists': False,
+                'created': False,
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ImportCoursesFromExcelView(APIView):
+    """
+    View for importing courses from Excel file.
+    Staff users can upload an Excel file with course data to create or update courses and sections.
+    """
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    parser_classes = [MultiPartParser, FormParser]
+    
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        """Process course data from Excel and create courses and sections."""
+        # Check if file is provided
+        if 'file' not in request.FILES:
+            return Response(
+                {"detail": "No file provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        excel_file = request.FILES['file']
+        
+        # Validate file is Excel
+        if not excel_file.name.endswith(('.xls', '.xlsx')):
+            return Response(
+                {"detail": "File must be an Excel file (.xls or .xlsx)"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Read Excel file using pandas
+            import pandas as pd
+            df = pd.read_excel(excel_file)
+            
+            # Expected columns: Department, Course Code, Course Title, Credits, Section Count, Student Count, Academic Level
+            expected_columns = ['Department', 'Course Code', 'Course Title', 'Credits', 'Section Count', 'Student Count', 'Academic Level']
+            
+            # Validate all required columns exist
+            missing_columns = [col for col in expected_columns if col not in df.columns]
+            if missing_columns:
+                return Response(
+                    {"detail": f"Missing required columns: {', '.join(missing_columns)}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Process each row
+            created_courses = []
+            created_sections = []
+            errors = []
+            
+            for index, row in df.iterrows():
+                try:
+                    dept_code = row['Department']
+                    course_code = row['Course Code']
+                    course_title = row['Course Title']
+                    credits = row['Credits']
+                    section_count = int(row['Section Count'])
+                    student_count = int(row['Student Count'])
+                    academic_level_str = row['Academic Level']
+
+                    # Validate academic level (case-insensitive)
+                    valid_levels_display = {choice[1]: choice[0] for choice in Course.CourseLevel.choices} # {Display: Key}
+                    valid_levels_lower = {k.lower(): v for k, v in valid_levels_display.items()} # {display_lower: Key}
+                    normalized_excel_level = str(academic_level_str).strip().lower()
+
+                    if normalized_excel_level not in valid_levels_lower:
+                        errors.append({
+                            "row": index + 2,
+                            "error": f"Invalid Academic Level: '{academic_level_str}'. Must be one of {', '.join(valid_levels_display.keys())}", # Show original expected display names
+                            "data": row.to_dict()
+                        })
+                        continue
+                    
+                    course_level_enum_key = valid_levels_lower[normalized_excel_level]
+
+                    # Validate numeric fields
+                    if section_count < 1:
+                        errors.append({
+                            "row": index + 2,  # +2 because Excel rows start at 1 and we have a header
+                            "error": "Section Count must be at least 1",
+                            "data": row.to_dict()
+                        })
+                        continue
+                    
+                    if student_count < 0:
+                        errors.append({
+                            "row": index + 2,
+                            "error": "Student Count cannot be negative",
+                            "data": row.to_dict()
+                        })
+                        continue
+                    
+                    # Check if the department exists, create if not
+                    try:
+                        department = Department.objects.get(code=dept_code)
+                    except Department.DoesNotExist:
+                        # Create a new department
+                        department = Department.objects.create(
+                            code=dept_code,
+                            name=f"{dept_code} Department",  # Generic name
+                            faculty="Unknown"  # Default faculty
+                        )
+                    
+                    # Create or update the course
+                    course, created = Course.objects.update_or_create(
+                        department=department,
+                        code=course_code,
+                        defaults={
+                            'title': course_title,
+                            'credit': Decimal(str(credits)),
+                            'level': course_level_enum_key
+                        }
+                    )
+                    
+                    if created:
+                        created_courses.append({
+                            "id": course.id,
+                            "code": f"{dept_code}{course_code}",
+                            "title": course_title
+                        })
+                    
+                    # Create sections for the course
+                    for i in range(1, section_count + 1):
+                        section_number = str(i)
+                        
+                        # Check if section already exists
+                        section, section_created = Section.objects.update_or_create(
+                            course=course,
+                            section_number=section_number,
+                            defaults={
+                                'student_count': student_count
+                            }
+                        )
+                        
+                        if section_created:
+                            created_sections.append({
+                                "id": section.id,
+                                "course": f"{dept_code}{course_code}",
+                                "section": section_number,
+                                "student_count": student_count
+                            })
+                    
+                except Exception as e:
+                    errors.append({
+                        "row": index + 2,
+                        "error": str(e),
+                        "data": row.to_dict() if hasattr(row, 'to_dict') else str(row)
+                    })
+            
+            # Log the import action
+            AuditLog.objects.create(
+                user=request.user,
+                action='IMPORT',
+                object_type='Course',
+                object_id=None,
+                description=f"Imported {len(created_courses)} courses and {len(created_sections)} sections from Excel",
+                ip_address=request.META.get('REMOTE_ADDR'),
+            )
+            
+            return Response({
+                "created_courses": created_courses,
+                "created_sections": created_sections,
+                "errors": errors,
+                "total_courses_created": len(created_courses),
+                "total_sections_created": len(created_sections),
+                "total_errors": len(errors)
+            }, status=status.HTTP_201_CREATED if created_courses or created_sections else status.HTTP_400_BAD_REQUEST)
+            
+        except Exception as e:
+            import traceback
+            return Response({
+                "detail": f"Error processing Excel file: {str(e)}",
+                "traceback": traceback.format_exc()
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CourseCreateView(generics.CreateAPIView):
+    """
+    API endpoint that allows staff to create courses.
+    """
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [IsStaffUser]
+
+    def perform_create(self, serializer):
+        course = serializer.save()
+        
+        # Automatically create Section 1 for the new course
+        new_section = Section.objects.create(
+            course=course,
+            section_number="1",
+            instructor=None,
+            student_count=0 
+        )
+        
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='CREATE',
+            object_type='Course',
+            object_id=course.id,
+            description=f"Course '{course.code} - {course.title}' created.",
+            ip_address=self.request.META.get('REMOTE_ADDR') # Restoring IP address logging
+        )
+        
+        # Also log section creation
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='CREATE',
+            object_type='Section',
+            object_id=new_section.id, # Use the actual ID of the created section
+            description=f"Section '{new_section.section_number}' for course '{course.code} - {course.title}' automatically created.",
+            ip_address=self.request.META.get('REMOTE_ADDR') # Restoring IP address logging
+        )
+
+
+class CourseUpdateView(generics.UpdateAPIView):
+    """
+    API endpoint that allows staff or authorized instructors to update courses.
+    """
+    queryset = Course.objects.all()
+    serializer_class = serializers.CourseSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForThisCourseOrStaff] # Changed
+    
+    def perform_update(self, serializer):
+        course = serializer.save()
+        
+        # Log the course update
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='UPDATE',
+            object_type='Course',
+            object_id=course.id,
+            description=f"Course {course.department.code}{course.code} updated",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class SectionCreateView(generics.CreateAPIView):
+    """
+    API endpoint that allows staff to create sections.
+    """
+    serializer_class = serializers.SectionSerializer
+    permission_classes = [IsStaffUser]
+    
+    def perform_create(self, serializer):
+        section = serializer.save()
+        
+        # Log the section creation
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='CREATE',
+            object_type='Section',
+            object_id=section.id,
+            description=f"Section {section} created",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class SectionUpdateView(generics.UpdateAPIView):
+    """
+    API endpoint that allows staff to update sections.
+    """
+    queryset = Section.objects.all()
+    serializer_class = serializers.SectionSerializer
+    permission_classes = [IsStaffUser]
+    
+    def perform_update(self, serializer):
+        section = serializer.save()
+        
+        # Log the section update
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='UPDATE',
+            object_type='Section',
+            object_id=section.id,
+            description=f"Section {section} updated",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class SectionDeleteView(generics.DestroyAPIView):
+    """
+    API endpoint that allows staff to delete sections.
+    """
+    queryset = Section.objects.all()
+    permission_classes = [IsStaffUser]
+    
+    def perform_destroy(self, instance):
+        # Log the section deletion
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='DELETE',
+            object_type='Section',
+            object_id=instance.id,
+            description=f"Section {instance.course.department.code}{instance.course.code}-{instance.section_number} deleted by staff",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+        
+        instance.delete()
+        
+    def destroy(self, request, *args, **kwargs):
+        try:
+            # Check if section has TA assignments
+            instance = self.get_object()
+            assignments = TAAssignment.objects.filter(section=instance)
+            
+            if assignments.exists():
+                return Response(
+                    {"detail": f"Cannot delete section with {assignments.count()} TA assignments. Please remove the assignments first."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+                
+            self.perform_destroy(instance)
+            return Response({"detail": "Section deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error deleting section: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CourseDeleteView(generics.DestroyAPIView):
+    """
+    API endpoint that allows staff to delete courses.
+    """
+    queryset = Course.objects.all()
+    permission_classes = [IsStaffUser]
+    
+    def perform_destroy(self, instance):
+        # Log the course deletion
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='DELETE',
+            object_type='Course',
+            object_id=instance.id,
+            description=f"Course {instance.department.code}{instance.code} deleted by staff",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+        
+        instance.delete()
+        
+    def destroy(self, request, *args, **kwargs):
+        try:
+            # Check if course has sections - REMOVED CHECK TO ALLOW CASCADE DELETE
+            instance = self.get_object()
+            # sections = Section.objects.filter(course=instance)
+            # 
+            # if sections.exists():
+            #     return Response(
+            #         {"detail": f"Cannot delete course with {sections.count()} sections. Please delete the sections first."},
+            #         status=status.HTTP_400_BAD_REQUEST
+            #     )
+                
+            self.perform_destroy(instance) # This calls instance.delete(), which triggers CASCADE
+            return Response({"detail": "Course deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            # Log the error for debugging
+            logger.error(f"Error deleting course {kwargs.get('pk')}: {str(e)}", exc_info=True)
+            return Response({"detail": f"Error deleting course: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Exam Management Views
+
+class IsInstructorForCourse(permissions.BasePermission):
+    """
+    Custom permission to only allow instructors to manage exams for courses they teach.
+    Staff, Admin, and Dean's Office have broader access.
+    """
+    def has_permission(self, request, view):
+        # Basic authentication check, detailed checks happen at object level or in view logic
+        if not request.user or not request.user.is_authenticated:
+            return False
+        
+        # For list/create views that don't have an object yet, more specific checks might be needed if this permission is used there.
+        # For views that operate on an object (Retrieve, Update, Delete), has_object_permission is key.
+        # Let's assume for now that if it reaches here for an object-specific view, basic auth is enough.
+        # Staff, admin, and dean's office are generally allowed broader access by default in this permission.
+        if request.user.role in [User.Role.STAFF, User.Role.ADMIN, User.Role.DEAN_OFFICE]:
+            return True
+        
+        # If it's an instructor, allow proceeding to object-level check for relevant views
+        if request.user.role == User.Role.INSTRUCTOR:
+            return True # Defer to has_object_permission for specific exam
+
+        return False # Other roles not explicitly handled are denied by default by this permission
+    
+    def has_object_permission(self, request, view, obj): # obj here is an Exam instance
+        if not request.user or not request.user.is_authenticated:
+            return False
+
+        if request.user.role in [User.Role.STAFF, User.Role.ADMIN, User.Role.DEAN_OFFICE]:
+            return True
+        
+        if request.user.role == User.Role.INSTRUCTOR:
+            # Check if the exam (obj) belongs to a course the instructor teaches
+            return Section.objects.filter(
+                course=obj.course, 
+                instructor=request.user
+            ).exists()
+        
+        return False
+
+
+class ExamListView(generics.ListAPIView):
+    """
+    API endpoint that allows users to list exams.
+    Instructors can only see exams for courses they teach.
+    """
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['course', 'type', 'status']
+    search_fields = ['course__code', 'course__title']
+    
+    def get_queryset(self):
+        """Override get_queryset to filter by user role and department for staff"""
+        user = self.request.user
+        queryset = Exam.objects.all()
+
+        status_param = self.request.query_params.get('status')
+
+        if user.is_superuser or (hasattr(user, 'role') and user.role == User.Role.ADMIN):
+            # Superusers and ADMIN role see all exams
+            pass 
+        elif hasattr(user, 'role') and user.role == User.Role.STAFF:
+            queryset = queryset.filter(course__department__code=user.department)
+        elif hasattr(user, 'role') and user.role == User.Role.DEAN_OFFICE:
+            pass # Retains current behavior of seeing all for Dean's Office
+        elif hasattr(user, 'role') and user.role == User.Role.INSTRUCTOR:
+            # Get all courses where the user is an instructor
+            instructor_courses = Course.objects.filter(sections__instructor=user).distinct() # Changed section to sections
+            queryset = queryset.filter(course__in=instructor_courses)
+        else:
+            # Default for other authenticated users (e.g., TAs)
+            return Exam.objects.none() # No exams for others by default
+
+        if status_param:
+            queryset = queryset.filter(status=status_param)
+            
+        return queryset
+
+
+class ExamDetailView(generics.RetrieveAPIView):
+    """
+    API endpoint that allows users to view an exam.
+    Instructors can only view exams for courses they teach.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+
+
+class ExamCreateView(generics.CreateAPIView):
+    """
+    API endpoint that allows users to create exams.
+    Instructors can only create exams for courses they teach.
+    """
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    
+    def perform_create(self, serializer):
+        exam = serializer.save()
+        
+        # Process student list file if provided
+        if exam.student_list_file:
+            file_path = os.path.join(settings.MEDIA_ROOT, exam.student_list_file.name)
+            result = process_student_list_file(file_path)
+            
+            if result.get('error'):
+                # Log the error but don't fail the exam creation
+                logger.error(f"Error processing student list for exam {exam.id}: {result['error']}")
+            else:
+                # Update student count and status
+                exam.student_count = result['student_count']
+                exam.status = Exam.Status.WAITING_FOR_PLACES
+                exam.save(update_fields=['student_count', 'status'])
+        
+        # Log the exam creation
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='CREATE',
+            object_type='Exam',
+            object_id=exam.id,
+            description=f"Exam created for {exam.course} ({exam.get_type_display()})",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class ExamUpdateView(generics.UpdateAPIView):
+    """
+    API endpoint that allows users to update exams.
+    Instructors can only update exams for courses they teach.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    
+    def perform_update(self, serializer):
+        exam = serializer.save()
+        
+        # Process student list file if provided
+        if 'student_list_file' in self.request.FILES:
+            file_path = os.path.join(settings.MEDIA_ROOT, exam.student_list_file.name)
+            result = process_student_list_file(file_path)
+            
+            if result.get('error'):
+                # Log the error but don't fail the exam update
+                logger.error(f"Error processing student list for exam {exam.id}: {result['error']}")
+            else:
+                # Update student count and status
+                exam.student_count = result['student_count']
+                exam.status = Exam.Status.WAITING_FOR_PLACES
+                exam.save(update_fields=['student_count', 'status'])
+        
+        # Log the exam update
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='UPDATE',
+            object_type='Exam',
+            object_id=exam.id,
+            description=f"Exam updated for {exam.course} ({exam.get_type_display()})",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+
+
+class ExamDeleteView(generics.DestroyAPIView):
+    """
+    API endpoint that allows users to delete exams.
+    Instructors can only delete exams for courses they teach.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    
+    def perform_destroy(self, instance):
+        # Log the exam deletion
+        AuditLog.objects.create(
+            user=self.request.user,
+            action='DELETE',
+            object_type='Exam',
+            object_id=instance.id,
+            description=f"Exam deleted for {instance.course} ({instance.get_type_display()})",
+            ip_address=self.request.META.get('REMOTE_ADDR'),
+        )
+        
+        instance.delete()
+        
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            return Response({"detail": "Exam deleted successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error deleting exam: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class IsDeanOffice(permissions.BasePermission):
+    """
+    Custom permission to only allow the Dean's Office to assign classrooms to exams.
+    """
+    def has_permission(self, request, view):
+        # Only Dean's Office, Staff and Admin can assign classrooms
+        return request.user.role in ['DEAN_OFFICE', 'STAFF', 'ADMIN']
+
+
+class ExamAssignClassroomView(generics.UpdateAPIView):
+    """
+    API endpoint that allows the Dean's Office to assign classrooms to exams.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsDeanOffice]
+    
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Ensure student list is uploaded before assigning classroom
+        # This check can be here or in the serializer's validate method if preferred
+        if not instance.has_student_list:
+             return Response(
+                 {"detail": "Student list must be uploaded before assigning classrooms"}, 
+                 status=status.HTTP_400_BAD_REQUEST
+             )
+
+        # The ExamSerializer will handle 'classroom_id' from request.data
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        # Log the classroom assignment
+        AuditLog.objects.create(
+            user=request.user,
+            action='UPDATE',
+            object_type='Exam',
+            object_id=instance.id,
+            description=f"Classroom assignment updated for {instance.course} ({instance.get_type_display()}) by {request.user.full_name}. New classroom: {instance.classroom}",
+            ip_address=request.META.get('REMOTE_ADDR'),
+        )
+        return Response(serializer.data)
+
+
+class ClassroomListView(generics.ListAPIView):
+    """
+    API endpoint that allows users to view available classrooms.
+    """
+    queryset = Classroom.objects.all().order_by('building', 'room_number')
+    serializer_class = serializers.ClassroomSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ['building', 'room_number']
+    filterset_fields = ['building']
+
+
+class ExamSetProctorsView(generics.UpdateAPIView):
+    """
+    API endpoint that allows instructors or staff to set the proctor count for an exam.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    
+    def update(self, request, *args, **kwargs):
+        try:
+            # Get the exam instance
+            instance = self.get_object()
+            
+            # Extract proctor count from request data
+            proctor_count = request.data.get('proctor_count')
+            if proctor_count is None:
+                return Response({"detail": "No proctor count provided"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            try:
+                proctor_count = int(proctor_count)
+                # Allow proctor count to be 0
+                if proctor_count < 0:
+                    return Response({"detail": "Proctor count cannot be negative"}, status=status.HTTP_400_BAD_REQUEST)
+            except (ValueError, TypeError):
+                return Response({"detail": "Invalid proctor count"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update the proctor count
+            instance.proctor_count = proctor_count
+            
+            # --- REMOVED: Don't automatically set status to READY --- 
+            # instance.status = Exam.Status.READY 
+            
+            # Save the updated proctor count
+            instance.save(update_fields=['proctor_count'])
+            
+            # --- ADDED: Re-evaluate status based on new proctor count --- 
+            print(f"[ExamSetProctorsView] Calling update_status_based_on_proctoring for Exam ID {instance.id} after setting proctor_count to {proctor_count}")
+            instance.update_status_based_on_proctoring()
+            # Refresh instance from db to get the potentially updated status
+            instance.refresh_from_db(fields=['status'])
+            
+            # Log the proctor count update
+            AuditLog.objects.create(
+                user=request.user,
+                action='UPDATE',
+                object_type='Exam',
+                object_id=instance.id,
+                description=f"Proctor count set to {proctor_count} for {instance.course} ({instance.get_type_display()}) by {request.user.full_name}",
+                ip_address=request.META.get('REMOTE_ADDR'),
+            )
+            
+            return Response({
+                "detail": "Proctor count set successfully",
+                "proctor_count": instance.proctor_count,
+                "status": instance.status, # Return the potentially updated status
+                "status_display": instance.get_status_display() # Use the method to get display
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"detail": f"Error setting proctor count: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ExamStudentListUploadView(generics.UpdateAPIView):
+    """
+    API endpoint that allows instructors to upload a student list for an existing exam.
+    """
+    queryset = Exam.objects.all()
+    serializer_class = serializers.ExamSerializer
+    permission_classes = [IsAuthenticated, IsInstructorForCourse]
+    parser_classes = [MultiPartParser, FormParser]
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        
+        # Check if the student list file is provided
+        if 'student_list_file' not in request.FILES:
+            return Response(
+                {"detail": "Student list file is required."}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Update the instance with the new file
+        instance.student_list_file = request.FILES['student_list_file']
+        instance.has_student_list = True
+        instance.save()
+        
+        # Process the file
+        file_path = os.path.join(settings.MEDIA_ROOT, instance.student_list_file.name)
+        result = process_student_list_file(file_path)
+        
+        if result.get('error'):
+            return Response(
+                {"detail": f"Error processing student list: {result['error']}"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Update student count and status
+        instance.student_count = result['student_count']
+        instance.status = Exam.Status.WAITING_FOR_PLACES
+        instance.save(update_fields=['student_count', 'status'])
+        
+        # Log the student list upload
+        AuditLog.objects.create(
+            user=request.user,
+            action='UPDATE',
+            object_type='Exam',
+            object_id=instance.id,
+            description=f"Student list uploaded for {instance.course} ({instance.get_type_display()}) with {result['student_count']} students",
+            ip_address=request.META.get('REMOTE_ADDR'),
+        )
+        
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
+
+class ExamPlacementImportView(APIView):
+    """
+    API endpoint for importing exam classroom assignments from an Excel file.
+    Only Dean's Office, Staff, and Admin users can import exam placements.
+    """
+    permission_classes = [IsAuthenticated, IsDeanOffice]
+    parser_classes = [MultiPartParser, FormParser]
+    
+    def post(self, request, *args, **kwargs):
+        logger.info(f"ExamPlacementImportView: Received file import request from user {request.user.email}")
+        # Check if file is provided
+        if 'file' not in request.FILES:
+            logger.warning("ExamPlacementImportView: No file provided in request.")
+            return Response(
+                {"detail": "No file provided"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        excel_file = request.FILES['file']
+        
+        # Validate file is Excel
+        if not excel_file.name.endswith(('.xls', '.xlsx')):
+            logger.warning(f"ExamPlacementImportView: Invalid file type: {excel_file.name}")
+            return Response(
+                {"detail": "File must be an Excel file (.xls or .xlsx)"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            import pandas as pd
+            df = pd.read_excel(excel_file)
+            logger.info(f"ExamPlacementImportView: Successfully read Excel file. Shape: {df.shape}")
+            
+            # Fix NaN values that can cause JSON serialization issues
+            df = df.replace({pd.NA: None, float('nan'): None})
+            
+            required_columns = ['Exam ID', 'Building', 'Room Number']
+            missing_columns = [col for col in required_columns if col not in df.columns]
+            if missing_columns:
+                logger.warning(f"ExamPlacementImportView: Missing required columns: {missing_columns}")
+                return Response(
+                    {"detail": f"Missing required columns: {', '.join(missing_columns)}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            assignments = []
+            errors = []
+            
+            with transaction.atomic():
+                logger.info("ExamPlacementImportView: Starting transaction to process exam placements.")
+                for index, row in df.iterrows():
+                    row_num_for_logging = index + 2  # For user-friendly row numbers (1-indexed + header)
+                    exam_id_from_excel = None
+                    try:
+                        exam_id_from_excel = row.get('Exam ID')
+                        if pd.isna(exam_id_from_excel): # Handle empty/NaN Exam ID
+                            logger.warning(f"ExamPlacementImportView: Row {row_num_for_logging}: Skipping due to missing 'Exam ID'.")
+                            errors.append({
+                                "row": row_num_for_logging,
+                                "error": "Missing 'Exam ID' in this row.",
+                                "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                            })
+                            continue
+                        exam_id = int(exam_id_from_excel)
+                        
+                        building = str(row.get('Building', '')).strip()
+                        room_number = str(row.get('Room Number', '')).strip()
+
+                        if not building or not room_number:
+                            logger.warning(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID {exam_id}: Skipping due to missing 'Building' or 'Room Number'.")
+                            errors.append({
+                                "row": row_num_for_logging,
+                                "error": "Missing 'Building' or 'Room Number' in this row.",
+                                "exam_id": exam_id,
+                                "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                            })
+                            continue
+
+                        logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}: Processing Exam ID {exam_id}, Classroom {building}-{room_number}")
+
+                        # Get or create the classroom
+                        classroom_capacity = row.get('Capacity')
+                        if pd.isna(classroom_capacity) or classroom_capacity <= 0:
+                            classroom_capacity = 50 # Default capacity
+                        else:
+                            classroom_capacity = int(classroom_capacity)
+
+                        classroom, created = Classroom.objects.get_or_create(
+                            building=building,
+                            room_number=room_number,
+                            defaults={'capacity': classroom_capacity }
+                        )
+                        if created:
+                            logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}: Created new classroom {classroom} with capacity {classroom_capacity}")
+                        else:
+                            logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}: Found existing classroom {classroom}")
+                        
+                        # Get the exam
+                        exam = Exam.objects.get(id=exam_id)
+                        logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}: Found Exam {exam.id} ({exam.course}) with current status '{exam.status_display}' and classroom '{exam.classroom}'")
+                        
+                        # Capture status before potential modification by exam.save()
+                        status_before_save_display = exam.get_status_display()
+                        
+                        if exam.classroom and exam.classroom != classroom:
+                            logger.warning(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID {exam.id}: Already has classroom {exam.classroom}. It will be overwritten with {classroom}.")
+                            errors.append({ # This is a warning, not a critical error preventing assignment
+                                "row": row_num_for_logging,
+                                "warning": f"Exam {exam.id} already had classroom {exam.classroom}. Overwriting with {classroom}.",
+                                "exam_id": exam.id,
+                                "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                            })
+                        
+                        # Assign classroom to exam
+                        exam.classroom = classroom
+                        logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID {exam.id}: Classroom object {classroom} assigned to exam.classroom field. Status before save: '{status_before_save_display}'")
+                        
+                        # The Exam.save() method will handle the status transition
+                        exam.save() 
+                        logger.info(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID {exam.id}: Exam saved. New status: '{exam.status_display}', New classroom: '{exam.classroom}'")
+                        
+                        assignments.append({
+                            "row": row_num_for_logging,
+                            "exam_id": exam.id,
+                            "course": f"{exam.course.department.code}{exam.course.code}",
+                            "classroom": f"{classroom.building}-{classroom.room_number}",
+                            "capacity": classroom.capacity,
+                            "student_count": exam.student_count,
+                            "previous_status": status_before_save_display, # Use the captured display status
+                            "new_status": exam.status, 
+                            "status_display": exam.status_display 
+                        })
+                        
+                    except Exam.DoesNotExist:
+                        logger.warning(f"ExamPlacementImportView: Row {row_num_for_logging}: Exam with ID '{exam_id_from_excel}' not found.")
+                        errors.append({
+                            "row": row_num_for_logging,
+                            "error": f"Exam with ID '{exam_id_from_excel}' not found.",
+                            "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                        })
+                        continue # Skip to the next row
+                    except ValueError as ve: # Catches int(exam_id_from_excel) error if 'Exam ID' is not a number
+                        logger.error(f"ExamPlacementImportView: Row {row_num_for_logging}: Invalid 'Exam ID' format: '{exam_id_from_excel}'. Error: {ve}")
+                        errors.append({
+                            "row": row_num_for_logging,
+                            "error": f"Invalid 'Exam ID' format: '{exam_id_from_excel}'. Must be a number.",
+                            "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                        })
+                        continue
+                    except Exception as e:
+                        logger.error(f"ExamPlacementImportView: Row {row_num_for_logging}, Exam ID '{exam_id_from_excel}': An unexpected error occurred: {type(e).__name__} - {str(e)}", exc_info=True)
+                        errors.append({
+                            "row": row_num_for_logging,
+                            "error": f"An unexpected error occurred: {str(e)}",
+                            "exam_id": exam_id_from_excel,
+                            "data": row.replace({pd.NA: None, float('nan'): None}).to_dict()
+                        })
+                        # Decide if you want to continue or re-raise to rollback transaction for unexpected errors
+                        # For now, we'll continue processing other rows.
+                        continue
+            
+            logger.info(f"ExamPlacementImportView: Transaction finished. Total assignments processed: {len(assignments)}, Total errors/warnings: {len(errors)}")
+            
+            if not assignments and errors:
+                 logger.warning("ExamPlacementImportView: No classrooms were assigned, and there were errors. Check the errors list.")
+            elif not assignments and not errors:
+                 logger.info("ExamPlacementImportView: No classrooms were assigned (e.g. empty Excel or all rows skipped for valid reasons like missing student lists), and no critical errors occurred during processing.")
+
+
+            # Log the import action
+            AuditLog.objects.create(
+                user=request.user,
+                action='IMPORT',
+                object_type='ExamPlacement', # Consider changing if it's more of an "attempt"
+                description=f"Attempted import of {df.shape[0]} exam classroom assignments. Successfully assigned: {len(assignments)}. Errors/Skipped: {len(errors)}.",
+                ip_address=request.META.get('REMOTE_ADDR')
+            )
+            
+            return Response({
+                "detail": f"Processed {df.shape[0]} rows. Successfully assigned classrooms to {len(assignments)} exams. Encountered {len(errors)} issues (errors or skipped rows).",
+                "assignments": assignments,
+                "errors": errors # This list is crucial for the user to understand what happened
+            }, status=status.HTTP_200_OK)
+            
+        except pd.errors.EmptyDataError:
+            logger.error("ExamPlacementImportView: Uploaded Excel file is empty.")
+            return Response({"detail": "The uploaded Excel file is empty."}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"ExamPlacementImportView: A critical error occurred while processing the Excel file: {type(e).__name__} - {str(e)}", exc_info=True)
+            return Response({
+                "detail": f"Error processing Excel file: {str(e)}"
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class ScheduleCourseOptionsView(APIView):
+    """
+    API endpoint to get available course options for a TA's weekly schedule.
+    For TAs, it shows their enrolled courses.
+    The options also include "Other Course" and, for Part-Time TAs, "Non-academic".
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        options = []
+
+        if user.role == 'TA':
+            try:
+                # Attempt to get TAProfile and their enrolled courses
+                ta_profile = user.ta_profile
+                enrolled_courses = ta_profile.enrolled_courses.all().order_by('department__code', 'code')
+                for course in enrolled_courses:
+                    options.append(f"{course.department.code}{course.code} - {course.title}")
+            except TAProfile.DoesNotExist:
+                # If TAProfile does not exist, this TA has no specific enrolled courses to list
+                # They will still get "Other Course" and potentially "Non-academic"
+                pass
+            except AttributeError: 
+                # Handles cases where user might not have ta_profile (e.g., if user is not a TA but somehow hits this logic)
+                # Or if ta_profile exists but enrolled_courses is not set up as expected (should not happen with M2M)
+                logger.warning(f"User {user.email} (ID: {user.id}) with role TA has no ta_profile or an issue with enrolled_courses.")
+                pass # Proceed to add default options
+
+            options.append("Other Course")
+            if user.employment_type == User.EmploymentType.PART_TIME:
+                options.append("Non-academic")
+        
+        elif user.role in [User.Role.STAFF, User.Role.ADMIN, User.Role.DEAN_OFFICE]:
+            # For Staff/Admin/Dean, list all courses (as before, or handle as needed for their context)
+            # For now, replicating previous behavior for non-TAs for safety, though this view is TA-centric.
+            all_system_courses = Course.objects.all().order_by('department__code', 'code')
+            for course in all_system_courses:
+                options.append(f"{course.department.code}{course.code} - {course.title}")
+            options.append("Other Course") # Staff might also need this
+            # "Non-academic" might not be relevant for Staff scheduling their own tasks here, adjust if needed.
+
+        else: # Other roles (e.g. Instructor) - what should they see?
+              # For now, returning empty or a generic message might be safest if they aren't supposed to use this.
+              # Or, provide "Other Course" as a minimum.
+            options.append("Other Course")
+
+
+        # If user is not a TA and no options were added (e.g. Instructor, or TA with no profile/courses)
+        # ensure at least "Other Course" is available.
+        if not options and "Other Course" not in options:
+             options.append("Other Course")
+
+
+        return Response(options, status=status.HTTP_200_OK)
+
+
+class CreateTAFromEmailView(APIView):
+    """
+    API endpoint to create a TA account from an email address.
+    This will look up the email in existing Excel import data or create a minimal account.
+    """
+    permission_classes = [permissions.AllowAny]
+    
+    def _extract_domain_info(self, email):
+        """Extract department information from email domain"""
+        if '@ug.bilkent.edu.tr' in email:
+            # Extract department code from university email
+            # Example: john.doe@cs.ug.bilkent.edu.tr -> CS department
+            try:
+                parts = email.split('@')
+                if len(parts) == 2:
+                    domain_parts = parts[1].split('.')
+                    if len(domain_parts) > 3:  # Has department subdomain
+                        dept_code = domain_parts[0].upper()
+                        # Check if it's a valid department code
+                        if Department.objects.filter(code=dept_code).exists():
+                            return {
+                                'department': dept_code,
+                                'academic_level': 'MASTERS',  # Default
+                                'employment_type': 'PART_TIME'  # Default
+                            }
+            except Exception as e:
+                logger.error(f"Error extracting domain info: {str(e)}")
+                
+        # Default to CS department if we can't extract
+        return {
+            'department': 'CS',
+            'academic_level': 'MASTERS',
+            'employment_type': 'PART_TIME'
+        }
+    
+    def _extract_name_from_email(self, email):
+        """Extract first and last name from email address"""
+        try:
+            # Example: john.doe@bilkent.edu.tr -> first_name="John", last_name="Doe"
+            username = email.split('@')[0]
+            parts = username.replace('.', ' ').replace('_', ' ').split()
+            
+            if len(parts) >= 2:
+                # Capitalize each part
+                first_name = parts[0].capitalize()
+                last_name = ' '.join([p.capitalize() for p in parts[1:]])
+            else:
+                # If we can't extract both names, use the whole username as first name
+                first_name = username.capitalize()
+                last_name = "Unknown"
+                
+            return {
+                'first_name': first_name,
+                'last_name': last_name
+            }
+        except Exception as e:
+            logger.error(f"Error extracting name from email: {str(e)}")
+            return {
+                'first_name': "New",
+                'last_name': "User"
+            }
+
+    def _find_ta_in_excel(self, email):
+        """
+        Find TA information in the Excel file.
+        Returns a dictionary with TA information or None if not found.
+        """
+        import pandas as pd
+        import os
+        
+        try:
+            # Look for Excel files with TA data
+            excel_files = [
+                os.path.join(settings.BASE_DIR, "CS department TA list.xlsx"),
+                os.path.join(settings.BASE_DIR.parent, "CS department TA list.xlsx")
+            ]
+            
+            # Try additional paths that might contain the Excel file
+            for root, dirs, files in os.walk(settings.BASE_DIR.parent):
+                for file in files:
+                    if "TA list" in file and file.endswith(".xlsx"):
+                        excel_files.append(os.path.join(root, file))
+            
+            # Get the first valid Excel file
+            excel_path = None
+            for file_path in excel_files:
+                if os.path.exists(file_path):
+                    excel_path = file_path
+                    break
+            
+            if not excel_path:
+                logger.error("Could not find TA Excel file")
+                return None
+            
+            # Read the Excel file
+            df = pd.read_excel(excel_path)
+            
+            # Clean up column names (remove spaces, etc.)
+            df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
+            
+            # Try to find email in various possible column names
+            email_columns = ['email', 'ta_email', 'email_address', 'mail', 'email_address', 'e-mail']
+            
+            # Find the correct email column
+            email_col = None
+            for col in email_columns:
+                if col in df.columns:
+                    email_col = col
+                    break
+            
+            if not email_col:
+                logger.error(f"Could not find email column in Excel file: {excel_path}")
+                return None
+            
+            # Find the row with the matching email
+            ta_row = df[df[email_col].str.lower() == email.lower()]
+            
+            if ta_row.empty:
+                logger.info(f"Email {email} not found in TA Excel list")
+                return None
+            
+            # Extract TA information
+            ta_data = ta_row.iloc[0].to_dict()
+            
+            # Map Excel columns to our model fields
+            # Common column mappings
+            name_columns = {
+                'first_name': ['first_name', 'first', 'name', 'ta_name', 'first name'],
+                'last_name': ['last_name', 'last', 'surname', 'ta_surname', 'last name'],
+                'phone': ['phone', 'phone_number', 'telephone', 'tel', 'phone number'],
+                'iban': ['iban', 'bank_account', 'bank account'],
+                'department': ['department', 'dept', 'dept_code'],
+                'academic_level': ['academic_level', 'level', 'education_level', 'education level', 'degree'],
+                'employment_type': ['employment_type', 'employment', 'work_type', 'work type', 'type'],
+                'bilkent_id': ['bilkent_id', 'id', 'student_id', 'ta_id', 'uni_id', 'university_id', 'bilkent id']
+            }
+            
+            # Extracted data
+            result = {}
+            
+            # Extract info using column mappings
+            for field, possible_columns in name_columns.items():
+                for col in possible_columns:
+                    if col in ta_data and pd.notna(ta_data[col]):
+                        if field == 'academic_level' and isinstance(ta_data[col], str):
+                            # Map various academic level terms to our model's choices
+                            value = ta_data[col].upper()
+                            if 'PHD' in value or 'DOCTORAL' in value:
+                                result[field] = 'PHD'
+                            elif 'MASTER' in value or 'MS' in value or 'MA' in value:
+                                result[field] = 'MASTERS'
+                            elif 'UNDER' in value or 'BS' in value or 'BA' in value:
+                                result[field] = 'UNDERGRADUATE'
+                            else:
+                                result[field] = 'MASTERS'  # Default
+                        elif field == 'employment_type' and isinstance(ta_data[col], str):
+                            # Map various employment type terms
+                            value = ta_data[col].upper()
+                            if 'FULL' in value:
+                                result[field] = 'FULL_TIME'
+                            elif 'PART' in value:
+                                result[field] = 'PART_TIME'
+                            else:
+                                result[field] = 'PART_TIME'  # Default
+                        else:
+                            result[field] = ta_data[col]
+                        break
+            
+            # Set defaults for missing data
+            if 'first_name' not in result or 'last_name' not in result:
+                name_info = self._extract_name_from_email(email)
+                result['first_name'] = result.get('first_name', name_info['first_name'])
+                result['last_name'] = result.get('last_name', name_info['last_name'])
+            
+            domain_info = self._extract_domain_info(email)
+            result['department'] = result.get('department', domain_info['department'])
+            result['academic_level'] = result.get('academic_level', domain_info['academic_level'])
+            result['employment_type'] = result.get('employment_type', domain_info['employment_type'])
+            
+            logger.info(f"Found TA data in Excel: {result}")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error processing Excel file: {str(e)}")
+            return None
+    
+    def generate_password(self, length=12):
+        """Generate a secure random password."""
+        chars = string.ascii_letters + string.digits + string.punctuation
+        # Ensure password has at least one of each type of character
+        password = ''.join(random.choice(string.ascii_lowercase) for _ in range(3))
+        password += ''.join(random.choice(string.ascii_uppercase) for _ in range(3))
+        password += ''.join(random.choice(string.digits) for _ in range(3))
+        password += ''.join(random.choice('!@#$%^&*()_+-=') for _ in range(3))
+        # Shuffle the password
+        password_list = list(password)
+        random.shuffle(password_list)
+        return ''.join(password_list)
+    
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response(
+                {'error': 'Email is required.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Check if user already exists
+        if User.objects.filter(email=email).exists():
+            return Response({
+                'exists': True,
+                'created': False,
+                'message': 'User with this email already exists'
+            }, status=status.HTTP_200_OK)
+        
+        try:
+            with transaction.atomic():
+                # Check if TA exists in Excel file
+                ta_data = self._find_ta_in_excel(email)
+                if not ta_data:
+                    logger.warning(f"No data found in Excel for: {email}")
+                    
+                    # Extract basic info from email if not in Excel
+                    domain_info = self._extract_domain_info(email)
+                    name_info = self._extract_name_from_email(email)
+                    
+                    # Prepare minimal user data
+                    ta_data = {
+                        'first_name': name_info['first_name'],
+                        'last_name': name_info['last_name'],
+                        'department': domain_info['department'],
+                        'academic_level': domain_info['academic_level'],
+                        'employment_type': domain_info['employment_type'],
+                        'phone': '05000000000',  # Placeholder
+                    }
+                
+                # Generate password
+                password = self.generate_password()
+                
+                # Check if bilkent_id exists in ta_data
+                if 'bilkent_id' not in ta_data:
+                    logger.warning(f"No Bilkent ID found in Excel for: {email}, using default value")
+                
+                # Create the user
+                user = User.objects.create_user(
+                    email=email,
+                    password=password,
+                    first_name=ta_data.get('first_name', ''),
+                    last_name=ta_data.get('last_name', ''),
+                    role='TA',
+                    department=ta_data.get('department', 'CS'),
+                    phone=ta_data.get('phone', '05000000000'),
+                    iban=ta_data.get('iban', ''),
+                    academic_level=ta_data.get('academic_level', 'MASTERS'),
+                    employment_type=ta_data.get('employment_type', 'PART_TIME'),
+                    is_approved=True,  # Auto-approve TAs
+                    email_verified=True,  # Auto-verify emails
+                    bilkent_id=ta_data.get('bilkent_id', '00000000')
+                )
+                
+                # Store temporary password
+                user.temp_password = password
+                user.temp_password_expiry = timezone.now() + timedelta(days=7)  # Valid for 7 days
+                user.save()
+                
+                # Send email with temporary password
+                subject = 'Your Bilkent TA Management System Account'
+                context = {
+                    'user': user,
+                    'temp_password': password,
+                    'expiry_date': user.temp_password_expiry.strftime('%Y-%m-%d %H:%M'),
+                    'login_url': f"{settings.FRONTEND_URL}/login"
+                }
+                
+                html_message = render_to_string('email/password_email_template.html', context)
+                plain_message = f"""
+                Hello {user.first_name} {user.last_name},
+                
+                Your account for the Bilkent TA Management System has been created.
+                
+                Your temporary password is: {password}
+                
+                This password is valid until {user.temp_password_expiry.strftime('%Y-%m-%d %H:%M')}.
+                Please log in to {settings.FRONTEND_URL}/login and change your password as soon as possible.
+                
+                Best regards,
+                Bilkent TA Management System
+                """
+                
+                # Send the email
+                email_sent = False
+                try:
+                    send_mail(
+                        subject=subject,
+                        message=plain_message,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[user.email],
+                        html_message=html_message,
+                        fail_silently=False,
+                    )
+                    email_sent = True
+                    logger.info(f"Sent password email to {user.email}")
+                except Exception as e:
+                    logger.error(f"Failed to send email to {user.email}: {str(e)}")
+                
+                return Response({
+                    'exists': False,
+                    'created': True,
+                    'message': 'User created successfully',
+                    'email_sent': email_sent,
+                    'user_info': {
+                        'id': user.id,
+                        'email': user.email,
+                        'name': f"{user.first_name} {user.last_name}",
+                        'temp_password': password if settings.DEBUG else None  # Only include password in debug mode
+                    }
+                }, status=status.HTTP_201_CREATED)
+                
+        except Exception as e:
+            logger.error(f"Error creating user from email: {str(e)}")
+            return Response({
+                'exists': False,
+                'created': False,
+                'message': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

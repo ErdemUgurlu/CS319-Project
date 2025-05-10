@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class UserManager(BaseUserManager):
@@ -75,6 +77,7 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     first_name = models.CharField(_('first name'), max_length=150)
     last_name = models.CharField(_('last name'), max_length=150)
+    bilkent_id = models.IntegerField(_('Bilkent ID'), unique=True, null=True, blank=True)
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.TA)
     department = models.CharField(max_length=10, choices=Department.choices, default=Department.OTHER)
     
@@ -114,7 +117,7 @@ class User(AbstractUser):
     
     # Set login field to email
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'role', 'phone']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'role', 'phone', 'bilkent_id']
     
     # Use custom user manager
     objects = UserManager()
@@ -138,6 +141,13 @@ class User(AbstractUser):
     def full_name(self):
         """Return the full name of the user."""
         return f"{self.first_name} {self.last_name}"
+
+    def is_student_in_course(self, course):
+        """Check if the user is enrolled as a student in a given course."""
+        # This should be implemented according to how students are tracked in courses
+        # For now, returning False as placeholder
+        # In a real implementation, this would check a StudentEnrollment model or similar
+        return False
 
 
 class Student(models.Model):
@@ -171,6 +181,17 @@ class Course(models.Model):
     title = models.CharField(max_length=200)
     credit = models.DecimalField(max_digits=3, decimal_places=1)
     
+    class CourseLevel(models.TextChoices):
+        UNDERGRADUATE = 'UNDERGRADUATE', 'Undergraduate'
+        GRADUATE = 'GRADUATE', 'Graduate'
+        PHD = 'PHD', 'PhD'
+
+    level = models.CharField(
+        max_length=20,
+        choices=CourseLevel.choices,
+        default=CourseLevel.UNDERGRADUATE
+    )
+
     class Meta:
         unique_together = ('department', 'code')
     
@@ -179,26 +200,19 @@ class Course(models.Model):
 
 
 class Section(models.Model):
-    """Section model representing a course offering for a specific semester."""
+    """Section model representing a course offering."""
     
-    SEMESTER_CHOICES = [
-        ('FALL', 'Fall'),
-        ('SPRING', 'Spring'),
-        ('SUMMER', 'Summer'),
-    ]
-    
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='sections',)
     section_number = models.CharField(max_length=3)
-    semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES)
-    year = models.IntegerField()
     instructor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, 
                                   limit_choices_to={'role': 'INSTRUCTOR'})
+    student_count = models.PositiveIntegerField(default=0)
     
     class Meta:
-        unique_together = ('course', 'section_number', 'semester', 'year')
+        unique_together = ('course', 'section_number')
     
     def __str__(self):
-        return f"{self.course.department.code}{self.course.code}-{self.section_number} ({self.semester} {self.year})"
+        return f"{self.course.department.code}{self.course.code}-{self.section_number}"
 
 
 class TAAssignment(models.Model):
@@ -282,7 +296,139 @@ class AuditLog(models.Model):
         return f"{self.timestamp} - {self.user} - {self.action} - {self.object_type}"
 
 
-# TA-Instructor ilişkisi için yeni model
+class Exam(models.Model):
+    """Model for course exams."""
+    
+    class ExamType(models.TextChoices):
+        MIDTERM = 'MIDTERM', _('Midterm')
+        FINAL = 'FINAL', _('Final')
+        QUIZ = 'QUIZ', _('Quiz')
+    
+    class Status(models.TextChoices):
+        WAITING_FOR_STUDENT_LIST = 'WAITING_FOR_STUDENT_LIST', _('Waiting for Student List')
+        WAITING_FOR_PLACES = 'WAITING_FOR_PLACES', _('Waiting for Places')
+        AWAITING_PROCTORS = 'AWAITING_PROCTORS', _('Awaiting Proctors')
+        READY = 'READY', _('Ready')
+    
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exams')
+    type = models.CharField(max_length=10, choices=ExamType.choices)
+    date = models.DateTimeField()
+    duration = models.PositiveIntegerField(default=120, help_text="Duration of the exam in minutes")
+    classroom = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True)
+    proctor_count = models.PositiveIntegerField(default=1)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_exams')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=25, choices=Status.choices, default=Status.WAITING_FOR_STUDENT_LIST)
+    student_count = models.PositiveIntegerField(default=0, help_text="Automatically calculated from the student list file if provided")
+    student_list_file = models.FileField(upload_to='exam_student_lists/', null=True, blank=True, 
+                                        help_text="Excel file containing the list of students for this exam")
+    has_student_list = models.BooleanField(default=False, help_text="Indicates if a student list has been uploaded")
+    
+    class Meta:
+        ordering = ['date']
+        verbose_name = 'Exam'
+        verbose_name_plural = 'Exams'
+    
+    def save(self, *args, **kwargs):
+        """Override save method to ensure status transitions happen correctly."""
+        
+        # Check if this is an update and if 'classroom' is one of the fields being updated.
+        # Or if it's a new instance and classroom is set.
+        is_new = self._state.adding
+        original_status = self.status
+
+        # Logic to set to AWAITING_PROCTORS when classroom is assigned.
+        # This should only happen if the classroom is being set and the exam isn't already READY.
+        if self.classroom and self.status != Exam.Status.READY:
+            # If it's a new exam with a classroom, or if the classroom field has changed for an existing exam
+            if is_new or (kwargs.get('update_fields') and 'classroom' in kwargs.get('update_fields')) or (not kwargs.get('update_fields') and self.pk and Exam.objects.get(pk=self.pk).classroom != self.classroom):
+                # Only revert to AWAITING_PROCTORS if it wasn't already AWAITING_PROCTORS or if it was something earlier
+                if self.status in [Exam.Status.WAITING_FOR_STUDENT_LIST, Exam.Status.WAITING_FOR_PLACES]:
+                    self.status = Exam.Status.AWAITING_PROCTORS
+                # If the classroom is being assigned and the status *was* AWAITING_PROCTORS, keep it there. 
+                # If the signal has set it to READY, this part won't execute due to `self.status != Exam.Status.READY`
+
+        # If the signal handler changed the status (e.g., to READY), 
+        # and no other part of this save method changed it back, then kwargs['update_fields'] from the signal will be used.
+        # If update_fields is not passed from the signal, a full save occurs.
+
+        # Special handling if the call to save() explicitly targets the status field, e.g. from the signal
+        if kwargs.get('update_fields') and 'status' in kwargs.get('update_fields') and len(kwargs.get('update_fields')) == 1:
+            # This means the save is likely coming from our signal, trying to set the status. 
+            # In this case, we trust the status value that has been set on the instance before calling save.
+            pass # The status set by the signal will be saved.
+        elif self.status == original_status and self.classroom and self.status != Exam.Status.READY: 
+             # If status wasn't changed by signal, and classroom exists, and it's not READY, ensure AWAITING_PROCTORS
+             # This handles the case where an exam is edited in admin, classroom is present, but status isn't READY.
+             self.status = Exam.Status.AWAITING_PROCTORS
+
+        super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f"{self.course} - {self.get_type_display()} on {self.date.strftime('%Y-%m-%d %H:%M')}"
+    
+    @property
+    def status_display(self):
+        return self.get_status_display()
+
+    def update_status_based_on_proctoring(self):
+        """
+        Updates the exam's status based on the current number of assigned proctors
+        and the required proctor_count.
+        This method should be called after proctor_count changes or proctor assignments change.
+        """
+        from proctoring.models import ProctorAssignment # Local import to avoid circular dependency issues
+        
+        assigned_proctor_count = ProctorAssignment.objects.filter(
+            exam=self,
+            status=ProctorAssignment.Status.ASSIGNED
+        ).count()
+        
+        original_status = self.status
+        new_status = original_status
+
+        if self.proctor_count > 0 and assigned_proctor_count >= self.proctor_count:
+            new_status = Exam.Status.READY
+        elif self.proctor_count == 0: # If no proctors needed, it's always ready
+            new_status = Exam.Status.READY
+        else:
+            new_status = Exam.Status.AWAITING_PROCTORS
+            
+        if original_status != new_status:
+            self.status = new_status
+            self.save(update_fields=['status'])
+            print(f"[Exam.update_status_based_on_proctoring] Exam ID {self.id} status updated to: {self.status}")
+        else:
+            print(f"[Exam.update_status_based_on_proctoring] Exam ID {self.id} status ({self.status}) unchanged.")
+
+
+class Leave(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leaves')
+    start_date = models.DateField()
+    end_date = models.DateField()
+    reason = models.TextField(blank=True, null=True)
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('APPROVED', 'Approved'),
+        ('REJECTED', 'Rejected'),
+    ]
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
+    requested_at = models.DateTimeField(auto_now_add=True)
+    # Consider who approves leaves. If it's another User (e.g., admin/staff):
+    # approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_user_leaves') 
+    # Using a different related_name for approved_by to avoid conflict if approved_by can also take leave.
+
+    def __str__(self):
+        return f"{self.user.full_name} - {self.start_date} to {self.end_date} ({self.get_status_display()})"
+
+    class Meta:
+        verbose_name = "Leave Request"
+        verbose_name_plural = "Leave Requests"
+        ordering = ['-requested_at']
+
+
+# TA-Instructor relation model
 class InstructorTAAssignment(models.Model):
     """Model for tracking which TAs are assigned to which instructors."""
     instructor = models.ForeignKey(
@@ -301,7 +447,7 @@ class InstructorTAAssignment(models.Model):
     department = models.ForeignKey(
         Department,
         on_delete=models.CASCADE,
-        related_name='instructor_ta_assignments'
+        related_name='ta_assignments'
     )
     
     class Meta:
@@ -310,4 +456,99 @@ class InstructorTAAssignment(models.Model):
         verbose_name_plural = "Instructor-TA Assignments"
     
     def __str__(self):
-        return f"{self.instructor.full_name} -> {self.ta.full_name}"
+        return f"{self.ta.full_name} assigned to {self.instructor.full_name}"
+
+
+class TAProfile(models.Model):
+    """
+    Extended profile for users with TA role.
+    Contains additional fields specific to TAs.
+    """
+    user = models.OneToOneField(
+        User, 
+        on_delete=models.CASCADE, 
+        related_name='ta_profile',
+        limit_choices_to={'role': 'TA'}
+    )
+    enrolled_courses = models.ManyToManyField(
+        Course, # Direct reference to Course model
+        blank=True,
+        related_name='enrolled_tas_profiles', # Changed related_name to avoid conflict if Course has enrolled_tas
+        help_text="Courses this TA is currently enrolled in as a student."
+    )
+    
+    # Additional TA-specific fields
+    undergrad_university = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True,
+        help_text="University where TA completed undergraduate studies"
+    )
+    
+    supervisor = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='supervised_tas',
+        limit_choices_to={'role': 'INSTRUCTOR'},
+        help_text="Academic supervisor for this TA"
+    )
+    
+    workload_number = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text="Workload category/type for the TA (e.g., 1 or 2, immutable once set)"
+    )
+    
+    workload_credits = models.PositiveIntegerField(
+        default=0,
+        help_text="Accumulated workload credits from assigned proctoring duties"
+    )
+    
+    # JSON field to store weekly schedule if not using the WeeklySchedule model
+    schedule_json = models.JSONField(
+        null=True, 
+        blank=True,
+        help_text="JSON representation of TA's weekly schedule if not using the WeeklySchedule model"
+    )
+    
+    class Meta:
+        verbose_name = "TA Profile"
+        verbose_name_plural = "TA Profiles"
+    
+    def __str__(self):
+        return f"TA Profile: {self.user.full_name}"
+    
+    def save(self, *args, **kwargs):
+        # Ensure the workload_number is immutable once set
+        if self.pk:
+            original = TAProfile.objects.get(pk=self.pk)
+            if original.workload_number is not None and self.workload_number != original.workload_number:
+                 # If trying to change an already set workload_number, prevent it or log a warning
+                 # Reverting to original value to enforce immutability
+                 self.workload_number = original.workload_number
+                 # Optionally, raise an error or log a warning here
+                 print(f"Warning: Attempted to change immutable workload_number for TAProfile {self.pk}. Reverted to {self.workload_number}.")
+            elif original.workload_number is None and self.workload_number is not None:
+                 # If setting it for the first time, allow it.
+                 pass 
+
+        super().save(*args, **kwargs)
+
+
+@receiver(post_save, sender=User)
+def create_ta_profile(sender, instance, created, **kwargs):
+    """Create a TAProfile when a User with role 'TA' is created."""
+    if created and instance.role == 'TA':
+        TAProfile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def update_ta_profile(sender, instance, created, **kwargs):
+    """Update TAProfile when a User's role changes to or from 'TA'."""
+    if not created:
+        # If role changed to TA, create profile if it doesn't exist
+        if instance.role == 'TA':
+            TAProfile.objects.get_or_create(user=instance)
+        # If role changed from TA, we could handle that here, but we'll leave profiles in place
+        # to preserve workload history

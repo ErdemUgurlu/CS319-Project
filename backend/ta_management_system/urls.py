@@ -23,8 +23,12 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 from accounts.views import CustomTokenObtainPairView
+from django.views.generic import RedirectView
 
 urlpatterns = [
+    # Root path redirection to admin page
+    path('', RedirectView.as_view(url='/admin/'), name='home'),
+    
     path('admin/', admin.site.urls),
     
     # API authentication endpoints
@@ -37,9 +41,8 @@ urlpatterns = [
     path('api/tasks/', include('tasks.urls')),
     path('api/duties/', include('duties.urls')),
     path('api/leaves/', include('leaves.urls')),
-    path('api/proctoring/', include('proctoring.urls')),
     path('api/reports/', include('reports.urls')),
-    path('api/workload/', include('workload.urls')),
+    path('api/proctoring/', include('proctoring.urls')),
 ]
 
 # Serve media files in development

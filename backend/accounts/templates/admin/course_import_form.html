@@ -1,0 +1,84 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static admin_urls %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        .help-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .file-upload {
+            margin: 20px 0;
+        }
+        .instructions {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-left: 4px solid #79aec8;
+            margin: 20px 0;
+        }
+        .required-columns {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+    <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+    &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+    &rsaquo; <a href="{% url 'admin:accounts_course_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+    &rsaquo; {% trans "Import Courses from Excel" %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <div class="instructions">
+        <h3>Instructions</h3>
+        <p>Upload an Excel file (.xlsx or .xls) containing course information to bulk import courses and sections.</p>
+        <p>Your Excel file must include the following columns:</p>
+        <div class="required-columns">
+            Department, Course Code, Course Title, Credits, Section Count, Student Count
+        </div>
+        <p class="help-text">
+            <strong>Note:</strong> 
+            <ul>
+                <li>Department: Department code (e.g., CS, EE, MATH)</li>
+                <li>Course Code: Course code without department prefix (e.g., 101, 202)</li>
+                <li>Course Title: Full name of the course</li>
+                <li>Credits: Numeric credit value (can include decimals)</li>
+                <li>Section Count: Number of sections to create (integer)</li>
+                <li>Student Count: Number of students per section (integer)</li>
+            </ul>
+        </p>
+    </div>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <fieldset class="module aligned">
+            <div class="form-row field-excel_file">
+                <div>
+                    <label for="id_excel_file">{{ form.excel_file.label }}</label>
+                    {{ form.excel_file }}
+                    {% if form.excel_file.help_text %}
+                        <div class="help-text">{{ form.excel_file.help_text }}</div>
+                    {% endif %}
+                    {% if form.excel_file.errors %}
+                        <div class="errors">{{ form.excel_file.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </fieldset>
+        
+        <div class="submit-row">
+            <input type="submit" value="{% trans 'Import' %}" class="default" />
+            <a href="{% url 'admin:accounts_course_changelist' %}" class="closelink">{% trans 'Cancel' %}</a>
+        </div>
+    </form>
+</div>
+{% endblock %} 

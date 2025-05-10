@@ -1,295 +1,127 @@
 from django.db import models
+from django.conf import settings
+from accounts.models import Exam, TAProfile, User
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
-from accounts.models import User, Classroom, Section, Department
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+import logging
 
-
-class Exam(models.Model):
-    """Model for exams that need proctors."""
-    
-    STATUS_CHOICES = [
-        ('DRAFT', 'Draft'),
-        ('PENDING', 'Pending'),
-        ('SCHEDULED', 'Scheduled'),
-        ('COMPLETED', 'Completed'),
-        ('CANCELLED', 'Cancelled'),
-    ]
-    
-    EXAM_TYPE_CHOICES = [
-        ('MIDTERM', 'Midterm'),
-        ('FINAL', 'Final'),
-        ('QUIZ', 'Quiz'),
-        ('MAKEUP', 'Makeup'),
-        ('OTHER', 'Other'),
-    ]
-    
-    title = models.CharField(max_length=200)
-    section = models.ForeignKey(
-        Section,
-        on_delete=models.CASCADE,
-        related_name='exams'
-    )
-    exam_type = models.CharField(max_length=10, choices=EXAM_TYPE_CHOICES)
-    date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    duration_minutes = models.IntegerField()  # Auto-calculated
-    student_count = models.PositiveIntegerField()
-    proctor_count_needed = models.PositiveIntegerField()
-    room_count = models.PositiveIntegerField(default=1)
-    student_list_file = models.FileField(upload_to='exam_student_lists/', blank=True, null=True)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='DRAFT')
-    created_by = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='created_exams'
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    notes = models.TextField(blank=True)
-    
-    # Cross-department request fields
-    is_cross_department = models.BooleanField(default=False)
-    requested_from_department = models.ForeignKey(
-        Department, 
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='requested_proctorings'
-    )
-    dean_office_request = models.BooleanField(default=False)
-    dean_office_comments = models.TextField(blank=True)
-    
-    def save(self, *args, **kwargs):
-        # Calculate duration in minutes
-        if self.start_time and self.end_time:
-            start_minutes = self.start_time.hour * 60 + self.start_time.minute
-            end_minutes = self.end_time.hour * 60 + self.end_time.minute
-            
-            # Handle case where exam spans across midnight
-            if end_minutes < start_minutes:
-                end_minutes += 24 * 60
-                
-            self.duration_minutes = end_minutes - start_minutes
-        
-        super().save(*args, **kwargs)
-    
-    def clean(self):
-        """Validate exam times."""
-        if self.start_time and self.end_time:
-            start_minutes = self.start_time.hour * 60 + self.start_time.minute
-            end_minutes = self.end_time.hour * 60 + self.end_time.minute
-            
-            # Handle case where exam spans across midnight
-            if end_minutes < start_minutes:
-                end_minutes += 24 * 60
-            
-            if end_minutes <= start_minutes:
-                raise ValidationError({'end_time': _('End time must be after start time.')})
-    
-    def __str__(self):
-        return f"{self.section} - {self.title} ({self.date})"
-    
-    class Meta:
-        ordering = ['date', 'start_time']
-
-
-class ExamRoom(models.Model):
-    """Model for tracking which classrooms are used for an exam."""
-    
-    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='rooms')
-    classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE)
-    student_count = models.PositiveIntegerField()
-    proctor_count = models.PositiveIntegerField(default=1)
-    
-    def __str__(self):
-        return f"{self.exam.title} - {self.classroom}"
-    
-    class Meta:
-        unique_together = ('exam', 'classroom')
-
+logger = logging.getLogger(__name__)
 
 class ProctorAssignment(models.Model):
-    """Model for assigning TAs as proctors to exams."""
+    """Model for tracking TA assignments to exams as proctors."""
     
-    STATUS_CHOICES = [
-        ('ASSIGNED', 'Assigned'),
-        ('CONFIRMED', 'Confirmed'),
-        ('COMPLETED', 'Completed'),
-        ('SWAPPED', 'Swapped'),
-        ('DECLINED', 'Declined'),
-    ]
+    class Status(models.TextChoices):
+        ASSIGNED = 'ASSIGNED', _('Assigned')
+        COMPLETED = 'COMPLETED', _('Completed')
+        CANCELED = 'CANCELED', _('Canceled')
     
-    exam = models.ForeignKey(Exam, on_delete=models.CASCADE, related_name='proctor_assignments')
-    exam_room = models.ForeignKey(
-        ExamRoom,
-        on_delete=models.CASCADE,
-        related_name='proctor_assignments',
-        null=True,
-        blank=True
+    exam = models.ForeignKey(
+        Exam, 
+        on_delete=models.CASCADE, 
+        related_name='proctor_assignments'
     )
-    proctor = models.ForeignKey(
-        User,
+    ta = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name='proctor_assignments',
+        related_name='proctoring_assignments',
         limit_choices_to={'role': 'TA'}
     )
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='ASSIGNED')
-    assigned_at = models.DateTimeField(auto_now_add=True)
     assigned_by = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
-        related_name='assigned_proctorings'
+        related_name='proctor_assignments_made',
+        limit_choices_to={'role__in': ['STAFF', 'ADMIN', 'INSTRUCTOR']}
     )
-    confirmation_date = models.DateTimeField(null=True, blank=True)
-    completion_notes = models.TextField(blank=True)
-    
-    # Flags for assignment constraints
-    override_flag = models.BooleanField(default=False)
-    override_reason = models.CharField(max_length=255, blank=True)
-    
-    # Swap related fields
-    previous_proctor = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='previous_proctor_assignments',
-        limit_choices_to={'role': 'TA'}
+    assigned_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(
+        max_length=10,
+        choices=Status.choices,
+        default=Status.ASSIGNED
     )
-    swap_timestamp = models.DateTimeField(null=True, blank=True)
-    swap_reason = models.CharField(max_length=255, blank=True)
-    swap_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='initiated_swaps'
-    )
-    swap_depth = models.PositiveSmallIntegerField(default=0, help_text="Number of times this assignment has been swapped")
+    is_paid = models.BooleanField(default=False, help_text="Is this a paid proctoring assignment?")
+    notes = models.TextField(blank=True)
     
-    def __str__(self):
-        room_info = f" ({self.exam_room.classroom})" if self.exam_room else ""
-        return f"{self.proctor.full_name} proctoring {self.exam.title}{room_info}"
-    
-    class Meta:
-        unique_together = ('exam', 'proctor')
+    _original_status = None 
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._original_status = self.status
 
-class SwapRequest(models.Model):
-    """Model for handling proctor swap requests."""
-    
-    STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('ACCEPTED', 'Accepted'),
-        ('REJECTED', 'Rejected'),
-        ('CANCELLED', 'Cancelled'),
-        ('FORCE_SWAP', 'Force Swap'),  # Used when staff initiates swap
-        ('AUTO_SWAP', 'Automatic Swap'),  # Used for immediate swaps
-        ('AVAILABLE', 'Available for Swap'),  # New status for self-initiated swaps with no target
-    ]
-    
-    original_assignment = models.ForeignKey(
-        ProctorAssignment,
-        on_delete=models.CASCADE,
-        related_name='swap_requests_as_original'
-    )
-    requested_proctor = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='swap_requests_as_target',
-        limit_choices_to={'role': 'TA'},
-        null=True,
-        blank=True,
-        help_text="Target TA for the swap. Leave blank for general availability posting."
-    )
-    requesting_proctor = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='swap_requests_as_requester'
-    )
-    reason = models.TextField(blank=True, help_text="Optional reason for the swap request")
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    # Staff initiated swap fields
-    force_swap = models.BooleanField(default=False)
-    force_swap_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='force_swaps',
-        limit_choices_to={'role__in': ['STAFF', 'ADMIN']}
-    )
-    force_swap_reason = models.TextField(blank=True)
-    
-    # Auto swap fields
-    is_auto_swap = models.BooleanField(default=False)
-    is_cross_department = models.BooleanField(default=False)
-    
-    # Response fields
-    response_date = models.DateTimeField(null=True, blank=True)
-    rejection_reason = models.TextField(blank=True)
-    
-    # Constraint check results
-    constraint_check_passed = models.BooleanField(null=True)
-    constraint_check_details = models.JSONField(default=dict, blank=True)
-    
-    def __str__(self):
-        if self.requested_proctor:
-            return f"Swap: {self.requesting_proctor.full_name} → {self.requested_proctor.full_name} for {self.original_assignment.exam.title}"
-        else:
-            return f"Available: {self.requesting_proctor.full_name}'s assignment for {self.original_assignment.exam.title}"
-    
     def save(self, *args, **kwargs):
-        # If no requested_proctor is specified, set status to AVAILABLE
-        if not self.requested_proctor and not self.status == 'CANCELLED' and self.status == 'PENDING':
-            self.status = 'AVAILABLE'
+        is_new = self._state.adding
+        
+        status_changed = not is_new and self.status != self._original_status
+        was_assigned = self._original_status == self.Status.ASSIGNED
+        is_assigned = self.status == self.Status.ASSIGNED
+
         super().save(*args, **kwargs)
 
+        try:
+            profile = TAProfile.objects.get(user=self.ta)
+            changed = False
+            if is_new and is_assigned:
+                profile.workload_credits += 1
+                changed = True
+                logger.info(f"Workload credit +1 for TA {self.ta.id} (New Assignment ID: {self.id}). New total: {profile.workload_credits}")
+            elif status_changed:
+                if not was_assigned and is_assigned:
+                    profile.workload_credits += 1
+                    changed = True
+                    logger.info(f"Workload credit +1 for TA {self.ta.id} (Assignment ID: {self.id} status -> ASSIGNED). New total: {profile.workload_credits}")
+                elif was_assigned and not is_assigned:
+                    if profile.workload_credits > 0:
+                        profile.workload_credits -= 1
+                        changed = True
+                        logger.info(f"Workload credit -1 for TA {self.ta.id} (Assignment ID: {self.id} status ASSIGNED -> {self.status}). New total: {profile.workload_credits}")
+                    else:
+                         logger.warning(f"Attempted to decrement workload credit below zero for TA {self.ta.id} (Assignment ID: {self.id}).")
+            
+            if changed:
+                 profile.save(update_fields=['workload_credits'])
+        
+        except TAProfile.DoesNotExist:
+            logger.error(f"TAProfile not found for TA {self.ta.id} when updating workload credits for Assignment ID {self.id}")
+        except Exception as e:
+             logger.error(f"Error updating workload credits for TA {self.ta.id} on Assignment {self.id} save: {e}")
 
-class ProctorConstraint(models.Model):
-    """Model for defining constraints that prevent certain TAs from being assigned to certain exams."""
-    
-    CONSTRAINT_TYPE_CHOICES = [
-        ('PHD_REQUIRED', 'PhD Required for Grad Courses'),
-        ('OWN_EXAM', 'Student in Course'),
-        ('SCHEDULE_CONFLICT', 'Schedule Conflict'),
-        ('LEAVE_DAY', 'Approved Leave'),
-        ('OTHER', 'Other Constraint'),
-    ]
-    
-    ta = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='proctor_constraints',
-        limit_choices_to={'role': 'TA'}
-    )
-    exam = models.ForeignKey(
-        Exam,
-        on_delete=models.CASCADE,
-        related_name='proctor_constraints',
-        null=True,
-        blank=True
-    )  # If null, applies to all exams on the date
-    constraint_date = models.DateField(null=True, blank=True)  # Used for date-specific constraints
-    constraint_type = models.CharField(max_length=20, choices=CONSTRAINT_TYPE_CHOICES)
-    description = models.TextField()
-    can_override = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey(
-        User,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='created_constraints'
-    )
+        self._original_status = self.status
+
+    class Meta:
+        verbose_name = 'Proctor Assignment'
+        verbose_name_plural = 'Proctor Assignments'
+        unique_together = ('exam', 'ta')
     
     def __str__(self):
-        exam_info = f" for {self.exam.title}" if self.exam else f" on {self.constraint_date}"
-        return f"{self.get_constraint_type_display()} - {self.ta.full_name}{exam_info}"
-    
-    class Meta:
-        unique_together = ('ta', 'exam', 'constraint_type')
+        return f"{self.ta.full_name} - {self.exam.course.code} {self.exam.get_type_display()}"
+
+@receiver(post_delete, sender=ProctorAssignment)
+def decrement_workload_on_delete(sender, instance, **kwargs):
+    if instance.status == ProctorAssignment.Status.ASSIGNED:
+        try:
+            ta_user = instance.ta 
+            profile = TAProfile.objects.get(user=ta_user)
+            if profile.workload_credits > 0:
+                profile.workload_credits -= 1
+                profile.save(update_fields=['workload_credits'])
+                logger.info(f"Workload credit -1 for TA {ta_user.id} (Deleted Assignment ID: {instance.id}). New total: {profile.workload_credits}")
+            else:
+                 logger.warning(f"Attempted to decrement workload credit below zero for TA {ta_user.id} on deleting Assignment ID {instance.id}.")
+        except User.DoesNotExist:
+            ta_id_for_log = instance.ta_id if hasattr(instance, 'ta_id') else 'unknown'
+            logger.error(f"TA User (ID: {ta_id_for_log}) not found for deleted Assignment ID: {instance.id}. Skipping workload update.")
+        except TAProfile.DoesNotExist:
+            ta_id_for_log = 'unknown'
+            try:
+                if instance.ta and hasattr(instance.ta, 'id'):
+                    ta_id_for_log = instance.ta.id
+                elif hasattr(instance, 'ta_id'):
+                    ta_id_for_log = instance.ta_id
+            except User.DoesNotExist:
+                if hasattr(instance, 'ta_id'):
+                    ta_id_for_log = instance.ta_id
+
+            logger.error(f"TAProfile not found for TA (ID: {ta_id_for_log}) when updating workload credits for deleted Assignment ID: {instance.id}")
+        except Exception as e:
+             logger.error(f"Error updating workload credits for TA {instance.ta.id} on Assignment {instance.id} delete: {e}")

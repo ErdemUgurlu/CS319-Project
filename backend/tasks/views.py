@@ -8,11 +8,13 @@ from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
+import logging
 
 from accounts.models import User, InstructorTAAssignment
-from workload.models import WorkloadRecord, WorkloadManualAdjustment
 from .models import Task, TaskCompletion, TaskReview
-from . import serializers
+from .serializers import TaskSerializer
+
+logger = logging.getLogger(__name__)
 
 
 class IsTaskRelevantUser(permissions.BasePermission):
@@ -28,7 +30,7 @@ class MyTasksView(generics.ListCreateAPIView):
     """
     API endpoint for users to view and create their tasks.
     """
-    serializer_class = serializers.TaskSerializer
+    serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = None  # Disable pagination for this view
     
@@ -94,7 +96,7 @@ class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     API endpoint for viewing, updating, and deleting task details.
     """
-    serializer_class = serializers.TaskSerializer
+    serializer_class = TaskSerializer
     permission_classes = [IsAuthenticated, IsTaskRelevantUser]
     queryset = Task.objects.all()
     
@@ -435,3 +437,21 @@ class ReviewTaskView(APIView):
             print(f"Email notification error: {str(e)}")
         
         return Response({"status": status_text}, status=status.HTTP_200_OK)
+
+
+# Commented out TaskComment view as the model/serializer may not exist
+# class TaskCommentListCreateView(generics.ListCreateAPIView):
+#     serializer_class = TaskSerializer # Corrected from TaskCommentSerializer
+#     permission_classes = [permissions.IsAuthenticated, IsTaskRelevantUser]
+
+#     def get_queryset(self):
+#         task_id = self.kwargs.get('task_id')
+#         task = get_object_or_404(Task, id=task_id)
+#         self.check_object_permissions(self.request, task)
+#         return TaskComment.objects.filter(task=task).order_by('created_at')
+
+#     def perform_create(self, serializer):
+#         task_id = self.kwargs.get('task_id')
+#         task = get_object_or_404(Task, id=task_id)
+#         self.check_object_permissions(self.request, task)
+#         serializer.save(task=task, author=self.request.user)
