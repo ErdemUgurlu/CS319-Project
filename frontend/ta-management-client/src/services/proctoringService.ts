@@ -182,9 +182,21 @@ const proctoringService = {
   },
 
   // Get eligible TAs for an exam (for instructors)
-  getEligibleProctorsForExam: async (examId: number): Promise<EligibleProctor[]> => {
+  getEligibleProctorsForExam: async (examId: number, overrideOptions?: { overrideAcademicLevel?: boolean; overrideConsecutiveProctoring?: boolean }): Promise<EligibleProctor[]> => {
     try {
-      const response = await api.get(`/proctoring/exams/${examId}/eligible-tas/`);
+      let queryString = '';
+      const params = [];
+      if (overrideOptions?.overrideAcademicLevel) {
+        params.push('override_academic_level=true');
+      }
+      if (overrideOptions?.overrideConsecutiveProctoring) {
+        params.push('override_consecutive_proctoring=true');
+      }
+      if (params.length > 0) {
+        queryString = `?${params.join('&')}`;
+      }
+
+      const response = await api.get(`/proctoring/exams/${examId}/eligible-tas/${queryString}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching eligible TAs for exam:', error);

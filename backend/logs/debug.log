@@ -38211,3 +38211,1244 @@ INFO 2025-05-10 18:18:30,408 basehttp "GET /api/proctoring/exams/9/eligible-tas/
 INFO 2025-05-10 18:18:33,125 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 111
 INFO 2025-05-10 18:18:33,141 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
 INFO 2025-05-10 18:18:33,152 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:06:06,208 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-10 21:06:18,022 log Not Found: /api/logout/
+WARNING 2025-05-10 21:06:18,024 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-10 21:06:20,824 basehttp "GET /admin/ HTTP/1.1" 200 24323
+WARNING 2025-05-10 21:06:20,928 log Not Found: /favicon.ico
+WARNING 2025-05-10 21:06:20,929 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+INFO 2025-05-10 21:06:35,642 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:06:37,347 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-10 21:06:41,214 basehttp "OPTIONS /api/accounts/exams/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:06:41,238 basehttp "OPTIONS /api/accounts/courses/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:06:41,238 basehttp "OPTIONS /api/accounts/courses/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:06:41,280 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:06:41,301 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:06:41,335 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:06:41,348 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:06:42,878 basehttp "OPTIONS /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:06:42,963 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:06:46,282 basehttp "OPTIONS /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:06:46,427 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 1118
+INFO 2025-05-10 21:06:46,463 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:06:46,483 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:06:47,834 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 876
+INFO 2025-05-10 21:06:51,571 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 111
+INFO 2025-05-10 21:06:51,606 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:06:51,627 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:07:01,927 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:07:21,548 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+WARNING 2025-05-10 21:08:35,618 log Not Found: /api/logout/
+WARNING 2025-05-10 21:08:35,619 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+WARNING 2025-05-10 21:12:48,372 log Unauthorized: /api/token/
+WARNING 2025-05-10 21:12:48,373 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-10 21:12:58,901 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-10 21:13:04,638 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-10 21:13:04,640 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-10 21:13:04,699 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-10 21:13:04,714 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-10 21:13:46,454 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:13:46,483 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:13:46,488 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:13:46,528 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:13:49,189 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:14:01,139 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:14:06,879 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:14:14,194 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+WARNING 2025-05-10 21:16:13,027 log Not Found: /api/logout/
+WARNING 2025-05-10 21:16:13,027 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-10 21:16:21,480 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 34259
+INFO 2025-05-10 21:16:21,501 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:17:41,970 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 24688
+INFO 2025-05-10 21:17:41,987 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:18:02,529 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 200 25067
+INFO 2025-05-10 21:18:02,543 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:18:16,629 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+INFO 2025-05-10 21:18:16,866 basehttp "GET /admin/accounts/user/21/change/ HTTP/1.1" 200 47707
+INFO 2025-05-10 21:18:16,884 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:18:41,521 basehttp "POST /admin/accounts/user/21/change/ HTTP/1.1" 302 0
+INFO 2025-05-10 21:18:41,589 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 35474
+INFO 2025-05-10 21:18:41,604 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:18:48,723 basehttp "POST /api/token/ HTTP/1.1" 200 921
+INFO 2025-05-10 21:18:48,758 basehttp "OPTIONS /api/accounts/courses/?instructor_id=21 HTTP/1.1" 200 0
+INFO 2025-05-10 21:18:48,773 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 52
+INFO 2025-05-10 21:18:48,775 basehttp "OPTIONS /api/accounts/courses/?instructor_id=21 HTTP/1.1" 200 0
+INFO 2025-05-10 21:18:48,786 basehttp "GET /api/accounts/courses/?instructor_id=21 HTTP/1.1" 200 52
+INFO 2025-05-10 21:18:48,796 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 52
+INFO 2025-05-10 21:18:48,805 basehttp "GET /api/accounts/courses/?instructor_id=21 HTTP/1.1" 200 52
+INFO 2025-05-10 21:18:58,977 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:18:58,977 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:18:58,987 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:18:58,999 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:19:00,614 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:19:00,615 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:19:00,671 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-10 21:19:00,679 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-10 21:19:11,054 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:19:11,054 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:19:11,062 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-10 21:19:11,121 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 52
+INFO 2025-05-10 21:19:11,149 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 3061
+INFO 2025-05-10 21:19:11,183 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 3061
+INFO 2025-05-10 21:19:15,536 basehttp "OPTIONS /api/accounts/instructor/assign-ta/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:19:15,615 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 298
+INFO 2025-05-10 21:19:15,640 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 350
+INFO 2025-05-10 21:19:15,668 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 2681
+INFO 2025-05-10 21:19:20,543 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:19:20,551 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:19:21,556 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 350
+INFO 2025-05-10 21:19:21,560 basehttp "OPTIONS /api/workload/instructor/ta-workloads/ HTTP/1.1" 200 0
+WARNING 2025-05-10 21:19:21,578 log Not Found: /api/workload/instructor/ta-workloads/
+WARNING 2025-05-10 21:19:21,586 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 404 4268
+INFO 2025-05-10 21:19:21,588 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 350
+WARNING 2025-05-10 21:19:21,621 log Not Found: /api/workload/instructor/ta-workloads/
+WARNING 2025-05-10 21:19:21,623 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 404 4268
+INFO 2025-05-10 21:19:36,658 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 538
+INFO 2025-05-10 21:19:36,676 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 540
+WARNING 2025-05-10 21:19:51,142 log Not Found: /api/logout/
+WARNING 2025-05-10 21:19:51,143 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-10 21:20:04,819 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-10 21:20:04,870 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:20:04,877 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:20:11,990 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:20:12,003 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:20:15,696 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:20:15,706 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:20:19,300 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 22611
+INFO 2025-05-10 21:20:19,316 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:20:22,346 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 23051
+INFO 2025-05-10 21:20:22,361 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:20:42,918 basehttp "GET /admin/accounts/section/ HTTP/1.1" 200 21869
+INFO 2025-05-10 21:20:42,935 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:20:47,621 basehttp "GET /admin/tasks/taskcompletion/ HTTP/1.1" 200 18565
+INFO 2025-05-10 21:20:47,635 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:20:55,273 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 23469
+INFO 2025-05-10 21:20:55,288 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-10 21:22:21,455 log Not Found: /api/logout/
+WARNING 2025-05-10 21:22:21,455 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-10 21:22:36,666 basehttp "POST /api/token/ HTTP/1.1" 200 921
+INFO 2025-05-10 21:22:38,544 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 350
+INFO 2025-05-10 21:22:38,577 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 350
+INFO 2025-05-10 21:22:38,580 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 2681
+INFO 2025-05-10 21:22:38,603 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 2681
+INFO 2025-05-10 21:22:44,984 basehttp "POST /api/accounts/instructor/assign-ta/ HTTP/1.1" 201 293
+INFO 2025-05-10 21:22:45,012 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 644
+INFO 2025-05-10 21:22:45,030 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 2292
+INFO 2025-05-10 21:22:54,012 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 540
+INFO 2025-05-10 21:22:54,025 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 540
+INFO 2025-05-10 21:22:55,149 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 644
+WARNING 2025-05-10 21:22:55,163 log Not Found: /api/workload/instructor/ta-workloads/
+WARNING 2025-05-10 21:22:55,166 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 404 4268
+INFO 2025-05-10 21:22:55,181 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 644
+WARNING 2025-05-10 21:22:55,207 log Not Found: /api/workload/instructor/ta-workloads/
+WARNING 2025-05-10 21:22:55,208 basehttp "GET /api/workload/instructor/ta-workloads/ HTTP/1.1" 404 4268
+INFO 2025-05-10 21:23:08,117 basehttp "POST /api/tasks/my-tasks/ HTTP/1.1" 201 426
+INFO 2025-05-10 21:23:08,138 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 967
+INFO 2025-05-10 21:23:12,452 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 23993
+INFO 2025-05-10 21:23:12,469 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:23:54,629 basehttp "POST /admin/tasks/task/ HTTP/1.1" 200 18458
+INFO 2025-05-10 21:23:55,481 basehttp "POST /admin/tasks/task/ HTTP/1.1" 302 0
+INFO 2025-05-10 21:23:55,526 basehttp "GET /admin/tasks/task/ HTTP/1.1" 200 20831
+INFO 2025-05-10 21:23:55,542 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+WARNING 2025-05-10 21:24:38,848 log Not Found: /api/logout/
+WARNING 2025-05-10 21:24:38,849 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-10 21:24:47,442 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-10 21:24:47,486 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:24:47,495 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-10 21:32:26,349 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:32:26,373 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:32:26,375 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:32:26,396 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:32:27,895 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:32:45,331 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:32:49,196 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:37:50,918 basehttp "GET /admin/ HTTP/1.1" 200 24222
+INFO 2025-05-10 21:39:41,240 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:39:51,341 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:39:55,054 basehttp "OPTIONS /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 0
+INFO 2025-05-10 21:39:55,078 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 879
+INFO 2025-05-10 21:40:02,103 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:40:04,286 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 879
+INFO 2025-05-10 21:40:05,496 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:40:06,071 basehttp "OPTIONS /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 0
+INFO 2025-05-10 21:40:06,098 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 879
+INFO 2025-05-10 21:40:09,421 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 879
+INFO 2025-05-10 21:40:10,330 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:40:13,255 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 879
+INFO 2025-05-10 21:42:51,802 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 35243
+INFO 2025-05-10 21:42:51,820 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:42:53,224 basehttp "GET /admin/accounts/user/17/change/ HTTP/1.1" 200 47506
+INFO 2025-05-10 21:42:53,238 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:45:01,168 basehttp "GET /admin/accounts/taprofile/ HTTP/1.1" 200 25137
+INFO 2025-05-10 21:45:01,188 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:45:02,719 basehttp "GET /admin/accounts/taprofile/13/change/ HTTP/1.1" 200 28419
+INFO 2025-05-10 21:45:02,736 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:48:19,553 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:48:19,583 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:48:19,587 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:48:19,627 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:48:21,657 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:48:22,975 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:48:25,468 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 879
+INFO 2025-05-10 21:48:30,463 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:48:32,940 basehttp "OPTIONS /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:48:33,027 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1779
+INFO 2025-05-10 21:51:00,456 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:51:00,471 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:51:00,475 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:51:00,494 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:51:02,184 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:51:03,474 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:51:05,196 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 879
+INFO 2025-05-10 21:51:08,757 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 879
+INFO 2025-05-10 21:53:03,923 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:53:03,931 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:53:03,950 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:53:03,952 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:53:09,150 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 23177
+INFO 2025-05-10 21:53:09,174 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:53:25,317 autoreload C:\Users\atama\Desktop\CS319-Project\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-10 21:53:26,530 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 21:54:05,551 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:54:06,983 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:54:09,808 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 1780
+INFO 2025-05-10 21:54:18,718 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 1780
+INFO 2025-05-10 21:54:20,153 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 2150
+INFO 2025-05-10 21:54:20,200 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:54:20,220 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:54:21,848 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 876
+INFO 2025-05-10 21:54:27,614 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 876
+INFO 2025-05-10 21:54:28,897 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 1774
+INFO 2025-05-10 21:54:34,188 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 111
+INFO 2025-05-10 21:54:34,233 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:54:34,254 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2356
+INFO 2025-05-10 21:54:36,055 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:54:37,349 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:54:50,222 basehttp "OPTIONS /api/accounts/exams/create/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:54:50,269 basehttp "POST /api/accounts/exams/create/ HTTP/1.1" 201 635
+INFO 2025-05-10 21:54:50,310 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:54:50,344 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 2992
+INFO 2025-05-10 21:54:59,998 basehttp "OPTIONS /api/accounts/exams/10/upload-student-list/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:55:00,881 basehttp "PATCH /api/accounts/exams/10/upload-student-list/ HTTP/1.1" 200 697
+INFO 2025-05-10 21:55:00,909 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:55:00,950 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3054
+INFO 2025-05-10 21:55:08,449 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 200 26290
+INFO 2025-05-10 21:55:08,469 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:55:15,288 basehttp "GET /admin/accounts/exam/10/change/ HTTP/1.1" 200 32674
+INFO 2025-05-10 21:55:15,305 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:55:23,571 basehttp "POST /admin/accounts/exam/10/change/ HTTP/1.1" 302 0
+INFO 2025-05-10 21:55:23,641 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 200 26555
+INFO 2025-05-10 21:55:23,658 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:55:25,735 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:55:25,769 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:55:25,779 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 21:55:25,839 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 21:55:28,269 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:55:32,684 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:55:33,971 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 1780
+INFO 2025-05-10 21:55:38,274 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 1780
+INFO 2025-05-10 21:55:43,212 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_academic_level=true HTTP/1.1" 200 1780
+INFO 2025-05-10 21:55:44,370 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 2154
+INFO 2025-05-10 21:55:44,410 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:55:44,444 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 21:55:47,978 basehttp "OPTIONS /api/proctoring/exams/10/eligible-tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:55:48,054 basehttp "GET /api/proctoring/exams/10/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:55:55,755 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 876
+INFO 2025-05-10 21:55:58,945 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 111
+INFO 2025-05-10 21:55:58,988 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:55:59,022 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 21:56:02,796 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:56:07,662 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 20447
+INFO 2025-05-10 21:56:07,678 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 21:56:22,225 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:56:26,968 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1779
+INFO 2025-05-10 21:56:39,525 basehttp "OPTIONS /api/accounts/exams/8/update/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:56:39,577 basehttp "PATCH /api/accounts/exams/8/update/ HTTP/1.1" 200 812
+INFO 2025-05-10 21:56:39,615 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:56:39,644 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 21:56:42,396 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1779
+INFO 2025-05-10 21:56:44,777 basehttp "OPTIONS /api/proctoring/exams/8/assign-proctors/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:56:44,887 basehttp "POST /api/proctoring/exams/8/assign-proctors/ HTTP/1.1" 200 435
+INFO 2025-05-10 21:56:44,924 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:56:44,956 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 21:56:46,712 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 585
+INFO 2025-05-10 21:56:59,320 basehttp "GET /api/proctoring/exams/10/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:57:23,177 basehttp "OPTIONS /api/accounts/exams/10/update/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:57:23,229 basehttp "PATCH /api/accounts/exams/10/update/ HTTP/1.1" 200 758
+INFO 2025-05-10 21:57:23,257 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:57:23,295 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 21:57:32,519 basehttp "PATCH /api/accounts/exams/10/update/ HTTP/1.1" 200 758
+INFO 2025-05-10 21:57:32,554 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:57:32,586 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 21:57:35,865 basehttp "GET /api/proctoring/exams/10/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 21:57:38,310 basehttp "OPTIONS /api/proctoring/exams/10/assign-proctors/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:57:38,415 basehttp "POST /api/proctoring/exams/10/assign-proctors/ HTTP/1.1" 200 436
+INFO 2025-05-10 21:57:38,452 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 21:57:38,486 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3067
+INFO 2025-05-10 21:57:40,384 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 21:57:45,881 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 21:57:48,205 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 21:57:50,294 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 292
+INFO 2025-05-10 21:58:08,013 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 21:58:09,776 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 292
+INFO 2025-05-10 21:58:11,755 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 21:58:12,306 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 292
+INFO 2025-05-10 21:59:42,403 autoreload C:\Users\atama\Desktop\CS319-Project\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-10 21:59:43,358 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 21:59:55,999 basehttp "OPTIONS /api/accounts/exams/7/update/ HTTP/1.1" 200 0
+INFO 2025-05-10 21:59:56,156 basehttp "PATCH /api/accounts/exams/7/update/ HTTP/1.1" 200 801
+INFO 2025-05-10 21:59:56,209 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3067
+INFO 2025-05-10 21:59:56,233 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:05:50,049 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 35243
+INFO 2025-05-10 22:05:50,070 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 22:06:56,710 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:06:56,744 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:06:56,754 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3067
+INFO 2025-05-10 22:06:56,803 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3067
+INFO 2025-05-10 22:06:58,522 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 22:07:00,486 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 22:07:01,523 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 879
+INFO 2025-05-10 22:07:11,131 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 448
+INFO 2025-05-10 22:07:11,172 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:07:11,196 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3067
+INFO 2025-05-10 22:07:14,675 basehttp "OPTIONS /api/proctoring/exams/7/eligible-tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:07:14,705 basehttp "GET /api/proctoring/exams/7/eligible-tas/ HTTP/1.1" 200 1486
+INFO 2025-05-10 22:07:21,610 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1486
+INFO 2025-05-10 22:08:44,461 basehttp "GET /admin/proctoring/proctorassignment/ HTTP/1.1" 200 24492
+INFO 2025-05-10 22:08:44,481 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 22:08:50,897 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1486
+INFO 2025-05-10 22:08:56,359 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 22:08:59,952 basehttp "GET /api/proctoring/exams/7/eligible-tas/ HTTP/1.1" 200 1486
+INFO 2025-05-10 22:09:07,661 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1486
+INFO 2025-05-10 22:09:10,959 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 292
+INFO 2025-05-10 22:09:13,449 basehttp "GET /api/proctoring/exams/10/eligible-tas/ HTTP/1.1" 200 584
+INFO 2025-05-10 22:09:15,545 basehttp "POST /api/proctoring/exams/10/assign-proctors/ HTTP/1.1" 200 110
+INFO 2025-05-10 22:09:15,583 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:09:15,609 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 22:09:17,862 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 585
+INFO 2025-05-10 22:09:36,262 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 585
+INFO 2025-05-10 22:09:38,191 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 878
+INFO 2025-05-10 22:09:40,552 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 111
+INFO 2025-05-10 22:09:40,582 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:09:40,625 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 22:09:43,110 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1778
+INFO 2025-05-10 22:09:45,366 basehttp "POST /api/proctoring/exams/8/assign-proctors/ HTTP/1.1" 200 110
+INFO 2025-05-10 22:09:45,395 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:09:45,426 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:11:33,498 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 22:11:39,360 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 448
+INFO 2025-05-10 22:11:39,400 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:11:39,434 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:11:41,582 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 878
+INFO 2025-05-10 22:11:43,427 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 111
+INFO 2025-05-10 22:11:43,456 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:11:43,567 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:11:44,808 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1779
+INFO 2025-05-10 22:11:48,180 basehttp "POST /api/proctoring/exams/8/assign-proctors/ HTTP/1.1" 200 435
+INFO 2025-05-10 22:11:48,213 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:11:48,242 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 22:11:49,831 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 585
+INFO 2025-05-10 22:11:54,282 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 585
+INFO 2025-05-10 22:11:55,660 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 879
+INFO 2025-05-10 22:11:59,125 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 448
+INFO 2025-05-10 22:11:59,160 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:11:59,194 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 22:12:01,200 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1486
+INFO 2025-05-10 22:14:39,699 autoreload C:\Users\atama\Desktop\CS319-Project\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-10 22:14:40,440 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:14:57,406 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1778
+INFO 2025-05-10 22:15:04,972 basehttp "GET /api/proctoring/exams/10/eligible-tas/ HTTP/1.1" 200 585
+INFO 2025-05-10 22:15:09,133 basehttp "GET /api/proctoring/exams/7/eligible-tas/ HTTP/1.1" 200 1486
+INFO 2025-05-10 22:15:14,244 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1778
+INFO 2025-05-10 22:15:19,022 basehttp "POST /api/proctoring/exams/8/assign-proctors/ HTTP/1.1" 200 110
+INFO 2025-05-10 22:15:19,075 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:15:19,096 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:15:21,160 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 878
+INFO 2025-05-10 22:15:24,440 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 111
+INFO 2025-05-10 22:15:24,470 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:15:24,495 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:15:27,939 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1779
+INFO 2025-05-10 22:15:31,206 basehttp "POST /api/proctoring/exams/8/assign-proctors/ HTTP/1.1" 200 435
+INFO 2025-05-10 22:15:31,243 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:15:31,275 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 22:15:32,893 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 585
+INFO 2025-05-10 22:15:34,043 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 585
+INFO 2025-05-10 22:15:35,810 basehttp "GET /api/proctoring/exams/9/eligible-tas/?override_consecutive_proctoring=true HTTP/1.1" 200 879
+INFO 2025-05-10 22:15:40,135 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 448
+INFO 2025-05-10 22:15:40,169 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:15:40,203 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3091
+INFO 2025-05-10 22:15:41,994 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 878
+INFO 2025-05-10 22:15:45,117 basehttp "GET /api/proctoring/exams/8/eligible-tas/ HTTP/1.1" 200 1778
+INFO 2025-05-10 22:15:46,976 basehttp "POST /api/proctoring/exams/8/assign-proctors/ HTTP/1.1" 200 110
+INFO 2025-05-10 22:15:47,013 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:15:47,045 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:15:48,921 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 878
+INFO 2025-05-10 22:15:50,800 basehttp "POST /api/proctoring/exams/9/assign-proctors/ HTTP/1.1" 200 111
+INFO 2025-05-10 22:15:50,837 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:15:50,871 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:16:13,212 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 22:16:14,906 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 22:16:25,155 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 22:16:27,008 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 22:22:54,095 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:23:33,588 basehttp "OPTIONS /api/accounts/exams/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:33,589 basehttp "OPTIONS /api/accounts/courses/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:33,592 basehttp "OPTIONS /api/accounts/exams/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:33,594 basehttp "OPTIONS /api/accounts/courses/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:33,671 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:23:33,688 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:23:33,716 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:23:33,761 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3115
+INFO 2025-05-10 22:23:39,417 basehttp "OPTIONS /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:39,462 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 22:23:41,591 basehttp "GET /api/proctoring/exams/9/eligible-tas/ HTTP/1.1" 200 879
+INFO 2025-05-10 22:23:42,825 basehttp "OPTIONS /api/proctoring/exams/9/request-cross-departmental/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:42,898 basehttp "POST /api/proctoring/exams/9/request-cross-departmental/ HTTP/1.1" 200 171
+INFO 2025-05-10 22:23:42,937 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 460
+INFO 2025-05-10 22:23:42,970 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+WARNING 2025-05-10 22:23:49,995 log Not Found: /api/logout/
+WARNING 2025-05-10 22:23:49,996 basehttp "POST /api/logout/ HTTP/1.1" 404 4191
+INFO 2025-05-10 22:23:54,442 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:56,062 basehttp "POST /api/token/ HTTP/1.1" 200 913
+INFO 2025-05-10 22:23:56,095 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:23:56,116 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:23:56,135 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:23:56,160 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:23:56,189 basehttp "OPTIONS /api/accounts/classrooms/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:56,189 basehttp "OPTIONS /api/accounts/classrooms/ HTTP/1.1" 200 0
+INFO 2025-05-10 22:23:56,253 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:23:56,263 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:27:09,159 autoreload C:\Users\atama\Desktop\CS319-Project\backend\accounts\models.py changed, reloading.
+INFO 2025-05-10 22:27:09,906 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:27:34,488 autoreload C:\Users\atama\Desktop\CS319-Project\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-10 22:27:35,197 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:28:28,655 autoreload C:\Users\atama\Desktop\CS319-Project\backend\accounts\models.py changed, reloading.
+INFO 2025-05-10 22:28:30,043 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:28:32,421 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:28:32,438 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:28:32,548 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:28:32,558 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:28:51,987 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:28:51,997 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:28:52,025 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:28:52,047 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:28:52,088 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:28:52,095 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:29:51,231 basehttp "GET /admin/ HTTP/1.1" 200 24219
+WARNING 2025-05-10 22:29:51,377 log Not Found: /favicon.ico
+WARNING 2025-05-10 22:29:51,378 basehttp "GET /favicon.ico HTTP/1.1" 404 4190
+INFO 2025-05-10 22:29:51,829 basehttp "GET /admin/ HTTP/1.1" 200 24219
+INFO 2025-05-10 22:30:19,536 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:30:19,546 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:30:19,556 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:30:19,579 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:30:19,620 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:30:19,627 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:30:20,800 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:30:20,810 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:30:20,816 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:30:20,838 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:30:20,885 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:30:20,892 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:30:31,097 autoreload C:\Users\atama\Desktop\CS319-Project\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-10 22:30:32,643 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:33:05,435 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:33:05,447 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:33:05,537 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:33:05,544 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:33:22,441 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:33:22,450 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:33:22,457 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:33:22,475 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:33:22,539 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:33:22,546 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:35:54,785 autoreload C:\Users\atama\Desktop\CS319-Project\backend\accounts\models.py changed, reloading.
+INFO 2025-05-10 22:35:55,634 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:36:13,085 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:36:13,091 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+ERROR 2025-05-10 22:36:13,445 log Internal Server Error: /api/accounts/exams/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.cross_department_proctoring_target_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.cross_department_proctoring_target_department_code
+ERROR 2025-05-10 22:36:13,454 basehttp "GET /api/accounts/exams/ HTTP/1.1" 500 184255
+ERROR 2025-05-10 22:36:13,496 log Internal Server Error: /api/accounts/exams/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.cross_department_proctoring_target_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.cross_department_proctoring_target_department_code
+ERROR 2025-05-10 22:36:13,502 basehttp "GET /api/accounts/exams/ HTTP/1.1" 500 184255
+INFO 2025-05-10 22:36:13,509 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:36:13,514 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:36:37,096 autoreload C:\Users\atama\Desktop\CS319-Project\backend\accounts\models.py changed, reloading.
+INFO 2025-05-10 22:36:38,448 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:36:40,124 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:36:40,130 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:36:40,167 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:36:40,173 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:36:55,443 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:36:55,471 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:36:55,516 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:36:55,529 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:37:17,646 autoreload C:\Users\atama\Desktop\CS319-Project\backend\accounts\models.py changed, reloading.
+INFO 2025-05-10 22:37:18,458 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:37:54,215 autoreload C:\Users\atama\Desktop\CS319-Project\backend\proctoring\views.py changed, reloading.
+INFO 2025-05-10 22:37:54,972 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:38:08,616 autoreload C:\Users\atama\Desktop\CS319-Project\backend\proctoring\urls.py changed, reloading.
+INFO 2025-05-10 22:38:09,362 autoreload Watching for file changes with StatReloader
+INFO 2025-05-10 22:38:22,446 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+ERROR 2025-05-10 22:38:22,483 log Internal Server Error: /api/accounts/exams/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.helping_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.helping_department_code
+ERROR 2025-05-10 22:38:22,489 basehttp "GET /api/accounts/exams/ HTTP/1.1" 500 183580
+INFO 2025-05-10 22:38:22,560 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:38:22,568 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:38:32,062 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+ERROR 2025-05-10 22:38:32,093 log Internal Server Error: /api/accounts/exams/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.helping_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.helping_department_code
+ERROR 2025-05-10 22:38:32,097 basehttp "GET /api/accounts/exams/ HTTP/1.1" 500 183580
+INFO 2025-05-10 22:38:32,159 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:38:32,164 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:39:16,081 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:39:36,394 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:39:36,405 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+ERROR 2025-05-10 22:39:36,429 log Internal Server Error: /api/accounts/exams/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.helping_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.helping_department_code
+ERROR 2025-05-10 22:39:36,436 basehttp "GET /api/accounts/exams/ HTTP/1.1" 500 183580
+ERROR 2025-05-10 22:39:36,485 log Internal Server Error: /api/accounts/exams/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.helping_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.helping_department_code
+ERROR 2025-05-10 22:39:36,493 basehttp "GET /api/accounts/exams/ HTTP/1.1" 500 183580
+INFO 2025-05-10 22:39:36,495 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:39:36,502 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:39:41,393 basehttp "GET /admin/ HTTP/1.1" 200 24219
+INFO 2025-05-10 22:39:46,436 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:39:46,457 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+ERROR 2025-05-10 22:39:46,530 log Internal Server Error: /api/accounts/exams/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.helping_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.helping_department_code
+ERROR 2025-05-10 22:39:46,540 basehttp "GET /api/accounts/exams/ HTTP/1.1" 500 183580
+ERROR 2025-05-10 22:39:46,653 log Internal Server Error: /api/accounts/exams/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.helping_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\csrf.py", line 65, in _view_wrapper
+    return view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 515, in dispatch
+    response = self.handle_exception(exc)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 475, in handle_exception
+    self.raise_uncaught_exception(exc)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 486, in raise_uncaught_exception
+    raise exc
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\views.py", line 512, in dispatch
+    response = handler(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 203, in get
+    return self.list(request, *args, **kwargs)
+           ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\mixins.py", line 40, in list
+    page = self.paginate_queryset(queryset)
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\generics.py", line 175, in paginate_queryset
+    return self.paginator.paginate_queryset(queryset, self.request, view=self)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\rest_framework\pagination.py", line 222, in paginate_queryset
+    return list(self.page)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\paginator.py", line 191, in __len__
+    return len(self.object_list)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.helping_department_code
+INFO 2025-05-10 22:39:46,670 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+ERROR 2025-05-10 22:39:46,671 basehttp "GET /api/accounts/exams/ HTTP/1.1" 500 183580
+INFO 2025-05-10 22:39:46,681 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:39:52,628 basehttp "GET /admin/ HTTP/1.1" 200 24219
+ERROR 2025-05-10 22:39:54,986 log Internal Server Error: /admin/accounts/exam/
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such column: accounts_exam.helping_department_code
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "D:\Pyhtonn\Lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 719, in wrapper
+    return self.admin_site.admin_view(view)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\views\decorators\cache.py", line 80, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\sites.py", line 246, in inner
+    return view(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 48, in _wrapper
+    return bound_method(*args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 192, in _view_wrapper
+    result = _process_exception(request, e)
+  File "D:\Pyhtonn\Lib\site-packages\django\utils\decorators.py", line 190, in _view_wrapper
+    response = view_func(request, *args, **kwargs)
+  File "D:\Pyhtonn\Lib\site-packages\django\contrib\admin\options.py", line 2163, in changelist_view
+    "selection_note": _("0 of %(cnt)s selected") % {"cnt": len(cl.result_list)},
+                                                           ~~~^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 366, in __len__
+    self._fetch_all()
+    ~~~~~~~~~~~~~~~^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 1935, in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\query.py", line 91, in __iter__
+    results = compiler.execute_sql(
+        chunked_fetch=self.chunked_fetch, chunk_size=self.chunk_size
+    )
+  File "D:\Pyhtonn\Lib\site-packages\django\db\models\sql\compiler.py", line 1622, in execute_sql
+    cursor.execute(sql, params)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 122, in execute
+    return super().execute(sql, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 79, in execute
+    return self._execute_with_wrappers(
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        sql, params, many=False, executor=self._execute
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 92, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 100, in _execute
+    with self.db.wrap_database_errors:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\utils.py", line 105, in _execute
+    return self.cursor.execute(sql, params)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "D:\Pyhtonn\Lib\site-packages\django\db\backends\sqlite3\base.py", line 360, in execute
+    return super().execute(query, params)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such column: accounts_exam.helping_department_code
+ERROR 2025-05-10 22:39:54,999 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 500 191868
+INFO 2025-05-10 22:41:08,503 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 200 26588
+INFO 2025-05-10 22:41:08,524 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 22:41:10,992 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:41:10,999 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:41:11,014 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:41:11,041 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:41:11,094 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:41:11,099 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:43:26,056 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:43:26,066 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:43:26,078 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:43:26,101 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:43:26,180 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:43:26,188 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:43:28,317 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 200 26588
+INFO 2025-05-10 22:43:28,328 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2025-05-10 22:44:12,560 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:44:12,576 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:44:12,585 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:44:12,609 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:44:12,664 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:44:12,669 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:44:19,731 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:44:19,752 basehttp "GET /api/accounts/courses/ HTTP/1.1" 200 52
+INFO 2025-05-10 22:44:19,774 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:44:19,818 basehttp "GET /api/accounts/exams/ HTTP/1.1" 200 3154
+INFO 2025-05-10 22:44:19,826 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451
+INFO 2025-05-10 22:44:19,836 basehttp "GET /api/accounts/classrooms/ HTTP/1.1" 200 451

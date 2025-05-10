@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Typography,
   Box,
@@ -49,7 +49,9 @@ import {
   AssignmentTurnedIn as AssignmentTurnedInIcon, 
   Upload as UploadIcon, 
   CloudUpload as CloudUploadIcon,
-  AssignmentInd as AssignProctorsIcon
+  AssignmentInd as AssignProctorsIcon,
+  CheckCircleOutline as CheckCircleOutlineIcon,
+  HighlightOff as HighlightOffIcon
 } from '@mui/icons-material';
 import { Exam, ExamType, ExamForm, ExamStatus, AssignPlacesForm, SetProctorsForm, Classroom } from '../../interfaces/exam';
 import { Course } from '../../interfaces/course';
@@ -123,6 +125,56 @@ const ExamList: React.FC<ExamListProps> = ({
   const [isAutoSuggestPhase, setIsAutoSuggestPhase] = useState(false);
   const [insufficientTAsDialogOpen, setInsufficientTAsDialogOpen] = useState(false);
   
+  // --- NEW STATE for Override Rule Checkboxes ---
+  const [overrideAcademicLevelRule, setOverrideAcademicLevelRule] = useState(true); // Checked by default
+  const [overrideConsecutiveProctoringRule, setOverrideConsecutiveProctoringRule] = useState(true); // Checked by default
+  // --- END NEW STATE ---
+
+  // --- NEW STATE for Dean's Cross-Departmental Approval ---
+  const [deanApprovalDialogOpen, setDeanApprovalDialogOpen] = useState(false);
+  const [examForDeanApproval, setExamForDeanApproval] = useState<Exam | null>(null);
+  const [selectedHelpingDepartment, setSelectedHelpingDepartment] = useState<string>('');
+  const [deanActionError, setDeanActionError] = useState<string | null>(null);
+  // --- END NEW STATE ---
+  
+  // --- NEW FUNCTION to fetch eligible TAs with override options ---
+  const fetchAndSetEligibleTAs = useCallback(async (examId: number, doOverrideAcademic: boolean, doOverrideConsecutive: boolean) => {
+    if (!examId) return;
+    setLoadingEligibleTAs(true);
+    try {
+      // Assume proctoringService.getEligibleProctorsForExam can take an options object
+      // This options object is assumed to be translated into backend query parameters
+      // e.g., ?override_academic_level=true&override_consecutive_proctoring=true
+      const tas = await proctoringService.getEligibleProctorsForExam(examId, {
+        overrideAcademicLevel: doOverrideAcademic,
+        overrideConsecutiveProctoring: doOverrideConsecutive,
+      });
+
+      const sortedTAsForDisplay = [...tas].sort((a, b) => {
+        const aIsTeaching = a.is_teaching_course_sections || false;
+        const bIsTeaching = b.is_teaching_course_sections || false;
+        if (aIsTeaching && !bIsTeaching) return -1;
+        if (!aIsTeaching && bIsTeaching) return 1;
+        return (a.current_workload ?? Infinity) - (b.current_workload ?? Infinity);
+      });
+      
+      setEligibleTAs(sortedTAsForDisplay);
+
+      const currentlyAssignedIds = sortedTAsForDisplay
+        .filter(ta => ta.is_assigned_to_current_exam)
+        .map(ta => ta.id);
+      setSelectedProctorIds(currentlyAssignedIds);
+
+    } catch (err: any) {
+      console.error("Error fetching eligible TAs with overrides:", err);
+      showNotification("Failed to load available TAs with new overrides", "error");
+      setEligibleTAs([]); // Clear TAs on error
+    } finally {
+      setLoadingEligibleTAs(false);
+    }
+  }, [setLoadingEligibleTAs, showNotification, setEligibleTAs, setSelectedProctorIds]);
+  // --- END NEW FUNCTION ---
+  
   // Fetch classrooms when component mounts
   useEffect(() => {
     console.log('ExamList mounted with initialTab:', initialTab);
@@ -141,7 +193,8 @@ const ExamList: React.FC<ExamListProps> = ({
       WAITING_FOR_PLACES: ExamStatus.WAITING_FOR_PLACES,
       WAITING_FOR_STUDENT_LIST: ExamStatus.WAITING_FOR_STUDENT_LIST,
       AWAITING_PROCTORS: ExamStatus.AWAITING_PROCTORS,
-      READY: ExamStatus.READY
+      READY: ExamStatus.READY,
+      AWAITING_DEAN_CROSS_APPROVAL: ExamStatus.AWAITING_DEAN_CROSS_APPROVAL
     });
   }, [currentTab, isDeanOffice]);
   
@@ -204,12 +257,19 @@ const ExamList: React.FC<ExamListProps> = ({
       return false;
     }
     
-    // Always show "Waiting for Places" exams to Dean's Office regardless of tab
-    // unless they're specifically filtering by another status
+    // Always show "Waiting for Places" exams to Dean's Office if that tab is selected or ALL tab (and status matches or is undefined)
     if (isDeanOffice && 
-        (exam.status === ExamStatus.WAITING_FOR_PLACES || !exam.status) && 
-        currentTab === 'ALL') {
-      console.log('Showing exam to Dean Office (all tab):', exam);
+        (currentTab === ExamStatus.WAITING_FOR_PLACES || currentTab === "WAITING_FOR_PLACES") &&
+        (!exam.status || exam.status === ExamStatus.WAITING_FOR_PLACES)) {
+      console.log('Showing exam to Dean Office (Waiting for Places tab or undefined status):', exam);
+      return true;
+    }
+
+    // Show "Awaiting Dean Cross Approval" exams to Dean's Office if that tab is selected
+    if (isDeanOffice && 
+        (currentTab === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL) && 
+        exam.status === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL) {
+      console.log('Showing exam to Dean Office (Awaiting Dean Cross Approval tab):', exam);
       return true;
     }
     
@@ -513,6 +573,7 @@ const ExamList: React.FC<ExamListProps> = ({
       case ExamStatus.WAITING_FOR_PLACES: return 'Waiting for Places';
       case ExamStatus.AWAITING_PROCTORS: return 'Awaiting Proctors';
       case ExamStatus.READY: return 'Ready';
+      case ExamStatus.AWAITING_DEAN_CROSS_APPROVAL: return 'Awaiting Dean Approval for Cross-Departmental';
       default: return status;
     }
   };
@@ -684,37 +745,10 @@ const ExamList: React.FC<ExamListProps> = ({
   const handleOpenAssignProctorsDialog = async (exam: Exam) => {
     setExamToAssignProctors(exam);
     setAssignProctorsDialogOpen(true);
-    setEligibleTAs([]); // Clear previous list
-    setLoadingEligibleTAs(true);
-    try {
-      const tas = await proctoringService.getEligibleProctorsForExam(exam.id);
-      
-      // Sort TAs for display: prioritize those teaching sections of the exam's course, then by workload
-      const sortedTAsForDisplay = [...tas].sort((a, b) => { // Use spread to avoid mutating the original 'tas' array if it's used later
-        const aIsTeaching = a.is_teaching_course_sections || false;
-        const bIsTeaching = b.is_teaching_course_sections || false;
-
-        if (aIsTeaching && !bIsTeaching) return -1;
-        if (!aIsTeaching && bIsTeaching) return 1;
-        return (a.current_workload ?? Infinity) - (b.current_workload ?? Infinity);
-      });
-      
-      setEligibleTAs(sortedTAsForDisplay);
-
-      // Pre-select TAs already assigned to this exam
-      // Use sortedTAsForDisplay here so the initial selection reflects the displayed order if TAs are pre-selected
-      const currentlyAssignedIds = sortedTAsForDisplay
-        .filter(ta => ta.is_assigned_to_current_exam)
-        .map(ta => ta.id);
-      setSelectedProctorIds(currentlyAssignedIds);
-      setReplaceExistingProctors(false); // Default to not replacing when modifying existing
-      //setIsAutoSuggestPhase(false); // Should be false initially when opening for manual assignment/review
-    } catch (err: any) {
-      console.error("Error fetching eligible TAs:", err);
-      showNotification("Failed to load available TAs", "error");
-    } finally {
-      setLoadingEligibleTAs(false);
-    }
+    // Initial fetch with no overrides active
+    await fetchAndSetEligibleTAs(exam.id, false, false); 
+    setReplaceExistingProctors(false);
+    setIsAutoSuggestPhase(false);
   };
 
   const handleCloseAssignProctorsDialog = () => {
@@ -896,6 +930,62 @@ const ExamList: React.FC<ExamListProps> = ({
     setInsufficientTAsDialogOpen(false);
   };
 
+  const handleRequestCrossDepartmental = async () => {
+    if (!examToAssignProctors) {
+      showNotification("No exam selected for this request.", "error");
+      return;
+    }
+    setLoading(true);
+    try {
+      await examService.requestCrossDepartmentalProctors(examToAssignProctors.id);
+      showNotification(
+        `Request for cross-departmental proctors for ${examToAssignProctors.course.code} - ${examToAssignProctors.type_display} submitted successfully. Status updated to Awaiting Dean's Approval.`,
+        'success'
+      );
+      handleCloseInsufficientTAsDialog();
+      handleCloseAssignProctorsDialog(); // Also close the main assign dialog
+      onDataChange(); // Refresh exam list
+    } catch (error: any) {
+      console.error('Error requesting cross-departmental proctors:', error);
+      showNotification(error.response?.data?.error || 'Failed to request cross-departmental proctors', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- NEW useEffect to refetch TAs when override rules change in InsufficientTAsDialog ---
+  useEffect(() => {
+    if (insufficientTAsDialogOpen && examToAssignProctors) {
+      // overrideAcademicLevelRule (state) = true means checkbox is CHECKED, rule is ENFORCED.
+      // To ACTIVATE override, checkbox is UNCHECKED, state is false.
+      // So, we pass !overrideAcademicLevelRule to the fetch function.
+      fetchAndSetEligibleTAs(
+        examToAssignProctors.id,
+        !overrideAcademicLevelRule,
+        !overrideConsecutiveProctoringRule
+      );
+    }
+  }, [
+    overrideAcademicLevelRule,
+    overrideConsecutiveProctoringRule,
+    insufficientTAsDialogOpen,
+    examToAssignProctors, // examToAssignProctors itself might be null initially
+    fetchAndSetEligibleTAs
+  ]);
+  // --- END NEW useEffect ---
+
+  // --- NEW FUNCTION for handling Dean's Approval Dialog ---
+  const handleOpenDeanApprovalDialog = (exam: Exam, action: 'APPROVE' | 'REJECT') => {
+    setExamForDeanApproval(exam);
+    setSelectedHelpingDepartment(''); // Reset selection
+    setDeanActionError(null); // Clear previous errors
+    setDeanApprovalDialogOpen(true);
+    // Note: The actual action (APPROVE/REJECT) will be handled by the dialog's submit function
+    // This handler just opens the dialog and primes it.
+    // If we needed to store the action type, we could add another state variable.
+  };
+  // --- END NEW FUNCTION ---
+
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
@@ -938,7 +1028,23 @@ const ExamList: React.FC<ExamListProps> = ({
                   />
                 </Box>
               } 
-              value="WAITING_FOR_PLACES" 
+              value={ExamStatus.WAITING_FOR_PLACES}
+            />
+          )}
+          {isDeanOffice && (
+            <Tab 
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <span>Cross-Dept. Approval</span>
+                  <Chip 
+                    label={exams.filter(e => e.status === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL).length} 
+                    color="info"
+                    size="small" 
+                    sx={{ ml: 1 }}
+                  />
+                </Box>
+              } 
+              value={ExamStatus.AWAITING_DEAN_CROSS_APPROVAL}
             />
           )}
           {!isDeanOffice && (
@@ -1069,62 +1175,74 @@ const ExamList: React.FC<ExamListProps> = ({
                     }
                   </TableCell>
                   <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
-                    {canEditExam(exam) && (
-                      <Tooltip title="Edit Exam">
-                        <IconButton onClick={() => handleOpenDialog(exam)} size="small">
-                          <EditIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    
-                    {canUploadStudentList(exam) && (
-                      <Tooltip title="Upload Student List">
-                        <IconButton onClick={() => handleOpenUploadStudentList(exam)} size="small">
-                          <CloudUploadIcon fontSize="small" color={exam.has_student_list ? "success" : "warning"} />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    
-                    {canAssignPlaces(exam) && (
-                      <Tooltip title="Assign Places">
-                        <IconButton onClick={() => handleOpenAssignPlaces(exam)} size="small">
-                          <AssignmentTurnedInIcon fontSize="small" color="primary" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    
-                    {isDeanOffice && exam.status === ExamStatus.WAITING_FOR_PLACES && (
-                      <Tooltip title="Import Places from Excel">
-                        <IconButton onClick={() => handleOpenImportPlacesForExam(exam)} size="small">
-                          <UploadIcon fontSize="small" color="secondary" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    
-                    {/* --- "Assign Proctors" Button --- */}
-                    {isStaff && (exam.status === ExamStatus.AWAITING_PROCTORS || exam.status === ExamStatus.READY) && (
-                      <Tooltip title="Assign Proctors"> 
-                        <IconButton onClick={() => handleOpenAssignProctorsDialog(exam)} size="small">
-                          <AssignProctorsIcon fontSize="small" color="primary" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    {/* --- End Assign Proctors Button --- */}
-                    
-                    {canSetProctors(exam) && (
-                      <Tooltip title="Set the number of proctors">
-                        <IconButton onClick={() => handleOpenSetProctors(exam)} size="small">
-                          <DoneIcon fontSize="small" color="success" />
-                        </IconButton>
-                      </Tooltip>
-                    )}
-                    
-                    {canEditExam(exam) && (
-                      <Tooltip title="Delete Exam">
-                        <IconButton onClick={() => handleConfirmDelete(exam)} size="small">
-                          <DeleteIcon fontSize="small" color="error" />
-                        </IconButton>
-                      </Tooltip>
+                    {!isReadOnly && (
+                      <>
+                        {isStaff && canEditExam(exam) && (
+                          <Tooltip title="Edit Exam Details">
+                            <IconButton onClick={() => handleOpenDialog(exam)} size="small">
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {isStaff && examToDelete !== exam && canEditExam(exam) && ( // Ensure not to show delete if already marked
+                          <Tooltip title="Delete Exam">
+                            <IconButton onClick={() => handleConfirmDelete(exam)} size="small">
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {isDeanOffice && canAssignPlaces(exam) && (
+                          <Tooltip title="Assign Classroom">
+                            <IconButton onClick={() => handleOpenAssignPlaces(exam)} size="small">
+                              <AssignmentTurnedInIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {isStaff && canSetProctors(exam) && (
+                           <Tooltip title="Set Required Proctors">
+                            <IconButton onClick={() => handleOpenSetProctors(exam)} size="small">
+                              <AssignProctorsIcon /> {/* Changed to a more generic assignment icon or use specific proctor icon */}
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        {isStaff && canUploadStudentList(exam) && (
+                          <Tooltip title="Upload Student List">
+                            <IconButton onClick={() => handleOpenUploadStudentList(exam)} size="small">
+                              <CloudUploadIcon />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                        
+                        {/* Dean's Office Actions for Cross-Departmental Approval */}
+                        {(() => {
+                          // Debugging logs
+                          if (exam.status === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL) {
+                            console.log(`[DeanActionsDebug] Exam ID: ${exam.id}, Status: ${exam.status}, Expected Status: ${ExamStatus.AWAITING_DEAN_CROSS_APPROVAL}, isDeanOffice: ${isDeanOffice}, !isReadOnly: ${!isReadOnly}`);
+                          }
+                          return isDeanOffice && exam.status === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL;
+                        })() && (
+                          <>
+                            <Tooltip title="Approve Cross-Departmental Request">
+                              <IconButton
+                                onClick={() => handleOpenDeanApprovalDialog(exam, 'APPROVE')}
+                                size="small"
+                                color="primary"
+                              >
+                                <CheckCircleOutlineIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Reject Cross-Departmental Request">
+                              <IconButton
+                                onClick={() => handleOpenDeanApprovalDialog(exam, 'REJECT')}
+                                size="small"
+                                color="error"
+                              >
+                                <HighlightOffIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </>
+                        )}
+                      </>
                     )}
                   </TableCell>
                 </TableRow>
@@ -1706,6 +1824,33 @@ const ExamList: React.FC<ExamListProps> = ({
             <br /><br />
             You can still assign proctors manually from the available list, or adjust the number of required proctors for the exam and try again.
           </DialogContentText>
+          {/* --- NEW OVERRIDE CHECKBOXES --- */}
+          <Box sx={{ mt: 2, mb: 1 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              Override Options:
+            </Typography>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={overrideAcademicLevelRule}
+                  onChange={(e) => setOverrideAcademicLevelRule(e.target.checked)}
+                  name="overrideAcademicLevel"
+                />
+              }
+              label="Override academic level rule for TAs"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={overrideConsecutiveProctoringRule}
+                  onChange={(e) => setOverrideConsecutiveProctoringRule(e.target.checked)}
+                  name="overrideConsecutiveProctoring"
+                />
+              }
+              label="Override no proctoring one day before/after rule for TAs"
+            />
+          </Box>
+          {/* --- END NEW OVERRIDE CHECKBOXES --- */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAssignFoundEligibleTAs} color="primary">
@@ -1714,10 +1859,10 @@ const ExamList: React.FC<ExamListProps> = ({
           <Button onClick={handleCloseInsufficientTAsDialog} color="primary">
             Override Restrictions
           </Button>
-          <Button onClick={handleCloseInsufficientTAsDialog} color="primary">
+          <Button onClick={handleRequestCrossDepartmental} color="primary" disabled={loading}>
             Request Cross-Departmental Proctors
           </Button>
-          <Button onClick={handleCloseInsufficientTAsDialog} color="secondary" autoFocus>
+          <Button onClick={handleCloseInsufficientTAsDialog} color="secondary" autoFocus disabled={loading}>
             Cancel
           </Button>
         </DialogActions>
