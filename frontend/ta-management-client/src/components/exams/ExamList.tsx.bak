@@ -1,0 +1,1128 @@
+import React, { useState, useEffect } from 'react';
+import {
+  Typography,
+  Box,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Dialog,
+  Tooltip,
+  TextField,
+  MenuItem,
+  CircularProgress,
+  FormControl,
+  InputLabel,
+  Select,
+  SelectChangeEvent,
+  Chip,
+  FormHelperText,
+  Tabs,
+  Tab,
+  Alert
+} from '@mui/material';
+import { DatePicker, TimePicker } from '@mui/x-date-pickers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { 
+  Edit as EditIcon, 
+  Delete as DeleteIcon, 
+  Add as AddIcon, 
+  Done as DoneIcon, 
+  AssignmentTurnedIn as AssignmentTurnedInIcon, 
+  Upload as UploadIcon, 
+  CloudUpload as CloudUploadIcon 
+} from '@mui/icons-material';
+import { Exam, ExamType, ExamForm, ExamStatus, AssignPlacesForm, SetProctorsForm, Classroom } from '../../interfaces/exam';
+import { Course } from '../../interfaces/course';
+import examService from '../../services/examService';
+import { useAuth } from '../../context/AuthContext';
+import { format } from 'date-fns';
+
+interface ExamListProps {
+  exams: Exam[];
+  courses: Course[];
+  isReadOnly: boolean;
+  onDataChange: () => void;
+  showNotification: (message: string, type: 'success' | 'error' | 'info') => void;
+  initialTab?: ExamStatus | 'ALL';
+  departmentFilter?: string;
+}
+
+const ExamList: React.FC<ExamListProps> = ({
+  exams,
+  courses,
+  isReadOnly,
+  onDataChange,
+  showNotification,
+  initialTab = 'ALL',
+  departmentFilter
+}) => {
+  const { authState } = useAuth();
+  const userId = authState.user?.user_id;
+  const isStaff = authState.user?.role === 'STAFF' || authState.user?.role === 'ADMIN';
+  const isInstructor = authState.user?.role === 'INSTRUCTOR';
+  const isDeanOffice = authState.user?.role === 'DEAN_OFFICE';
+  
+  const [openDialog, setOpenDialog] = useState(false);
+  const [editingExam, setEditingExam] = useState<Exam | null>(null);
+  const [formData, setFormData] = useState<ExamForm>({
+    course_id: 0,
+    type: ExamType.MIDTERM,
+    date: new Date().toISOString(),
+    time: format(new Date(), 'HH:mm'),
+    duration: 90
+  });
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [examToDelete, setExamToDelete] = useState<Exam | null>(null);
+  const [currentTab, setCurrentTab] = useState<ExamStatus | 'ALL'>(initialTab);
+  const [assignPlacesDialog, setAssignPlacesDialog] = useState(false);
+  const [examToAssignPlaces, setExamToAssignPlaces] = useState<Exam | null>(null);
+  const [assignPlacesForm, setAssignPlacesForm] = useState<AssignPlacesForm>({ classrooms: [] });
+  const [setProctorlDialog, setSetProctorlDialog] = useState(false);
+  const [examToSetProctors, setExamToSetProctors] = useState<Exam | null>(null);
+  const [proctorForm, setProctorForm] = useState<SetProctorsForm>({ proctor_count: 1 });
+  const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+  const [uploadStudentListDialog, setUploadStudentListDialog] = useState(false);
+  const [examToUploadStudentList, setExamToUploadStudentList] = useState<Exam | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  
+  // Fetch classrooms when component mounts
+  useEffect(() => {
+    console.log('ExamList mounted with initialTab:', initialTab);
+    console.log('Current Tab value set to:', currentTab);
+    if (isDeanOffice) {
+      fetchClassrooms();
+    }
+  }, [isDeanOffice, initialTab]);
+  
+  // Log whenever currentTab changes
+  useEffect(() => {
+    console.log('Current tab changed to:', currentTab);
+    console.log('isDeanOffice:', isDeanOffice);
+    console.log('Available tabs:', {
+      ALL: 'ALL',
+      WAITING_FOR_PLACES: ExamStatus.WAITING_FOR_PLACES,
+      WAITING_FOR_STUDENT_LIST: ExamStatus.WAITING_FOR_STUDENT_LIST,
+      AWAITING_PROCTORS: ExamStatus.AWAITING_PROCTORS,
+      READY: ExamStatus.READY
+    });
+  }, [currentTab, isDeanOffice]);
+  
+  // Fetch classrooms from API
+  const fetchClassrooms = async () => {
+    try {
+      const response = await examService.getClassrooms();
+      if (response && response.data && Array.isArray(response.data)) {
+        setClassrooms(response.data);
+      } else {
+        console.error('Invalid classrooms data format:', response);
+        setClassrooms([]); // Ensure classrooms is always an array
+      }
+    } catch (error) {
+      console.error('Error fetching classrooms:', error);
+      setClassrooms([]); // Set empty array on error
+      showNotification('Failed to load classrooms', 'error');
+    }
+  };
+
+  // Handle tab change
+  const handleTabChange = (event: React.SyntheticEvent, newValue: ExamStatus | 'ALL' | string) => {
+    console.log('Tab changed to:', newValue, 'from:', currentTab);
+    setCurrentTab(newValue as ExamStatus | 'ALL');
+
+    // If Dean's Office selects "Waiting for Places", refresh data to ensure they see all such exams
+    if (isDeanOffice && (newValue === ExamStatus.WAITING_FOR_PLACES || newValue === "WAITING_FOR_PLACES")) {
+      console.log('Dean Office selected Waiting for Places tab, refreshing data');
+      onDataChange();
+    }
+  };
+
+  // Filter exams based on current tab
+  const filteredExams = exams.filter(exam => {
+    console.log('Filtering exam:', exam, 'currentTab:', currentTab, 'isDeanOffice:', isDeanOffice);
+    
+    // If Dean's Office, hide exams with WAITING_FOR_STUDENT_LIST status entirely
+    if (isDeanOffice && exam.status === ExamStatus.WAITING_FOR_STUDENT_LIST) {
+      console.log('Hiding WAITING_FOR_STUDENT_LIST exam from Dean Office:', exam);
+      return false;
+    }
+    
+    // Always show "Waiting for Places" exams to Dean's Office regardless of tab
+    // unless they're specifically filtering by another status
+    if (isDeanOffice && 
+        (exam.status === ExamStatus.WAITING_FOR_PLACES || !exam.status) && 
+        currentTab === 'ALL') {
+      console.log('Showing exam to Dean Office (all tab):', exam);
+      return true;
+    }
+    
+    if (currentTab === 'ALL') {
+      console.log('Showing exam (all tab):', exam);
+      return true;
+    }
+    
+    // Handle case where backend hasn't implemented status field yet
+    if (!exam.status) {
+      // For Dean's Office view, treat undefined status as "Waiting for Places"
+      if (isDeanOffice && (currentTab === ExamStatus.WAITING_FOR_PLACES || currentTab === "WAITING_FOR_PLACES")) {
+        console.log('Showing undefined status exam to Dean Office:', exam);
+        return true;
+      }
+      console.log('Hiding undefined status exam:', exam);
+      return false;
+    }
+    
+    console.log('Checking exam status:', exam.status, '===', currentTab, exam.status === currentTab);
+    // Handle case where we're on the WAITING_FOR_PLACES tab
+    if (currentTab === "WAITING_FOR_PLACES" && exam.status === ExamStatus.WAITING_FOR_PLACES) {
+      return true;
+    }
+    return exam.status === currentTab;
+  });
+
+  // Handle opening exam dialog
+  const handleOpenDialog = (exam?: Exam) => {
+    if (exam) {
+      // Edit existing exam
+      setEditingExam(exam);
+      setFormData({
+        course_id: exam.course.id,
+        type: exam.type as ExamType,
+        date: exam.date,
+        time: exam.time || format(new Date(exam.date), 'HH:mm'),
+        duration: exam.duration || 90
+      });
+    } else {
+      // Create new exam
+      setEditingExam(null);
+      setFormData({
+        course_id: 0,
+        type: ExamType.MIDTERM,
+        date: new Date().toISOString(),
+        time: format(new Date(), 'HH:mm'),
+        duration: 90
+      });
+    }
+    setFormErrors({});
+    setOpenDialog(true);
+  };
+
+  // Handle closing dialog
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setEditingExam(null);
+  };
+
+  // Handle input change
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent
+  ) => {
+    const { name, value } = e.target;
+    
+    // Handle numeric values
+    if (name === 'duration') {
+      const numValue = parseInt(value as string) || 0;
+      setFormData({
+        ...formData,
+        duration: numValue
+      });
+      // Validate numeric fields
+      if (numValue < 0) {
+        setFormErrors({...formErrors, [name]: `${name.replace('_', ' ')} must be 0 or greater`});
+      } else {
+        const newErrors = {...formErrors};
+        delete newErrors[name];
+        setFormErrors(newErrors);
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
+  };
+
+  // Handle date change
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      setFormData({
+        ...formData,
+        date: date.toISOString()
+      });
+    }
+  };
+
+  // Handle time change
+  const handleTimeChange = (time: Date | null) => {
+    if (time) {
+      setFormData({
+        ...formData,
+        time: format(time, 'HH:mm')
+      });
+    }
+  };
+
+  // Validate form
+  const validateForm = () => {
+    const errors: Record<string, string> = {};
+    
+    if (formData.course_id === 0) {
+      errors.course_id = 'Please select a course';
+    }
+    
+    if (formData.duration <= 0) {
+      errors.duration = 'Duration must be greater than 0';
+    }
+    
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  // Handle form submission for create/update
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      if (editingExam) {
+        // Update existing exam
+        await examService.updateExam(editingExam.id, formData);
+        showNotification(`${editingExam.type_display} exam updated successfully`, 'success');
+      } else {
+        // Create new exam
+        await examService.createExam(formData);
+        showNotification('Exam created successfully', 'success');
+      }
+      handleCloseDialog();
+      onDataChange();
+    } catch (error: any) {
+      console.error('Error saving exam:', error);
+      showNotification(error.response?.data?.detail || 'Failed to save exam', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle opening delete confirmation dialog
+  const handleConfirmDelete = (exam: Exam) => {
+    setExamToDelete(exam);
+    setDeleteDialogOpen(true);
+  };
+
+  // Handle delete exam
+  const handleDeleteExam = async () => {
+    if (!examToDelete) return;
+    
+    try {
+      setLoading(true);
+      await examService.deleteExam(examToDelete.id);
+      showNotification(`${examToDelete.type_display} exam deleted successfully`, 'success');
+      setDeleteDialogOpen(false);
+      setExamToDelete(null);
+      onDataChange();
+    } catch (error: any) {
+      console.error('Error deleting exam:', error);
+      showNotification(error.response?.data?.detail || 'Failed to delete exam', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Check if a user can edit or delete a specific exam
+  const canEditExam = (exam: Exam): boolean => {
+    if (isStaff) return true;
+    
+    // Instructors can only edit/delete exams for their courses
+    if (isInstructor) {
+      // Logic to check if course belongs to the instructor will be handled by the backend
+      return true; // The backend will restrict access appropriately
+    }
+    
+    return false;
+  };
+
+  // Check if a user can assign places to an exam
+  const canAssignPlaces = (exam: Exam): boolean => {
+    // Always allow Dean's Office to assign places if status field isn't implemented
+    // or if it's in WAITING_FOR_PLACES status
+    if (isDeanOffice) {
+      return !exam.status || exam.status === ExamStatus.WAITING_FOR_PLACES;
+    }
+    
+    return false; // Only Dean's Office can assign places
+  };
+
+  // Check if a user can set proctor count
+  const canSetProctors = (exam: Exam): boolean => {
+    if (!exam.status) {
+      // If status field isn't implemented yet, allow it for Staff or Instructors
+      return isStaff || isInstructor;
+    }
+    return (isStaff || isInstructor) && exam.status === ExamStatus.AWAITING_PROCTORS;
+  };
+
+  // Format date for display
+  const formatDate = (dateString: string): string => {
+    try {
+      return format(new Date(dateString), 'MMM d, yyyy');
+    } catch (error) {
+      return dateString;
+    }
+  };
+
+  // Get exam type display name
+  const getExamTypeDisplay = (type: ExamType): string => {
+    switch (type) {
+      case ExamType.MIDTERM: return 'Midterm';
+      case ExamType.FINAL: return 'Final';
+      case ExamType.QUIZ: return 'Quiz';
+      default: return type;
+    }
+  };
+
+  // Get status display name
+  const getStatusDisplay = (status: ExamStatus): string => {
+    switch (status) {
+      case ExamStatus.WAITING_FOR_STUDENT_LIST: return 'Waiting for Student List';
+      case ExamStatus.WAITING_FOR_PLACES: return 'Waiting for Places';
+      case ExamStatus.AWAITING_PROCTORS: return 'Awaiting Proctors';
+      case ExamStatus.READY: return 'Ready';
+      default: return status;
+    }
+  };
+
+  // Sort exams by date
+  const sortedExams = filteredExams.sort((a, b) => {
+    return new Date(a.date).getTime() - new Date(b.date).getTime();
+  });
+
+  // Handle opening assign places dialog
+  const handleOpenAssignPlaces = (exam: Exam) => {
+    setExamToAssignPlaces(exam);
+    // Ensure classrooms is initialized as an empty array
+    setAssignPlacesForm({ classrooms: [] });
+    
+    // Check if student list has been uploaded
+    if (!exam.has_student_list) {
+      showNotification('Please upload a student list before assigning classrooms', 'info');
+      // Open the upload dialog instead
+      handleOpenUploadStudentList(exam);
+      return;
+    }
+    
+    setAssignPlacesDialog(true);
+    
+    // Ensure classrooms data is loaded
+    if (isDeanOffice && (!classrooms || !Array.isArray(classrooms) || classrooms.length === 0)) {
+      fetchClassrooms();
+    }
+  };
+
+  // Handle closing assign places dialog
+  const handleCloseAssignPlaces = () => {
+    setAssignPlacesDialog(false);
+    setExamToAssignPlaces(null);
+  };
+
+  // Handle change in assign places form
+  const handleAssignPlacesChange = (e: SelectChangeEvent<number[]>) => {
+    setAssignPlacesForm({
+      ...assignPlacesForm,
+      classrooms: e.target.value as number[]
+    });
+  };
+
+  // Submit assign places form
+  const handleAssignPlacesSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!examToAssignPlaces) return;
+
+    try {
+      setLoading(true);
+      await examService.assignPlaces(examToAssignPlaces.id, assignPlacesForm);
+      showNotification('Classrooms assigned successfully', 'success');
+      handleCloseAssignPlaces();
+      onDataChange();
+    } catch (error: any) {
+      console.error('Error assigning places:', error);
+      showNotification(error.response?.data?.detail || 'Failed to assign places', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle opening set proctors dialog
+  const handleOpenSetProctors = (exam: Exam) => {
+    setExamToSetProctors(exam);
+    setProctorForm({ proctor_count: exam.proctor_count || 1 });
+    setSetProctorlDialog(true);
+  };
+
+  // Handle closing set proctors dialog
+  const handleCloseSetProctors = () => {
+    setSetProctorlDialog(false);
+    setExamToSetProctors(null);
+  };
+
+  // Handle change in set proctors form
+  const handleProctorFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value) || 0;
+    setProctorForm({ proctor_count: value });
+  };
+
+  // Submit set proctors form
+  const handleSetProctorsSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!examToSetProctors) return;
+
+    try {
+      setLoading(true);
+      await examService.setProctors(examToSetProctors.id, proctorForm);
+      showNotification('Proctor count set successfully', 'success');
+      handleCloseSetProctors();
+      onDataChange();
+    } catch (error: any) {
+      console.error('Error setting proctors:', error);
+      showNotification(error.response?.data?.detail || 'Failed to set proctor count', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle opening student list upload dialog
+  const handleOpenUploadStudentList = (exam: Exam) => {
+    setExamToUploadStudentList(exam);
+    setSelectedFile(null);
+    setUploadError(null);
+    setUploadStudentListDialog(true);
+  };
+
+  // Handle closing student list upload dialog
+  const handleCloseUploadStudentList = () => {
+    setUploadStudentListDialog(false);
+    setExamToUploadStudentList(null);
+    setSelectedFile(null);
+    setUploadError(null);
+  };
+
+  // Handle file selection
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      
+      // Check if file is an Excel file
+      if (!file.name.match(/\.(xlsx|xls|csv)$/)) {
+        setUploadError('Please select an Excel (.xlsx, .xls) or CSV file');
+        setSelectedFile(null);
+        return;
+      }
+      
+      setSelectedFile(file);
+      setUploadError(null);
+    }
+  };
+
+  // Submit student list upload
+  const handleUploadStudentList = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!examToUploadStudentList || !selectedFile) return;
+
+    try {
+      setLoading(true);
+      await examService.uploadStudentList(examToUploadStudentList.id, selectedFile);
+      showNotification('Student list uploaded successfully', 'success');
+      handleCloseUploadStudentList();
+      onDataChange();
+    } catch (error: any) {
+      console.error('Error uploading student list:', error);
+      setUploadError(error.response?.data?.detail || 'Failed to upload student list');
+      showNotification(error.response?.data?.detail || 'Failed to upload student list', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Check if a user can upload a student list
+  const canUploadStudentList = (exam: Exam): boolean => {
+    // Staff and instructors can always upload student lists
+    return isStaff || isInstructor;
+  };
+
+  return (
+    <Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Typography variant="h6" component="h2">
+          {isDeanOffice && currentTab === ExamStatus.WAITING_FOR_PLACES
+            ? "Assign Classrooms to Exams"
+            : "Exam Management"}
+        </Typography>
+        {(isStaff || isInstructor) && (
+          <Button 
+            variant="contained" 
+            color="primary" 
+            startIcon={<AddIcon />}
+            onClick={() => handleOpenDialog()}
+          >
+            Add Exam
+          </Button>
+        )}
+      </Box>
+
+      {/* Tabs for filtering by status */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+        <Tabs 
+          value={currentTab} 
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          <Tab label="All Exams" value="ALL" />
+          {isDeanOffice && (
+            <Tab 
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <span>Waiting for Places</span>
+                  <Chip 
+                    label={exams.filter(e => e.status === ExamStatus.WAITING_FOR_PLACES).length} 
+                    color="warning" 
+                    size="small" 
+                    sx={{ ml: 1 }}
+                  />
+                </Box>
+              } 
+              value="WAITING_FOR_PLACES" 
+            />
+          )}
+          {!isDeanOffice && (
+            <Tab 
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <span>Need Student List</span>
+                  <Chip 
+                    label={exams.filter(e => e.status === ExamStatus.WAITING_FOR_STUDENT_LIST).length} 
+                    color="error" 
+                    size="small" 
+                    sx={{ ml: 1 }}
+                  />
+                </Box>
+              } 
+              value={ExamStatus.WAITING_FOR_STUDENT_LIST} 
+            />
+          )}
+          {(isStaff || isInstructor) && (
+            <Tab label="Awaiting Proctors" value={ExamStatus.AWAITING_PROCTORS} />
+          )}
+          <Tab label="Ready" value={ExamStatus.READY} />
+        </Tabs>
+      </Box>
+
+      <Typography variant="subtitle1" sx={{ mb: 2 }}>
+        {sortedExams.length} {sortedExams.length === 1 ? 'Exam' : 'Exams'} found
+      </Typography>
+
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Course</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Date & Time</TableCell>
+              <TableCell>Duration</TableCell>
+              <TableCell>Students</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Classrooms</TableCell>
+              <TableCell>Proctors</TableCell>
+              <TableCell align="right">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {sortedExams.length > 0 ? (
+              sortedExams.map((exam) => (
+                <TableRow key={exam.id} hover>
+                  <TableCell>
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Chip 
+                        label={exam.course.department.code} 
+                        size="small" 
+                        color="primary" 
+                        variant="outlined"
+                        sx={{ marginRight: 1, fontWeight: 'bold' }}
+                      />
+                      <Box>
+                        <Typography variant="body1">
+                          <strong>{exam.course.code}</strong>
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {exam.course.title}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Chip 
+                      label={exam.type_display} 
+                      color={
+                        exam.type === ExamType.MIDTERM ? 'primary' : 
+                        exam.type === ExamType.FINAL ? 'error' : 
+                        'success'
+                      }
+                      variant="outlined"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="body2">{formatDate(exam.date)}</Typography>
+                    <Typography variant="body2" color="text.secondary">{exam.time || format(new Date(exam.date), 'HH:mm')}</Typography>
+                  </TableCell>
+                  <TableCell>{exam.duration ? `${exam.duration} min` : 'N/A'}</TableCell>
+                  <TableCell>
+                    {exam.student_count !== undefined ? exam.student_count : 'Not Set'}
+                    {!exam.has_student_list && (
+                      <Typography variant="caption" color="error" display="block">
+                        No student list
+                      </Typography>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {exam.status ? (
+                      <Chip 
+                        label={exam.status_display || getStatusDisplay(exam.status)} 
+                        color={
+                          exam.status === ExamStatus.WAITING_FOR_PLACES ? 'warning' : 
+                          exam.status === ExamStatus.AWAITING_PROCTORS ? 'info' : 
+                          'success'
+                        }
+                        size="small"
+                      />
+                    ) : (
+                      <Chip 
+                        label="Not Set" 
+                        color="default"
+                        size="small"
+                      />
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {exam.classrooms && Array.isArray(exam.classrooms) && exam.classrooms.length > 0 ? (
+                      <Box>
+                        {exam.classrooms.map((classroom, index) => (
+                          <Typography key={index} variant="body2">
+                            {classroom.building}-{classroom.room_number}
+                          </Typography>
+                        ))}
+                      </Box>
+                    ) : (
+                      <Typography variant="body2" color="text.secondary">Not Assigned</Typography>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {exam.proctor_count !== undefined ? exam.proctor_count : 'Not Set'}
+                  </TableCell>
+                  <TableCell align="right">
+                    {canEditExam(exam) && (
+                      <Tooltip title="Edit Exam">
+                        <IconButton onClick={() => handleOpenDialog(exam)} size="small">
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {canUploadStudentList(exam) && (
+                      <Tooltip title="Upload Student List">
+                        <IconButton onClick={() => handleOpenUploadStudentList(exam)} size="small">
+                          <CloudUploadIcon fontSize="small" color={exam.has_student_list ? "success" : "warning"} />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {canAssignPlaces(exam) && (
+                      <Tooltip title="Assign Places">
+                        <IconButton onClick={() => handleOpenAssignPlaces(exam)} size="small">
+                          <AssignmentTurnedInIcon fontSize="small" color="primary" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {canSetProctors(exam) && (
+                      <Tooltip title="Set Proctors">
+                        <IconButton onClick={() => handleOpenSetProctors(exam)} size="small">
+                          <DoneIcon fontSize="small" color="success" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {canEditExam(exam) && (
+                      <Tooltip title="Delete Exam">
+                        <IconButton onClick={() => handleConfirmDelete(exam)} size="small">
+                          <DeleteIcon fontSize="small" color="error" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={9} align="center">
+                  No exams found
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* Create/Edit Exam Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+        <Box component="form" onSubmit={handleSubmit} sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            {editingExam ? 'Edit Exam' : 'Add New Exam'}
+          </Typography>
+
+          <Box sx={{ mb: 2 }}>
+            <FormControl fullWidth error={!!formErrors.course_id}>
+              <InputLabel id="course-select-label">Course</InputLabel>
+              <Select
+                labelId="course-select-label"
+                name="course_id"
+                value={formData.course_id.toString()}
+                onChange={handleInputChange}
+                label="Course"
+                required
+              >
+                <MenuItem value="0" disabled>Select Course</MenuItem>
+                {courses.map((course) => (
+                  <MenuItem key={course.id} value={course.id.toString()}>
+                    {course.department.code}{course.code} - {course.title}
+                  </MenuItem>
+                ))}
+              </Select>
+              {formErrors.course_id && <FormHelperText>{formErrors.course_id}</FormHelperText>}
+            </FormControl>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <FormControl fullWidth>
+              <InputLabel id="type-select-label">Exam Type</InputLabel>
+              <Select
+                labelId="type-select-label"
+                name="type"
+                value={formData.type}
+                onChange={handleInputChange}
+                label="Exam Type"
+                required
+              >
+                <MenuItem value={ExamType.MIDTERM}>Midterm</MenuItem>
+                <MenuItem value={ExamType.FINAL}>Final</MenuItem>
+                <MenuItem value={ExamType.QUIZ}>Quiz</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Date"
+                value={new Date(formData.date)}
+                onChange={handleDateChange}
+                sx={{ width: '100%' }}
+              />
+            </LocalizationProvider>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <TimePicker
+                label="Time"
+                value={new Date(`2023-01-01T${formData.time}`)}
+                onChange={handleTimeChange}
+                sx={{ width: '100%' }}
+              />
+            </LocalizationProvider>
+          </Box>
+
+          <Box sx={{ mb: 3 }}>
+            <TextField
+              fullWidth
+              label="Duration (minutes)"
+              name="duration"
+              type="number"
+              value={formData.duration}
+              onChange={handleInputChange}
+              required
+              error={!!formErrors.duration}
+              helperText={formErrors.duration}
+            />
+          </Box>
+
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button onClick={handleCloseDialog} disabled={loading}>
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} /> : editingExam ? 'Update' : 'Create'}
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
+
+      {/* Assign Places Dialog */}
+      <Dialog open={assignPlacesDialog} onClose={handleCloseAssignPlaces} maxWidth="sm" fullWidth>
+        <Box component="form" onSubmit={handleAssignPlacesSubmit} sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Assign Classrooms
+          </Typography>
+          
+          {examToAssignPlaces && (
+            <>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle1">
+                  {examToAssignPlaces.course.department.code}{examToAssignPlaces.course.code} - {examToAssignPlaces.type_display}
+                </Typography>
+                <Typography variant="body2">
+                  Date: {formatDate(examToAssignPlaces.date)} at {examToAssignPlaces.time}
+                </Typography>
+                <Typography variant="body2">
+                  Duration: {examToAssignPlaces.duration} minutes
+                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 'bold', mt: 1 }}>
+                  Students: {examToAssignPlaces.student_count}
+                </Typography>
+              </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="classrooms-select-label">Assign Classrooms</InputLabel>
+                  <Select
+                    labelId="classrooms-select-label"
+                    multiple
+                    value={assignPlacesForm.classrooms as number[]}
+                    onChange={handleAssignPlacesChange}
+                    label="Assign Classrooms"
+                    required
+                    renderValue={(selected) => (
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                        {(selected as number[]).map((value) => {
+                          const classroom = classrooms.find(c => c.id === value);
+                          return (
+                            <Chip 
+                              key={value} 
+                              label={`${classroom?.building}-${classroom?.room_number} (${classroom?.capacity} capacity)`} 
+                              size="small" 
+                            />
+                          );
+                        })}
+                      </Box>
+                    )}
+                  >
+                    {Array.isArray(classrooms) && classrooms.map((classroom) => (
+                      <MenuItem key={classroom.id} value={classroom.id}>
+                        {classroom.building}-{classroom.room_number} (Capacity: {classroom.capacity})
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </>
+          )}
+
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button onClick={handleCloseAssignPlaces} disabled={loading}>
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Assign Classrooms'}
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
+
+      {/* Set Proctors Dialog */}
+      <Dialog open={setProctorlDialog} onClose={handleCloseSetProctors} maxWidth="sm" fullWidth>
+        <Box component="form" onSubmit={handleSetProctorsSubmit} sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Set Proctor Count
+          </Typography>
+          
+          {examToSetProctors && (
+            <>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle1">
+                  {examToSetProctors.course.department.code}{examToSetProctors.course.code} - {examToSetProctors.type_display}
+                </Typography>
+                <Typography variant="body2">
+                  Date: {formatDate(examToSetProctors.date)} at {examToSetProctors.time}
+                </Typography>
+                <Typography variant="body2">
+                  Students: {examToSetProctors.student_count}
+                </Typography>
+                <Typography variant="body2" sx={{ mt: 1 }}>
+                  <strong>Assigned Classrooms:</strong>
+                </Typography>
+                {examToSetProctors.classrooms && Array.isArray(examToSetProctors.classrooms) && examToSetProctors.classrooms.length > 0 ? (
+                  examToSetProctors.classrooms.map((classroom, index) => (
+                    <Typography key={index} variant="body2">
+                      {classroom.building}-{classroom.room_number} (Capacity: {classroom.capacity})
+                    </Typography>
+                  ))
+                ) : (
+                  <Typography variant="body2" color="text.secondary">
+                    No classrooms assigned
+                  </Typography>
+                )}
+              </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <TextField
+                  fullWidth
+                  label="Proctor Count"
+                  type="number"
+                  value={proctorForm.proctor_count}
+                  onChange={handleProctorFormChange}
+                  required
+                  helperText="Enter the number of proctors needed for this exam"
+                />
+              </Box>
+            </>
+          )}
+
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button onClick={handleCloseSetProctors} disabled={loading}>
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Set Proctor Count'}
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+        <Box sx={{ p: 3, minWidth: 300 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Confirm Delete
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 3 }}>
+            Are you sure you want to delete the {examToDelete?.type_display} exam for {examToDelete?.course.department.code}{examToDelete?.course.code}?
+          </Typography>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button onClick={() => setDeleteDialogOpen(false)} disabled={loading}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleDeleteExam} 
+              variant="contained" 
+              color="error"
+              disabled={loading}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Delete'}
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
+
+      {/* Dialog for student list upload */}
+      <Dialog open={uploadStudentListDialog} onClose={handleCloseUploadStudentList} maxWidth="sm" fullWidth>
+        <Box component="form" onSubmit={handleUploadStudentList} sx={{ p: 3 }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            Upload Student List
+          </Typography>
+          
+          {examToUploadStudentList && (
+            <>
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="subtitle1">
+                  {examToUploadStudentList.course.department.code}{examToUploadStudentList.course.code} - {examToUploadStudentList.type_display}
+                </Typography>
+                <Typography variant="body2">
+                  Date: {formatDate(examToUploadStudentList.date)} at {examToUploadStudentList.time}
+                </Typography>
+                <Typography variant="body2">
+                  Duration: {examToUploadStudentList.duration} minutes
+                </Typography>
+              </Box>
+
+              <Box sx={{ mb: 3 }}>
+                <Alert severity="info" sx={{ mb: 2 }}>
+                  Please upload an Excel file (.xlsx, .xls) or CSV file with student information. 
+                  The file should include a column with student IDs.
+                </Alert>
+                
+                {uploadError && (
+                  <Alert severity="error" sx={{ mb: 2 }}>
+                    {uploadError}
+                  </Alert>
+                )}
+                
+                <Button
+                  variant="outlined"
+                  component="label"
+                  startIcon={<UploadIcon />}
+                  sx={{ mb: 2 }}
+                >
+                  {selectedFile ? 'Change File' : 'Select File'}
+                  <input 
+                    type="file" 
+                    hidden 
+                    accept=".xlsx,.xls,.csv"
+                    onChange={handleFileChange}
+                  />
+                </Button>
+                
+                {selectedFile && (
+                  <Typography variant="body2" sx={{ mb: 2 }}>
+                    Selected file: {selectedFile.name}
+                  </Typography>
+                )}
+              </Box>
+            </>
+          )}
+
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+            <Button onClick={handleCloseUploadStudentList} disabled={loading}>
+              Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              variant="contained" 
+              color="primary"
+              disabled={loading || !selectedFile}
+            >
+              {loading ? <CircularProgress size={24} /> : 'Upload Student List'}
+            </Button>
+          </Box>
+        </Box>
+      </Dialog>
+    </Box>
+  );
+};
+
+export default ExamList; 

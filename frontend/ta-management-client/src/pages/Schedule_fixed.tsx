@@ -1,0 +1,705 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { 
+  Container, 
+  Box, 
+  Paper, 
+  Typography, 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Stack,
+  Chip,
+  TextField,
+  CircularProgress,
+  Alert,
+  Snackbar,
+  IconButton
+} from '@mui/material';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { useAuth } from '../context/AuthContext';
+import scheduleService, { WeeklyScheduleEntry } from '../services/scheduleService';
+
+// Days of week mapping between UI and API
+const DAY_MAPPING: Record<string, string> = {
+  'Monday': 'MON',
+  'Tuesday': 'TUE',
+  'Wednesday': 'WED',
+  'Thursday': 'THU',
+  'Friday': 'FRI',
+  'Saturday': 'SAT',
+  'Sunday': 'SUN'
+};
+
+// Reverse mapping from API to UI days
+const REVERSE_DAY_MAPPING: Record<string, string> = {
+  'MON': 'Monday',
+  'TUE': 'Tuesday',
+  'WED': 'Wednesday',
+  'THU': 'Thursday',
+  'FRI': 'Friday',
+  'SAT': 'Saturday',
+  'SUN': 'Sunday'
+};
+
+// Sample days and time slots
+const DAYS_OF_WEEK = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+const TIME_SLOTS = [
+  '08:30 - 09:20', '09:30 - 10:20', '10:30 - 11:20', '11:30 - 12:20',
+  '13:30 - 14:20', '14:30 - 15:20', '15:30 - 16:20', '16:30 - 17:20'
+];
+
+// Status for class hours
+const CLASS_HOURS_STATUS = { value: 'class', label: 'Class Hours', color: 'primary' };
+
+interface ScheduleCell {
+  id?: number;
+  day: string;
+  timeSlot: string;
+  status: string;
+  course?: string; // Course name
+}
+
+const Schedule: React.FC = () => {
+  const { authState } = useAuth();
+  const { user } = authState;
+  
+  const [schedule, setSchedule] = useState<ScheduleCell[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  
+  // For edit dialog
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedCell, setSelectedCell] = useState<ScheduleCell | null>(null);
+  const [courseInput, setCourseInput] = useState('');
+  
+  // Parse timeSlot into start_time and end_time for API
+  const parseTimeSlot = (timeSlot: string): { start_time: string, end_time: string } => {
+    const [startStr, endStr] = timeSlot.split(' - ');
+    return {
+      start_time: startStr,
+      end_time: endStr
+    };
+  };
+  
+  // Create timeSlot string from start_time and end_time
+  const createTimeSlot = (start_time: string, end_time: string): string => {
+    // Remove seconds if present
+    const removeSeconds = (timeStr: string) => {
+      return timeStr.replace(/(\d{2}):(\d{2}):(\d{2})/g, '$1:$2');
+    };
+    
+    const normalizedStart = removeSeconds(start_time.trim());
+    const normalizedEnd = removeSeconds(end_time.trim());
+    
+    return `${normalizedStart} - ${normalizedEnd}`;
+  };
+  
+  // Convert API entry to UI cell
+  const apiToUiEntry = (entry: WeeklyScheduleEntry): ScheduleCell => {
+    // Fix day format - handle both full name and code
+    let day = entry.day;
+    
+    // If it's already a full day name, use it directly
+    if (Object.values(REVERSE_DAY_MAPPING).includes(day)) {
+      // Day format already correct
+    } 
+    // If it's a three-letter code, convert it
+    else if (REVERSE_DAY_MAPPING[day]) {
+      day = REVERSE_DAY_MAPPING[day];
+    }
+    // If neither, log an error but try to continue
+    else {
+      console.error(`Unknown day format: ${day}`);
+    }
+    
+    const timeSlot = createTimeSlot(entry.start_time, entry.end_time);
+    
+    return {
+      id: entry.id,
+      day,
+      timeSlot,
+      status: 'class',
+      course: entry.description
+    };
+  };
+  
+  // Convert UI cell to API entry
+  const uiToApiEntry = (cell: ScheduleCell): Omit<WeeklyScheduleEntry, 'id' | 'day_display'> => {
+    const { start_time, end_time } = parseTimeSlot(cell.timeSlot);
+    return {
+      day: DAY_MAPPING[cell.day],
+      start_time,
+      end_time,
+      description: cell.course || ''
+    };
+  };
+  
+  // Load schedule data
+  const fetchSchedule = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null); // Clear any previous errors
+      
+      // Check if user is authenticated
+      if (!user) {
+        console.error('Trying to fetch schedule without authenticated user');
+        setError('Authentication required. Please log in again.');
+        setLoading(false);
+        return;
+      }
+      
+      console.log('Fetching schedule data for user:', user.email);
+      const data = await scheduleService.getMySchedule();
+      
+      console.log('Schedule data received:', data);
+      
+      // Convert API data to UI format
+      const uiSchedule = data.map(apiToUiEntry);
+      
+      console.log('Converted to UI schedule:', uiSchedule);
+      setSchedule(uiSchedule);
+    } catch (err: any) {
+      console.error('Error fetching schedule:', err);
+      
+      // Log more detailed error information
+      if (err.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.error('API Error Response:', {
+          status: err.response.status,
+          statusText: err.response.statusText,
+          data: err.response.data,
+          headers: err.response.headers
+        });
+        
+        setError(`Server error: ${err.response.status} - ${err.response.data?.detail || err.response.statusText || 'Unknown error'}`);
+      } else if (err.request) {
+        // The request was made but no response was received
+        console.error('No response received:', err.request);
+        setError('No response from server. Please check your connection.');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Request error:', err.message);
+        setError(`Error: ${err.message}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [user]);
+  
+  // Refetch data when user auth state changes or component mounts
+  useEffect(() => {
+    if (user) {
+      fetchSchedule();
+    } else {
+      // If no user, clear the schedule
+      setSchedule([]);
+    }
+  }, [fetchSchedule, user]);
+  
+  // The previous effect only with refreshTrigger
+  useEffect(() => {
+    if (user && refreshTrigger > 0) {
+      fetchSchedule();
+    }
+  }, [fetchSchedule, refreshTrigger, user]);
+  
+  // Function to trigger a refresh
+  const refreshSchedule = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+  
+  const handleCellClick = (day: string, timeSlot: string) => {
+    // Find exact match or time-normalized match
+    const existingCell = schedule.find(item => 
+      item.day === day && isSameTime(item.timeSlot, timeSlot)
+    );
+    
+    console.log(`Clicked on ${day} ${timeSlot}, existing cell:`, existingCell);
+    
+    if (existingCell) {
+      // If cell already has class hours, open dialog to edit or remove
+      setSelectedCell(existingCell);
+      setCourseInput(existingCell.course || '');
+      setOpenDialog(true);
+    } else {
+      // Add new class hour - open dialog to enter course name
+      setSelectedCell({ day, timeSlot, status: 'class' });
+      setCourseInput('');
+      setOpenDialog(true);
+    }
+  };
+  
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setSelectedCell(null);
+  };
+  
+  const handleCloseSnackbar = () => {
+    setSuccessMessage(null);
+    setError(null);
+  };
+  
+  const handleRemoveClass = async () => {
+    if (!selectedCell || !selectedCell.id) return;
+    
+    try {
+      setLoading(true);
+      await scheduleService.deleteScheduleEntry(selectedCell.id);
+      
+      // Update local state
+      const newSchedule = schedule.filter(
+        cell => cell.id !== selectedCell.id
+      );
+      setSchedule(newSchedule);
+      setSuccessMessage('Class hour removed successfully');
+      
+      // Refresh the data
+      refreshSchedule();
+    } catch (err: any) {
+      console.error('Error removing class hour:', err);
+      setError(err.response?.data?.detail || 'Failed to remove class hour');
+    } finally {
+      setLoading(false);
+      handleCloseDialog();
+    }
+  };
+  
+  const handleSaveClass = async () => {
+    if (!selectedCell) return;
+    
+    try {
+      setLoading(true);
+      
+      // Create updated cell with course information
+      const updatedCell = {
+        ...selectedCell,
+        course: courseInput.trim(),
+      };
+      
+      // Convert to API format
+      const apiData = uiToApiEntry(updatedCell);
+      
+      let responseData: WeeklyScheduleEntry;
+      
+      if (updatedCell.id) {
+        // Update existing entry
+        responseData = await scheduleService.updateScheduleEntry(updatedCell.id, apiData);
+        
+        // Update local state
+        setSchedule(schedule.map(cell => cell.id === updatedCell.id ? apiToUiEntry(responseData) : cell));
+        setSuccessMessage('Class hour updated successfully');
+      } else {
+        // Create new entry
+        responseData = await scheduleService.createScheduleEntry(apiData);
+        
+        // Add to local state
+        setSchedule([...schedule, apiToUiEntry(responseData)]);
+        setSuccessMessage('Class hour added successfully');
+      }
+      
+      // Refresh the data
+      refreshSchedule();
+    } catch (err: any) {
+      console.error('Error saving class hour:', err);
+      setError(err.response?.data?.detail || 'Failed to save class hour');
+    } finally {
+      setLoading(false);
+      handleCloseDialog();
+    }
+  };
+  
+  // Time comparison function that handles formats with slight differences
+  const isSameTime = (time1: string, time2: string): boolean => {
+    // Clean up any extra spaces
+    const cleanTime1 = time1.replace(/\s+/g, ' ').trim();
+    const cleanTime2 = time2.replace(/\s+/g, ' ').trim();
+    
+    // Check exact match after cleanup
+    if (cleanTime1 === cleanTime2) {
+      return true;
+    }
+    
+    // Remove seconds from times (if present)
+    const removeSeconds = (timeStr: string) => {
+      return timeStr.replace(/(\d{2}):(\d{2}):(\d{2})/g, '$1:$2');
+    };
+    
+    const normalizedTime1 = removeSeconds(cleanTime1);
+    const normalizedTime2 = removeSeconds(cleanTime2);
+    
+    if (normalizedTime1 === normalizedTime2) {
+      return true;
+    }
+    
+    // If times still don't exactly match, try to parse them
+    try {
+      const [startTime1, endTime1] = normalizedTime1.split('-').map(t => t.trim());
+      const [startTime2, endTime2] = normalizedTime2.split('-').map(t => t.trim());
+      
+      return startTime1 === startTime2 && endTime1 === endTime2;
+    } catch (e) {
+      console.error('Error comparing times:', e);
+      return false;
+    }
+  };
+  
+  const getStatusForCell = (day: string, timeSlot: string) => {
+    // Debug info
+    const cellsForDay = schedule.filter(cell => cell.day === day);
+    console.log(`Checking status for ${day} ${timeSlot}, found ${cellsForDay.length} entries for this day:`, cellsForDay);
+    
+    // Check for exact match
+    const exactMatch = schedule.find(cell => 
+      cell.day === day && cell.timeSlot === timeSlot
+    );
+    
+    if (exactMatch) {
+      console.log(`Found exact match for ${day} ${timeSlot}:`, exactMatch);
+      return exactMatch.status;
+    }
+    
+    // Try flexible time matching
+    const flexMatch = schedule.find(cell => 
+      cell.day === day && isSameTime(cell.timeSlot, timeSlot)
+    );
+    
+    if (flexMatch) {
+      console.log(`Found flexible match for ${day} ${timeSlot}:`, flexMatch);
+      return flexMatch.status;
+    }
+    
+    return '';
+  };
+  
+  const getCourseForCell = (day: string, timeSlot: string) => {
+    // Check for exact match
+    const exactMatch = schedule.find(cell => 
+      cell.day === day && cell.timeSlot === timeSlot
+    );
+    
+    if (exactMatch) {
+      return exactMatch.course || '';
+    }
+    
+    // Try flexible time matching
+    const flexMatch = schedule.find(cell => 
+      cell.day === day && isSameTime(cell.timeSlot, timeSlot)
+    );
+    
+    if (flexMatch) {
+      return flexMatch.course || '';
+    }
+    
+    return '';
+  };
+  
+  // API connection test
+  const testApiConnection = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Test authentication status first
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        setError('No authentication token found in local storage');
+        return;
+      }
+      
+      // Report the user's authentication info first
+      console.log('Current user data:', user);
+      
+      // Log token info
+      console.log('Token from localStorage:', token.substring(0, 15) + '...');
+      
+      // Check if token is expired
+      try {
+        const tokenData = JSON.parse(atob(token.split('.')[1]));
+        const expDate = new Date(tokenData.exp * 1000);
+        console.log('Token expiration:', expDate.toLocaleString());
+        
+        if (expDate < new Date()) {
+          setError('Authentication token is expired. Please log in again.');
+          return;
+        }
+      } catch (e) {
+        console.error('Error decoding token:', e);
+      }
+      
+      // Try to get user profile first (simpler endpoint)
+      console.log('Testing user profile endpoint...');
+      const profileResponse = await scheduleService.testApiConnection();
+      console.log('User profile response:', profileResponse);
+      
+      // Then try schedule endpoint
+      console.log('Testing schedule endpoint...');
+      const scheduleData = await scheduleService.getMySchedule();
+      console.log('Schedule data:', scheduleData);
+      
+      // Show success message
+      setSuccessMessage('API connection test successful! See console for details.');
+    } catch (err: any) {
+      console.error('API test failed:', err);
+      
+      if (err.response) {
+        setError(`API test failed: ${err.response.status} - ${err.response.statusText}`);
+      } else if (err.request) {
+        setError('API test failed: No response received from server');
+      } else {
+        setError(`API test failed: ${err.message}`);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return (
+    <Container maxWidth="lg" sx={{ pt: 4, pb: 8 }}>
+      <Box sx={{ mb: 4 }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
+          <Typography variant="h4" gutterBottom sx={{ mb: 0, fontWeight: 'bold' }}>
+            My Class Schedule
+          </Typography>
+          <Button
+            startIcon={<RefreshIcon />}
+            onClick={refreshSchedule}
+            variant="outlined"
+            disabled={loading}
+          >
+            Refresh
+          </Button>
+        </Stack>
+        <Typography variant="body2" color="text.secondary">
+          Manage your weekly class schedule here. These hours will be marked as unavailable for proctoring assignments.
+        </Typography>
+      </Box>
+      
+      <Box sx={{ position: 'relative' }}>
+        <Paper sx={{ p: 3, borderRadius: 2, boxShadow: 1 }}>
+          {error && (
+            <Alert 
+              severity="error" 
+              sx={{ mb: 3 }}
+              variant="outlined"
+            >
+              {error}
+            </Alert>
+          )}
+          
+          {loading && !error ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', my: 8 }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
+              <TableContainer sx={{ overflowX: 'auto' }}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell sx={{ fontWeight: 'bold', width: '120px' }}></TableCell>
+                      {DAYS_OF_WEEK.map(day => (
+                        <TableCell key={day} align="center" sx={{ fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+                          {day}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {TIME_SLOTS.map(timeSlot => (
+                      <TableRow key={timeSlot} hover>
+                        <TableCell sx={{ whiteSpace: 'nowrap', fontWeight: 500, color: 'text.secondary' }}>
+                          {timeSlot}
+                        </TableCell>
+                        {DAYS_OF_WEEK.map(day => {
+                          const status = getStatusForCell(day, timeSlot);
+                          const course = getCourseForCell(day, timeSlot);
+                          return (
+                            <TableCell 
+                              key={`${day}-${timeSlot}`} 
+                              align="center"
+                              onClick={() => handleCellClick(day, timeSlot)}
+                              sx={{ 
+                                cursor: 'pointer',
+                                position: 'relative',
+                                height: '70px',
+                                width: '140px',
+                                padding: '8px',
+                                backgroundColor: status === 'class' ? 'rgba(25, 118, 210, 0.08)' : 'transparent',
+                                '&:hover': {
+                                  backgroundColor: status === 'class' 
+                                    ? 'rgba(25, 118, 210, 0.15)' 
+                                    : 'rgba(0, 0, 0, 0.04)',
+                                },
+                                borderRadius: '4px',
+                                transition: 'background-color 0.2s ease'
+                              }}
+                            >
+                              {status === 'class' && (
+                                <Box sx={{ 
+                                  display: 'flex', 
+                                  flexDirection: 'column',
+                                  height: '100%',
+                                  justifyContent: 'center',
+                                  alignItems: 'center'
+                                }}>
+                                  <Chip 
+                                    label={CLASS_HOURS_STATUS.label}
+                                    color={CLASS_HOURS_STATUS.color as any}
+                                    size="small"
+                                    sx={{ mb: 1, fontSize: '0.7rem' }}
+                                  />
+                                  {course && (
+                                    <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
+                                      {course}
+                                    </Typography>
+                                  )}
+                                </Box>
+                              )}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              
+              <Stack direction="row" spacing={2} sx={{ mt: 4, backgroundColor: '#f8f9fa', p: 2, borderRadius: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Chip 
+                    label={CLASS_HOURS_STATUS.label} 
+                    color={CLASS_HOURS_STATUS.color as any}
+                    size="small"
+                    sx={{ mr: 1 }}
+                  />
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    Times when you have classes and are not available for proctoring
+                  </Typography>
+                </Box>
+              </Stack>
+              
+              <Typography variant="body2" sx={{ mt: 3, fontStyle: 'italic', color: 'text.secondary' }}>
+                Click on any cell to mark it as a class hour and specify which course you have.
+              </Typography>
+            </>
+          )}
+        </Paper>
+      </Box>
+      
+      {/* Class Hour Edit Dialog */}
+      <Dialog 
+        open={openDialog} 
+        onClose={handleCloseDialog}
+        disableEscapeKeyDown={loading}
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+            width: '400px',
+            maxWidth: '90vw'
+          }
+        }}
+      >
+        <DialogTitle sx={{ 
+          pb: 1, 
+          pt: 2.5,
+          fontWeight: 'bold',
+          borderBottom: '1px solid #f0f0f0'
+        }}>
+          {selectedCell && schedule.some(c => c.day === selectedCell.day && c.timeSlot === selectedCell.timeSlot && c.id)
+            ? 'Edit Class Hour'
+            : 'Add Class Hour'}
+        </DialogTitle>
+        <DialogContent sx={{ pt: 3, pb: 2 }}>
+          {selectedCell && (
+            <>
+              <DialogContentText sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
+                <Box component="span" sx={{ fontWeight: 'bold', color: 'text.primary', mr: 1 }}>
+                  {selectedCell.day},
+                </Box>
+                <Box component="span" sx={{ color: 'text.primary' }}>
+                  {selectedCell.timeSlot}
+                </Box>
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="course"
+                label="Course Name/Code"
+                fullWidth
+                variant="outlined"
+                value={courseInput}
+                onChange={(e) => setCourseInput(e.target.value)}
+                placeholder="e.g. CS101, MATH241"
+                helperText="Enter the course name or code for this time slot"
+                disabled={loading}
+                sx={{ mt: 1 }}
+              />
+            </>
+          )}
+        </DialogContent>
+        <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid #f0f0f0' }}>
+          {selectedCell && selectedCell.id && (
+            <Button 
+              onClick={handleRemoveClass} 
+              color="error"
+              disabled={loading}
+              variant="outlined"
+              startIcon={loading ? <CircularProgress size={16} /> : null}
+            >
+              {loading ? 'Removing...' : 'Remove'}
+            </Button>
+          )}
+          <Box sx={{ flex: '1 1 auto' }} />
+          <Button 
+            onClick={handleCloseDialog} 
+            disabled={loading}
+            sx={{ color: 'text.secondary' }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleSaveClass} 
+            color="primary" 
+            variant="contained"
+            disabled={loading || !courseInput.trim()}
+            startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
+          >
+            {loading ? 'Saving...' : 'Save'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+      
+      {/* Success message */}
+      <Snackbar
+        open={!!successMessage}
+        autoHideDuration={5000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Alert 
+          onClose={handleCloseSnackbar} 
+          severity="success" 
+          variant="filled"
+          sx={{ width: '100%', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}
+        >
+          {successMessage}
+        </Alert>
+      </Snackbar>
+    </Container>
+  );
+};
+
+export default Schedule; 
