@@ -31,9 +31,18 @@ api.interceptors.request.use(
     // Fix for double 'api/' in the URL
     if (config.url && (
         config.url.startsWith('api/proctoring/') || 
-        config.url.startsWith('api/workload/')
+        config.url.startsWith('api/workload/') ||
+        config.url.startsWith('api/leaves/')
       )) {
       config.url = config.url.replace('api/', '');
+    }
+    
+    // Also fix for leaves/ endpoints
+    if (config.url && config.url.startsWith('leaves/')) {
+      // Make sure we're using the correct path
+      console.log('Original URL:', config.url);
+      config.url = config.url;
+      console.log('Modified URL:', config.url);
     }
     
     return config;

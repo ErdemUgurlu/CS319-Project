@@ -14,7 +14,8 @@ import {
   Divider,
   Avatar,
   Menu,
-  MenuItem
+  MenuItem,
+  Badge
 } from '@mui/material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -28,6 +29,8 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import WorkIcon from '@mui/icons-material/Work';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import SchoolIcon from '@mui/icons-material/School';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import ApprovalIcon from '@mui/icons-material/Approval';
 import { useAuth } from '../context/AuthContext';
 
 const NavBar: React.FC = () => {
@@ -89,6 +92,16 @@ const NavBar: React.FC = () => {
     if (user) {
       const userRole = (user.role || '').toUpperCase();
       
+      // Add Leave Requests for TAs
+      if (userRole === 'TA') {
+        items.push({
+          text: 'Leave Requests',
+          icon: <ScheduleIcon />,
+          path: '/leave-requests',
+          roles: ['TA']
+        });
+      }
+      
       // Add role-specific navigation items
       if (['INSTRUCTOR', 'STAFF', 'ADMIN'].includes(userRole)) {
         items.push({
@@ -96,6 +109,16 @@ const NavBar: React.FC = () => {
           icon: <EventIcon />,
           path: '/exam-management',
           roles: ['INSTRUCTOR', 'STAFF', 'ADMIN']
+        });
+      }
+      
+      // Add Leave Approvals for Instructors
+      if (userRole === 'INSTRUCTOR') {
+        items.push({
+          text: 'Leave Approvals',
+          icon: <ApprovalIcon />,
+          path: '/instructor/leave-approvals',
+          roles: ['INSTRUCTOR']
         });
       }
       

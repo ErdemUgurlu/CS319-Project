@@ -18,6 +18,7 @@ import ExamManagement from './pages/ExamManagement';
 import ForgotPassword from './pages/ForgotPassword';
 // Instructor pages
 import InstructorProctoring from './pages/instructor/InstructorProctoring';
+import LeaveApprovals from './pages/instructor/LeaveApprovals';
 // Staff pages
 import CourseManagement from './pages/staff/CourseManagement';
 // Dean's Office pages
@@ -78,7 +79,8 @@ const ProtectedLayout = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/tasks" element={<TaskList />} />
           <Route path="/schedule" element={<Schedule />} />
-          <Route path="/leaves" element={<LeaveRequests />} />
+          <Route path="/leave-requests" element={<LeaveRequests />} />
+          <Route path="/instructor/leave-approvals" element={<LeaveApprovals />} />
           <Route path="/proctoring" element={<ProctoringRoute />} />
           <Route path="/workload" element={<MyWorkload />} />
           <Route path="/approve-users" element={<ApproveUsers />} />
