@@ -109,13 +109,13 @@ const NavBar: React.FC = () => {
         });
       }
       
-      // Add Swap Requests for TAs and Instructors
-      if (userRole === 'TA' || userRole === 'INSTRUCTOR') {
+      // Add Swap Requests for TAs and STAFF
+      if (userRole === 'TA' || userRole === 'STAFF') {
         items.push({
           text: 'Swap Requests',
           icon: <SwapHorizIcon />,
           path: '/swap-requests',
-          roles: ['TA', 'INSTRUCTOR']
+          roles: ['TA', 'STAFF']
         });
       }
       

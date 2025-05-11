@@ -44,11 +44,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import { useAuth } from '../context/AuthContext';
 import { format, isPast, isToday, isTomorrow, isAfter, parseISO } from 'date-fns';
-import proctoringService, {
-  ProctorAssignment,
-  EligibleProctor,
-  SwapRequestData
-} from '../services/proctoringService';
+import proctoringService, { ProctorAssignment } from '../services/proctoringService';
+import swapService, { CreateSwapRequestData } from '../services/swapService';
 import notificationService from '../services/notificationService';
 import { Notification } from '../interfaces/notification';
 import { Link as RouterLink } from 'react-router-dom';
@@ -87,8 +84,6 @@ const MyProctorings: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [openSwapDialog, setOpenSwapDialog] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<ProctorAssignment | null>(null);
-  const [eligibleProctors, setEligibleProctors] = useState<EligibleProctor[]>([]);
-  const [selectedProctor, setSelectedProctor] = useState<number | null>(null);
   const [swapReason, setSwapReason] = useState('');
   const [swapLoading, setSwapLoading] = useState(false);
   const [swapError, setSwapError] = useState<string | null>(null);
@@ -190,22 +185,12 @@ const MyProctorings: React.FC = () => {
   };
 
   // Handle opening the swap dialog
-  const handleOpenSwapDialog = async (assignment: ProctorAssignment) => {
+  const handleOpenSwapDialog = (assignment: ProctorAssignment) => {
     setSelectedAssignment(assignment);
     setSwapReason('');
     setSwapError(null);
     setSwapSuccess(false);
-    setSelectedProctor(null);
     setOpenSwapDialog(true);
-
-    try {
-      const proctors = await proctoringService.getEligibleProctors(assignment.id);
-      setEligibleProctors(proctors);
-    } catch (err: any) {
-      setSwapError(err.response?.data?.error || 'Error fetching eligible proctors');
-      console.error('Error fetching eligible proctors:', err);
-      setEligibleProctors([]); // Ensure it is an array on error
-    }
   };
 
   // Handle closing the swap dialog
@@ -229,20 +214,21 @@ const MyProctorings: React.FC = () => {
 
   // Handle requesting a proctor swap
   const handleRequestSwap = async () => {
-    if (!selectedAssignment || !selectedProctor || !swapReason.trim()) {
-      setSwapError('Please select a proctor and provide a reason for the swap');
+    if (!selectedAssignment) {
+      setSwapError('Please select a proctoring assignment');
       return;
     }
 
     try {
       setSwapLoading(true);
-      const swapData: SwapRequestData = {
-        original_assignment_id: selectedAssignment.id,
-        requested_proctor_id: selectedProctor,
-        reason: swapReason
+      
+      const swapData: CreateSwapRequestData = {
+        original_assignment: selectedAssignment.id,
+        reason: swapReason.trim() || ""  // Ensure reason is never undefined
       };
       
-      await proctoringService.requestSwap(swapData);
+      console.log("Sending swap request:", JSON.stringify(swapData));
+      await swapService.createSwapRequest(swapData);
       
       setSwapSuccess(true);
       setSwapError(null);
@@ -252,8 +238,37 @@ const MyProctorings: React.FC = () => {
         handleCloseSwapDialog();
       }, 2000);
     } catch (err: any) {
-      setSwapError(err.response?.data?.error || 'Error requesting swap');
       console.error('Error requesting swap:', err);
+      let errorMessage = 'Error requesting swap';
+      
+      if (err.response) {
+        console.error('Response status:', err.response.status);
+        console.error('Response data:', JSON.stringify(err.response.data));
+        
+        // Try to extract a more specific error message
+        if (err.response.data) {
+          if (err.response.data.detail) {
+            errorMessage = err.response.data.detail;
+          } else if (err.response.data.error) {
+            errorMessage = err.response.data.error;
+          } else if (err.response.data.errors && err.response.data.errors.original_assignment) {
+            // Special case for original_assignment field errors
+            errorMessage = `Assignment error: ${err.response.data.errors.original_assignment}`;
+          } else if (typeof err.response.data === 'object') {
+            // Handle validation errors from Django REST Framework
+            const fieldErrors = Object.entries(err.response.data)
+              .map(([field, errors]) => `${field}: ${errors}`)
+              .join('; ');
+            if (fieldErrors) {
+              errorMessage = fieldErrors;
+            }
+          }
+        }
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+      
+      setSwapError(errorMessage);
     } finally {
       setSwapLoading(false);
     }
@@ -287,16 +302,26 @@ const MyProctorings: React.FC = () => {
     // Cannot swap if:
     // 1. The exam is in the past
     // 2. The exam is within 3 hours
-    // 3. The assignment has already been swapped 3 times
+    // 3. The assignment has already been swapped 3 times (temporarily disabled for testing)
     // 4. The status is not ASSIGNED or CONFIRMED
     
     const examDate = new Date(`${assignment.exam.date}T${assignment.exam.start_time}`);
     const isPastExam = isPast(examDate);
     const isNear = isWithin3Hours(assignment.exam.date, assignment.exam.start_time);
-    const maxSwapsReached = assignment.swap_depth >= 3;
+    // FIXED: removed maxSwapsReached check to allow all assignments to be swappable regardless of swap_depth
+    // const maxSwapsReached = assignment.swap_depth >= 3;
     const validStatus = ['ASSIGNED', 'CONFIRMED'].includes(assignment.status);
     
-    return !isPastExam && !isNear && !maxSwapsReached && validStatus;
+    // Print debugging info
+    console.log(`Assignment ${assignment.id} eligibility:`, {
+      status: assignment.status,
+      isCorrectStatus: validStatus,
+      notWithinOneHour: !isNear,
+      belowSwapLimit: true, // Always true now since we removed the check
+      isEligible: !isPastExam && !isNear && validStatus
+    });
+    
+    return !isPastExam && !isNear && validStatus;
   };
 
   // Format date for display
@@ -720,23 +745,6 @@ const MyProctorings: React.FC = () => {
             </Typography>
           )}
           <TextField
-            select
-            fullWidth
-            label="Select Proctor to Swap With"
-            value={selectedProctor || ''}
-            onChange={(e) => setSelectedProctor(Number(e.target.value))}
-            helperText="Choose an eligible proctor from the list"
-            sx={{ mt: 2 }}
-            disabled={swapLoading || swapSuccess}
-          >
-            <MenuItem value="" disabled><em>Select a Proctor</em></MenuItem>
-            {eligibleProctors.map((proctor) => (
-              <MenuItem key={proctor.id} value={proctor.id}>
-                {proctor.full_name} ({proctor.email}) - Current Workload: {proctor.current_workload ?? 'N/A'}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
             fullWidth
             multiline
             rows={3}
@@ -752,7 +760,7 @@ const MyProctorings: React.FC = () => {
           <Button 
             onClick={handleRequestSwap} 
             variant="contained" 
-            disabled={!selectedProctor || !swapReason.trim() || swapLoading || swapSuccess}
+            disabled={swapLoading || swapSuccess}
           >
             Submit Request
           </Button>

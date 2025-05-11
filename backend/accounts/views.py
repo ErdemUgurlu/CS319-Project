@@ -1650,63 +1650,140 @@ class RegisterTAsFromExcelView(APIView):
     @transaction.atomic
     def post(self, request, *args, **kwargs):
         """Process TA data from Excel and create accounts."""
-        tas_data = request.data.get('tas_data', [])
+        raw_tas_data = request.data.get('tas_data', [])
         
-        if not tas_data:
+        if not raw_tas_data:
             return Response(
                 {"detail": "No TA data provided"},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
         # First, set all existing users as approved and email-verified
-        User.objects.all().update(is_approved=True, email_verified=True)
-        
+        # User.objects.all().update(is_approved=True, email_verified=True) 
+        # Commenting this out as it seems too broad and potentially unintended.
+        # Approval should happen on a per-user basis if they are being re-processed or if specific logic dictates it.
+
         created_users = []
         errors = []
         
-        for index, ta_data in enumerate(tas_data):
+        key_map = {
+            'email': 'email',
+            'name': 'name', 
+            'surname': 'surname',
+            'first_name': 'first_name', # Allow direct first_name
+            'last_name': 'last_name',   # Allow direct last_name
+            'bilkent id': 'bilkent_id',
+            'bilkentid': 'bilkent_id', # Common variation
+            'iban': 'iban',
+            'phone number': 'phone',
+            'phone': 'phone', # Allow direct phone
+            'employment type (p/f)': 'employment_type',
+            'employment type': 'employment_type',
+            'academic level (phd/masters)': 'academic_level',
+            'academic level': 'academic_level',
+            'undergraduate university': 'undergrad_university',
+            'workload number': 'workload_number',
+            'supervisor email': 'supervisor_email',
+        }
+
+        for index, ta_data_raw_item in enumerate(raw_tas_data):
+            ta_data = {}
+            for key, value in ta_data_raw_item.items():
+                # Normalize key: lower case, strip whitespace, then map
+                normalized_key = str(key).lower().strip()
+                if normalized_key in key_map:
+                    ta_data[key_map[normalized_key]] = value
+                else: # Keep unmapped keys as is, maybe they are already correct
+                    ta_data[normalized_key] = value
+            
             try:
-                # Extract required fields
-                email = ta_data.get('email')
+                # Extract and process names
                 first_name = ta_data.get('first_name')
                 last_name = ta_data.get('last_name')
+
+                if not first_name and ta_data.get('name'):
+                    name_parts = str(ta_data.get('name', '')).split(' ', 1)
+                    first_name = name_parts[0].strip()
+                    if len(name_parts) > 1 and not last_name:
+                        last_name = name_parts[1].strip()
+                
+                if not last_name and ta_data.get('surname'):
+                    last_name = str(ta_data.get('surname', '')).strip()
+                
+                # If after processing 'name' and 'surname', first_name might still contain both
+                if first_name and ' ' in first_name and not last_name:
+                    name_parts = first_name.split(' ', 1)
+                    first_name = name_parts[0].strip()
+                    last_name = name_parts[1].strip()
+
+                email = ta_data.get('email')
                 
                 # Validate required fields
                 if not email or not first_name or not last_name:
                     errors.append({
                         "index": index,
-                        "error": "Missing required field(s): email, first_name, last_name",
-                        "data": ta_data
+                        "error": "Missing required field(s): email, first_name, last_name after processing. Ensure 'Email', 'Name'/'First Name', 'Surname'/'Last Name' are provided.",
+                        "data": ta_data_raw_item # Show original data for error
                     })
                     continue
                 
                 # Check if user already exists
                 if User.objects.filter(email=email).exists():
-                    # Update existing user to ensure they are approved and verified
                     existing_user = User.objects.get(email=email)
-                    existing_user.is_approved = True
-                    existing_user.email_verified = True
-                    existing_user.save()
+                    # Logic for existing users: update, approve, or just note.
+                    # For now, if user exists, we'll mark as error as per original logic
+                    # but ensure they are TA, approved, and verified if we were to update.
+                    # existing_user.role = 'TA' # Ensure role is TA
+                    # existing_user.is_approved = True
+                    # existing_user.email_verified = True
+                    # existing_user.save() 
                     
                     errors.append({
                         "index": index,
-                        "error": f"User with email {email} already exists and has been approved",
-                        "data": ta_data
+                        "error": f"User with email {email} already exists. Manual review needed or update logic to handle existing users.",
+                        "data": ta_data_raw_item
                     })
                     continue
                 
+                # Process employment_type
+                employment_type_raw = ta_data.get('employment_type', 'P') # Default to Part-Time if not specified
+                if isinstance(employment_type_raw, str):
+                    if employment_type_raw.upper() == 'F':
+                        employment_type = 'FULL_TIME'
+                    elif employment_type_raw.upper() == 'P':
+                        employment_type = 'PART_TIME'
+                    else: # Use provided value if it's already one of the choices, otherwise default or error
+                        employment_type = employment_type_raw if employment_type_raw in dict(User.EmploymentType.choices) else 'PART_TIME'
+                else: # If not a string, default
+                    employment_type = 'PART_TIME'
+
+                # Process academic_level
+                academic_level_raw = ta_data.get('academic_level', 'Masters') # Default to Masters
+                if isinstance(academic_level_raw, str):
+                    if academic_level_raw.upper() == 'PHD':
+                        academic_level = 'PHD'
+                    elif academic_level_raw.upper() == 'MASTERS':
+                        academic_level = 'MASTERS'
+                    else: # Use provided value if it's already one of the choices, otherwise default or error
+                        academic_level = academic_level_raw if academic_level_raw in dict(User.AcademicLevel.choices) else 'MASTERS'
+                else: # If not a string, default
+                    academic_level = 'MASTERS'
+
                 # Extract optional fields with defaults
-                phone = ta_data.get('phone', '')
-                iban = ta_data.get('iban', '')
-                department = ta_data.get('department', 'CS')
-                academic_level = ta_data.get('academic_level', 'MASTERS')
-                employment_type = ta_data.get('employment_type', 'FULL_TIME')
+                phone = str(ta_data.get('phone', ''))
+                iban = str(ta_data.get('iban', ''))
+                department_code = str(ta_data.get('department', 'CS')).upper() # Default to CS
                 
-                # Extract TA profile specific fields
-                undergrad_university = ta_data.get('undergrad_university', '')
-                workload_number = ta_data.get('workload_number', None)
+                # Ensure department exists
+                department, _ = Department.objects.get_or_create(code=department_code, defaults={'name': f'{department_code} Department', 'faculty': 'Unknown'})
+
+                undergrad_university = str(ta_data.get('undergrad_university', ''))
+                workload_number_raw = ta_data.get('workload_number', None)
+                workload_number = int(workload_number_raw) if workload_number_raw is not None and str(workload_number_raw).isdigit() else None
+
                 supervisor_email = ta_data.get('supervisor_email', None)
-                
+                bilkent_id = str(ta_data.get('bilkent_id', '00000000')) # Default if not provided
+
                 # Generate a password
                 password = self.generate_password()
                 
@@ -1717,14 +1794,14 @@ class RegisterTAsFromExcelView(APIView):
                     first_name=first_name,
                     last_name=last_name,
                     role='TA',
-                    department=department,
+                    department=department, # Use department object
                     phone=phone,
                     iban=iban,
                     academic_level=academic_level,
                     employment_type=employment_type,
                     is_approved=True,  # Auto-approve TAs created by staff/admin
                     email_verified=True,  # Auto-verify emails for TAs created by staff/admin
-                    bilkent_id=ta_data.get('bilkent_id', '00000000')
+                    bilkent_id=bilkent_id
                 )
                 
                 # Store temporary password for password reset
@@ -1796,7 +1873,7 @@ class RegisterTAsFromExcelView(APIView):
                 errors.append({
                     "index": index,
                     "error": str(e),
-                    "data": ta_data
+                    "data": ta_data_raw_item
                 })
         
         return Response({

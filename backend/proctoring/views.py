@@ -7,11 +7,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from accounts.models import User, Exam, Course, WeeklySchedule, TAAssignment
 from accounts.permissions import IsStaffOrInstructor
-from .models import ProctorAssignment
+from .models import ProctorAssignment, SwapRequest
 from .serializers import (
     ProctorAssignmentSerializer,
     EligibleProctorSerializer,
-    ProctorAssignmentCreateSerializer
+    ProctorAssignmentCreateSerializer,
+    SwapRequestCreateSerializer,
+    SwapRequestMatchSerializer,
+    SwapRequestDetailSerializer,
+    SwapRequestApproveSerializer
 )
 
 class ExamEligibleTAsView(APIView):
@@ -480,19 +484,28 @@ class MyProctoringsView(APIView):
                 status=status.HTTP_403_FORBIDDEN
             )
         
-        # Get the TA's proctor assignments
-        assignments = ProctorAssignment.objects.filter(
-            ta=request.user
-        ).select_related(
-            'exam', 
-            'exam__course', 
-            'exam__classroom',
-            'assigned_by'
-        )
-        
-        # Serialize and return the data
-        serializer = ProctorAssignmentSerializer(assignments, many=True)
-        return Response(serializer.data)
+        try:
+            # Get the TA's proctor assignments
+            assignments = ProctorAssignment.objects.filter(
+                ta=request.user
+            ).select_related(
+                'exam', 
+                'exam__course', 
+                'exam__classroom',
+                'assigned_by'
+            )
+            
+            # Serialize and return the data
+            serializer = ProctorAssignmentSerializer(assignments, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            import traceback
+            print(f"Error in MyProctoringsView.get: {str(e)}")
+            print(traceback.format_exc())
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 class ConfirmAssignmentView(APIView):
     """
@@ -573,6 +586,494 @@ class RejectAssignmentView(APIView):
         exam.save(update_fields=['status'])
         
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class SwapRequestsView(APIView):
+    """
+    API endpoint for listing and creating swap requests.
+    GET: List swap requests relevant to the current user
+    POST: Create a new swap request
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        """Get swap requests relevant to the current user based on their role."""
+        user = request.user
+        
+        try:
+            if user.role == 'TA':
+                # TAs see requests from their department
+                # Include their own requests and pending requests from other TAs in their department
+                
+                # Instead of using department directly in the filter, we'll use a simpler approach
+                # Just get requests that are mine, that match me, or that are pending
+                ta_swap_requests = SwapRequest.objects.filter(
+                    Q(requesting_proctor=user) |  # Their own requests (any status)
+                    Q(matched_proctor=user)    |  # Requests they've been matched with
+                    Q(status='PENDING')           # All pending requests (to be filtered further)
+                ).select_related(
+                    'original_assignment',
+                    'original_assignment__exam',
+                    'original_assignment__exam__course',
+                    'original_assignment__exam__course__department',
+                    'matched_assignment',
+                    'requesting_proctor',
+                    'matched_proctor'
+                ).distinct()
+                
+                # For pending requests, filter to only include those from the same department
+                # This is safer than trying to filter in the database query
+                user_department = user.department
+                if isinstance(user_department, str):
+                    # Filter in Python instead of in the database query
+                    swap_requests = [
+                        sr for sr in ta_swap_requests if 
+                        sr.requesting_proctor == user or 
+                        sr.matched_proctor == user or 
+                        (sr.status == 'PENDING' and 
+                         hasattr(sr.original_assignment.exam.course, 'department') and
+                         (
+                             # Compare with department code string
+                             (hasattr(sr.original_assignment.exam.course.department, 'code') and
+                              sr.original_assignment.exam.course.department.code == user_department) or
+                             # Or directly compare if departments are already strings
+                             (isinstance(sr.original_assignment.exam.course.department, str) and
+                              sr.original_assignment.exam.course.department == user_department)
+                         )
+                        )
+                    ]
+                else:
+                    # Filter in Python for safety
+                    swap_requests = [
+                        sr for sr in ta_swap_requests if 
+                        sr.requesting_proctor == user or 
+                        sr.matched_proctor == user or 
+                        (sr.status == 'PENDING' and 
+                         hasattr(sr.original_assignment.exam.course, 'department') and
+                         sr.original_assignment.exam.course.department == user_department)
+                    ]
+            
+            elif user.role == 'STAFF':
+                # Staff see requests from their department
+                user_department = user.department
+                
+                # Get all requests, then filter by department 
+                all_requests = SwapRequest.objects.all().select_related(
+                    'original_assignment',
+                    'original_assignment__exam',
+                    'original_assignment__exam__course',
+                    'original_assignment__exam__course__department',
+                    'matched_assignment',
+                    'requesting_proctor',
+                    'matched_proctor'
+                )
+                
+                # Filter requests that belong to the staff's department
+                if isinstance(user_department, str):
+                    swap_requests = [
+                        sr for sr in all_requests if 
+                        hasattr(sr.original_assignment.exam.course, 'department') and
+                        (
+                            # Compare with department code string
+                            (hasattr(sr.original_assignment.exam.course.department, 'code') and
+                             sr.original_assignment.exam.course.department.code == user_department) or
+                            # Or directly compare if departments are already strings
+                            (isinstance(sr.original_assignment.exam.course.department, str) and
+                             sr.original_assignment.exam.course.department == user_department)
+                        )
+                    ]
+                else:
+                    swap_requests = [
+                        sr for sr in all_requests if 
+                        hasattr(sr.original_assignment.exam.course, 'department') and
+                        sr.original_assignment.exam.course.department == user_department
+                    ]
+            
+            elif user.role == 'ADMIN':
+                # Admin see all requests
+                swap_requests = SwapRequest.objects.all().select_related(
+                    'original_assignment',
+                    'original_assignment__exam',
+                    'original_assignment__exam__course',
+                    'matched_assignment',
+                    'requesting_proctor',
+                    'matched_proctor'
+                )
+            
+            else:
+                # Unauthorized role (including INSTRUCTOR who no longer can approve)
+                return Response(
+                    {"error": "You do not have permission to view swap requests."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            serializer = SwapRequestDetailSerializer(swap_requests, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            import traceback
+            print(f"Error in SwapRequestsView.get: {str(e)}")
+            print(traceback.format_exc())
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+    
+    def post(self, request):
+        """Create a new swap request."""
+        print(f"POST request to create swap request. Raw Data: {request.data}")
+        print(f"Content-Type: {request.content_type}")
+        print(f"User: {request.user.id} - {request.user.email}")
+        
+        # Print all request headers for debugging
+        print("Headers:")
+        for key, value in request.META.items():
+            if key.startswith('HTTP_'):
+                print(f"  {key}: {value}")
+        
+        if request.user.role != 'TA':
+            return Response(
+                {"error": "Only TAs can create swap requests."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        serializer = SwapRequestCreateSerializer(
+            data=request.data, 
+            context={'request': request}
+        )
+        
+        print(f"Serializer initial data: {serializer.initial_data}")
+        
+        if serializer.is_valid():
+            print("Serializer is valid, saving...")
+            swap_request = serializer.save()
+            response_serializer = SwapRequestDetailSerializer(swap_request)
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
+        
+        print(f"Serializer errors: {serializer.errors}")
+        # Enhance error response by returning both 'detail' and the specific validation errors
+        error_detail = {"detail": "Invalid request data", "errors": serializer.errors}
+        return Response(error_detail, status=status.HTTP_400_BAD_REQUEST)
+
+class SwapRequestDetailView(APIView):
+    """
+    API endpoint for retrieving, updating, or deleting a specific swap request.
+    GET: Retrieve details of a swap request
+    DELETE: Cancel a swap request (if it's the requester)
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_object(self, pk):
+        """Get the swap request object with proper permissions checking."""
+        swap_request = get_object_or_404(SwapRequest, pk=pk)
+        user = self.request.user
+        
+        # Check permissions based on role
+        if user.role == 'TA':
+            # TAs can only access their own requests or pending requests from their department
+            if not (
+                swap_request.requesting_proctor == user or 
+                (swap_request.status == 'PENDING' and 
+                 swap_request.original_assignment.exam.course.department == user.department) or
+                swap_request.matched_proctor == user
+            ):
+                self.permission_denied(self.request)
+        
+        elif user.role == 'STAFF':
+            # Staff can only access requests for their department
+            user_department = user.department
+            request_department = None
+            
+            # Get department of the swap request
+            if hasattr(swap_request, 'original_assignment') and swap_request.original_assignment:
+                if hasattr(swap_request.original_assignment, 'exam') and swap_request.original_assignment.exam:
+                    if hasattr(swap_request.original_assignment.exam, 'course') and swap_request.original_assignment.exam.course:
+                        if hasattr(swap_request.original_assignment.exam.course, 'department'):
+                            request_department = swap_request.original_assignment.exam.course.department
+                            if hasattr(request_department, 'code'):
+                                request_department = request_department.code
+            
+            # Check if staff is from the same department
+            if not (
+                (isinstance(user_department, str) and isinstance(request_department, str) and user_department == request_department) or
+                (not isinstance(user_department, str) and not isinstance(request_department, str) and user_department == request_department)
+            ):
+                self.permission_denied(self.request)
+        
+        # Admins have full access, no additional checks needed
+        elif user.role != 'ADMIN':
+            # Any other roles don't have access
+            self.permission_denied(self.request)
+        
+        return swap_request
+    
+    def get(self, request, pk):
+        """Get details of a specific swap request."""
+        swap_request = self.get_object(pk)
+        serializer = SwapRequestDetailSerializer(swap_request)
+        return Response(serializer.data)
+    
+    def delete(self, request, pk):
+        """Cancel a swap request. Only the requester can cancel their own pending requests."""
+        swap_request = self.get_object(pk)
+        
+        # Only the requester can cancel
+        if request.user != swap_request.requesting_proctor:
+            return Response(
+                {"error": "You can only cancel your own swap requests."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Only pending requests can be cancelled
+        if swap_request.status != 'PENDING':
+            return Response(
+                {"error": f"Cannot cancel a swap request with status '{swap_request.get_status_display()}'."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        swap_request.status = 'CANCELLED'
+        swap_request.save()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class SwapRequestMatchView(APIView):
+    """
+    API endpoint for TAs to match with an existing swap request.
+    POST: Match the TA's assignment with the specified swap request
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, pk):
+        """Match the current TA's assignment with the specified swap request."""
+        try:
+            # Ensure user is a TA
+            if request.user.role != 'TA':
+                return Response(
+                    {"error": "Only TAs can match with swap requests."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            
+            # Get the swap request
+            swap_request = get_object_or_404(SwapRequest, pk=pk)
+            print(f"Found swap request: {swap_request.id}, status: {swap_request.status}")
+            
+            # Check if the request is in pending status
+            if swap_request.status != 'PENDING':
+                return Response(
+                    {"error": f"Cannot match with a request in '{swap_request.get_status_display()}' status."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Check if the TA is not the requester
+            if request.user == swap_request.requesting_proctor:
+                return Response(
+                    {"error": "You cannot match with your own swap request."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Validate the match assignment from the request data
+            serializer = SwapRequestMatchSerializer(
+                data=request.data,
+                context={'request': request, 'swap_request': swap_request}
+            )
+            
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Get the matched assignment
+            assignment_id = serializer.validated_data['proctor_assignment_id']
+            matched_assignment = get_object_or_404(
+                ProctorAssignment, 
+                id=assignment_id, 
+                ta=request.user
+            )
+            print(f"Found matched assignment: {matched_assignment.id}")
+            
+            # Update the swap request
+            swap_request.matched_proctor = request.user
+            swap_request.matched_assignment = matched_assignment
+            swap_request.status = 'MATCHED'
+            swap_request.save()
+            
+            # Get instructor emails for notification
+            course = swap_request.original_assignment.exam.course
+            print(f"Course for notification: {course.code}")
+            
+            try:
+                # Do not attempt to filter on relationship fields
+                instructors = User.objects.filter(role='INSTRUCTOR')
+                
+                # Print instructor count for debugging
+                print(f"Found {instructors.count()} instructors total")
+                
+                # Just list all instructors for now (temporary solution)
+                instructor_emails = list(instructors.values_list('email', flat=True))
+                print(f"Using all instructor emails for notification: {instructor_emails}")
+                
+                # TODO: Implement proper course-instructor relationship query when data model is fixed
+            except Exception as e:
+                import traceback
+                print(f"Error finding instructors: {str(e)}")
+                print(traceback.format_exc())
+                instructor_emails = []
+            
+            # TODO: Send email notification to instructors here
+            
+            # Return the updated swap request
+            response_serializer = SwapRequestDetailSerializer(swap_request)
+            return Response(response_serializer.data)
+            
+        except Exception as e:
+            import traceback
+            print(f"Error in SwapRequestMatchView.post: {str(e)}")
+            print(traceback.format_exc())
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class SwapRequestApproveView(APIView):
+    """
+    API endpoint for instructors to approve swap requests.
+    POST: Approve a matched swap request
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, pk):
+        """Approve a matched swap request."""
+        try:
+            swap_request = get_object_or_404(SwapRequest, pk=pk)
+            print(f"Found swap request to approve: {swap_request.id}, status: {swap_request.status}")
+            print(f"Original assignment: {swap_request.original_assignment.id}, TA: {swap_request.original_assignment.ta.email}")
+            if swap_request.matched_assignment:
+                print(f"Matched assignment: {swap_request.matched_assignment.id}, TA: {swap_request.matched_assignment.ta.email}")
+            else:
+                print(f"No matched assignment found")
+            
+            # Get the user's role
+            user = request.user
+            print(f"User approving: {user.id} - {user.email}, role: {user.role}")
+            
+            # Check if the request is in MATCHED status
+            if swap_request.status != 'MATCHED':
+                print(f"Cannot approve: wrong status: {swap_request.status}")
+                return Response(
+                    {"error": f"Cannot approve a request in '{swap_request.get_status_display()}' status."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Validate that the user has permission to approve this swap
+            print(f"Validating approver permissions...")
+            serializer = SwapRequestApproveSerializer(
+                data=request.data,
+                context={'request': request, 'swap_request': swap_request}
+            )
+            
+            if not serializer.is_valid():
+                print(f"Validation failed: {serializer.errors}")
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            print(f"Validation successful!")
+            
+            # Process the approval - set status but don't save yet
+            # Store comments if provided
+            if 'comment' in serializer.validated_data:
+                swap_request.instructor_comment = serializer.validated_data['comment']
+                print(f"Added instructor comment: {serializer.validated_data['comment']}")
+            
+            # Set status to APPROVED - required for perform_swap to work
+            swap_request.status = 'APPROVED'
+            print(f"Set status to APPROVED")
+            
+            # Perform the actual swap first
+            print(f"Performing swap for swap_request {swap_request.id}")
+            try:
+                # Use the proper perform_swap method instead of duplicating logic
+                swap_result = swap_request.perform_swap()
+                print(f"perform_swap returned: {swap_result}")
+                
+                if not swap_result:
+                    print(f"Swap failed: perform_swap returned False")
+                    return Response(
+                        {"error": "Failed to perform the swap. Check server logs for details."},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                    )
+                print(f"Swap completed successfully!")
+                success = True
+            except Exception as e:
+                import traceback
+                print(f"Error during swap: {str(e)}")
+                print(traceback.format_exc())
+                return Response(
+                    {"error": f"Failed to perform the swap: {str(e)}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+            
+            # Get updated swap request with COMPLETED status after perform_swap()
+            print(f"Fetching updated swap request...")
+            swap_request = SwapRequest.objects.get(pk=pk)
+            print(f"Updated status: {swap_request.status}")
+            response_serializer = SwapRequestDetailSerializer(swap_request)
+            return Response(response_serializer.data)
+            
+        except Exception as e:
+            import traceback
+            print(f"Error in SwapRequestApproveView.post: {str(e)}")
+            print(traceback.format_exc())
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class SwapRequestRejectView(APIView):
+    """
+    API endpoint for instructors to reject swap requests.
+    POST: Reject a matched swap request
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, pk):
+        """Reject a matched swap request."""
+        try:
+            swap_request = get_object_or_404(SwapRequest, pk=pk)
+            print(f"Found swap request to reject: {swap_request.id}, status: {swap_request.status}")
+            
+            # Get the user's role
+            user = request.user
+            
+            # Check if the request is in MATCHED status
+            if swap_request.status != 'MATCHED':
+                return Response(
+                    {"error": f"Cannot reject a request in '{swap_request.get_status_display()}' status."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Validate that the user has permission to reject this swap
+            serializer = SwapRequestApproveSerializer(
+                data=request.data,
+                context={'request': request, 'swap_request': swap_request}
+            )
+            
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Process the rejection
+            swap_request.status = 'REJECTED'
+            if 'comment' in serializer.validated_data:
+                swap_request.rejected_reason = serializer.validated_data['comment']
+            swap_request.save()
+            print(f"Swap request {swap_request.id} rejected successfully")
+            
+            # Return the updated swap request
+            response_serializer = SwapRequestDetailSerializer(swap_request)
+            return Response(response_serializer.data)
+            
+        except Exception as e:
+            import traceback
+            print(f"Error in SwapRequestRejectView.post: {str(e)}")
+            print(traceback.format_exc())
+            return Response(
+                {"error": f"An error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 # Register this in your urls.py:
 # path('exams/<int:pk>/eligible-tas/', ExamEligibleTAsView.as_view(), name='exam-eligible-tas'),

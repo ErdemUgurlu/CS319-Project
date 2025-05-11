@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // Create a base axios instance with configurations
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+const rawApiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+const API_URL = rawApiUrl.endsWith('/') ? rawApiUrl.slice(0, -1) : rawApiUrl;
 
 const api = axios.create({
   baseURL: API_URL,
@@ -38,7 +39,15 @@ api.interceptors.request.use(
     }
     
     // Print the final URL for debugging
-    console.log('Final request URL:', `${API_URL}${config.url ? ('/' + config.url) : ''}`);
+    // console.log('Final request URL:', `${API_URL}${config.url ? ('/' + config.url) : ''}`);
+    let actualRequestUrlDisplay = API_URL;
+    if (config.url) {
+      // Our API_URL (baseURL) has no trailing slash.
+      // config.url (the path) has a leading slash.
+      // Axios concatenates these: API_URL + config.url
+      actualRequestUrlDisplay = API_URL + config.url;
+    }
+    console.log('Axios effective request URL (for logging):', actualRequestUrlDisplay);
     
     return config;
   },

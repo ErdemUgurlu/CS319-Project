@@ -14,6 +14,7 @@ urlpatterns = [
     
     # New endpoints for TA bulk registration from Excel
     path('register-tas-from-excel/', views.RegisterTAsFromExcelView.as_view(), name='register_tas_from_excel'),
+    path('import-tas/', views.RegisterTAsFromExcelView.as_view(), name='import_tas_from_excel'),
     path('send-password-emails/', views.SendPasswordEmailsView.as_view(), name='send_password_emails'),
     
     # First-time login endpoints
