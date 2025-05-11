@@ -31,6 +31,7 @@ import HowToRegIcon from '@mui/icons-material/HowToReg';
 import SchoolIcon from '@mui/icons-material/School';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import ApprovalIcon from '@mui/icons-material/Approval';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import { useAuth } from '../context/AuthContext';
 
 const NavBar: React.FC = () => {
@@ -105,6 +106,16 @@ const NavBar: React.FC = () => {
           icon: <ScheduleIcon />,
           path: '/leave-requests',
           roles: ['TA']
+        });
+      }
+      
+      // Add Swap Requests for TAs and Instructors
+      if (userRole === 'TA' || userRole === 'INSTRUCTOR') {
+        items.push({
+          text: 'Swap Requests',
+          icon: <SwapHorizIcon />,
+          path: '/swap-requests',
+          roles: ['TA', 'INSTRUCTOR']
         });
       }
       

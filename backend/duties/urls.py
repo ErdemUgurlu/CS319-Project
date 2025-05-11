@@ -4,6 +4,6 @@ from . import views
 app_name = 'duties'
 
 urlpatterns = [
-    # Add URL patterns for the duties app here
-    # Will be implemented later
+    path('my_workload/', views.MyWorkloadView.as_view(), name='my-workload'),
+    # Add other URL patterns for the duties app here if any
 ] 

@@ -199,9 +199,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Gmail SMTP sunucusu
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'erdemcs319@gmail.com'  # Google e-posta adresi burada olacak
-EMAIL_HOST_PASSWORD = 'ownn kubg qsuc epzs'  # Google'dan alınan uygulama şifresi burada olacak
-DEFAULT_FROM_EMAIL = 'erdemcs319@gmail.com'  # E-posta gönderimi için kullanılacak adres
+EMAIL_HOST_USER = 'bilkenttams@gmail.com'  # Yeni Google e-posta adresi
+EMAIL_HOST_PASSWORD = 'jeuy wfmk dtqj miyc'  # Yeni uygulama şifresi
+DEFAULT_FROM_EMAIL = 'bilkenttams@gmail.com'  # E-posta gönderimi için kullanılacak adres
 
 # IMPORTANT: Email templates should be in backend/templates/email/ directory
 # e.g. backend/templates/email/account_verification_email.html
