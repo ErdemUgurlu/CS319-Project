@@ -40134,3 +40134,103 @@ INFO 2025-05-11 04:15:57,071 basehttp "GET /static/admin/img/tooltag-add.svg HTT
 INFO 2025-05-11 04:15:57,072 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
 INFO 2025-05-11 04:16:36,915 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
 INFO 2025-05-11 04:16:36,929 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 06:58:16,568 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 06:58:29,338 basehttp "GET /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-11 06:58:29,355 basehttp "GET /admin/login/?next=/admin/accounts/user/ HTTP/1.1" 200 4218
+INFO 2025-05-11 06:58:31,279 basehttp "POST /admin/login/?next=/admin/accounts/user/ HTTP/1.1" 200 4402
+INFO 2025-05-11 06:58:38,561 basehttp "POST /admin/login/?next=/admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-11 06:58:38,594 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32580
+INFO 2025-05-11 06:58:38,618 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 07:17:37,122 log Not Found: /api/logout/
+WARNING 2025-05-11 07:17:37,123 basehttp "POST /api/logout/ HTTP/1.1" 404 3577
+INFO 2025-05-11 07:18:24,917 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+WARNING 2025-05-11 07:18:25,044 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:18:25,044 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-11 07:18:40,963 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:18:40,964 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-11 07:19:17,707 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:19:17,708 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-11 07:19:20,489 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:19:20,489 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-11 07:19:24,494 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32580
+INFO 2025-05-11 07:19:24,527 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 07:19:30,246 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:19:30,246 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-11 07:19:31,348 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:19:31,349 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-11 07:19:37,649 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32580
+INFO 2025-05-11 07:19:37,667 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 07:20:06,764 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:20:06,765 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-11 07:20:19,486 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 15158
+INFO 2025-05-11 07:20:20,532 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-11 07:20:20,553 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 31811
+INFO 2025-05-11 07:20:20,570 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:20:28,689 basehttp "OPTIONS /api/accounts/check-email-exists/ HTTP/1.1" 200 0
+INFO 2025-05-11 07:20:28,693 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+INFO 2025-05-11 07:20:28,697 basehttp "OPTIONS /api/accounts/create-ta-from-email/ HTTP/1.1" 200 0
+ERROR 2025-05-11 07:20:28,701 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:28,701 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:31,412 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:31,420 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:31,420 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:31,942 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:31,948 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:31,949 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:32,341 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:32,347 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:32,348 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:32,624 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:32,630 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:32,630 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:32,974 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:32,980 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:32,981 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:33,283 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:33,289 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:33,290 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:33,491 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:33,498 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:33,498 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:33,690 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:33,696 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:33,697 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:33,905 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:33,911 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:33,912 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:34,108 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:34,114 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:34,114 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+INFO 2025-05-11 07:20:34,306 basehttp "POST /api/accounts/check-email-exists/ HTTP/1.1" 200 16
+ERROR 2025-05-11 07:20:34,312 log Internal Server Error: /api/accounts/create-ta-from-email/
+ERROR 2025-05-11 07:20:34,313 basehttp "POST /api/accounts/create-ta-from-email/ HTTP/1.1" 500 74
+WARNING 2025-05-11 07:21:09,391 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:21:09,392 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-11 07:21:10,607 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:21:10,607 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-11 07:21:27,067 basehttp "GET /admin/accounts/user/add/ HTTP/1.1" 200 21227
+INFO 2025-05-11 07:21:27,089 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:21:49,449 basehttp "POST /admin/accounts/user/add/ HTTP/1.1" 302 0
+INFO 2025-05-11 07:21:49,487 basehttp "GET /admin/accounts/user/98/change/ HTTP/1.1" 200 44142
+INFO 2025-05-11 07:21:49,512 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:21:58,887 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32578
+INFO 2025-05-11 07:21:58,908 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:22:08,704 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-11 07:22:08,736 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32731
+INFO 2025-05-11 07:22:08,759 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:22:17,318 basehttp "POST /api/token/ HTTP/1.1" 200 913
+INFO 2025-05-11 07:22:20,631 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 07:22:20,633 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 07:22:20,643 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 07:22:20,646 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+WARNING 2025-05-11 07:22:23,256 log Not Found: /api/logout/
+WARNING 2025-05-11 07:22:23,256 basehttp "POST /api/logout/ HTTP/1.1" 404 3577
+WARNING 2025-05-11 07:22:27,795 log Unauthorized: /api/token/
+WARNING 2025-05-11 07:22:27,795 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-11 07:22:49,784 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-11 07:22:49,830 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 07:22:49,831 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 07:22:49,840 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 07:22:49,841 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 07:22:57,811 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 07:22:57,816 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52

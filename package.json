@@ -1,7 +1,8 @@
 {
   "dependencies": {
     "@mui/x-date-pickers": "^8.2.0",
-    "date-fns": "^4.1.0"
+    "date-fns": "^4.1.0",
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "cd frontend/ta-management-client && npm start",
