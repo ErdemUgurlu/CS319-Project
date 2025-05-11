@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import axios from '../utils/axiosConfig';
 import {
   Container,
   Box,
@@ -12,7 +13,9 @@ import {
   Avatar,
   Alert,
   Grid as MuiGrid,
-  CircularProgress
+  CircularProgress,
+  Modal,
+  Snackbar
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAuth } from '../context/AuthContext';
@@ -32,16 +35,27 @@ const validationSchema = yup.object({
     .required('Password is required'),
 });
 
+// Validation schema for forgot password form
+const forgotPasswordValidationSchema = yup.object({
+  email: yup
+    .string()
+    .email('Enter a valid email')
+    .required('Email is required'),
+});
+
 const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { authState, login, clearError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   // Get the redirect path from location state or default to dashboard
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
-  // Initialize Formik
+  // Initialize Formik for login
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -60,6 +74,64 @@ const Login = () => {
     },
   });
 
+  // Initialize Formik for forgot password
+  const forgotPasswordFormik = useFormik({
+    initialValues: {
+      email: '',
+    },
+    validationSchema: forgotPasswordValidationSchema,
+    onSubmit: async (values) => {
+      try {
+        console.log("Submitting forgot password request:", values);
+        
+        // Show a loading state on the button
+        forgotPasswordFormik.setSubmitting(true);
+        
+        const response = await axios.post('/api/auth/forgot-password/', { email: values.email });
+        console.log("Forgot password response:", response);
+        
+        handleCloseResetModal();
+        setToastMessage("If that email is registered, you'll receive a temporary password shortly.");
+        setToastOpen(true);
+      } catch (error) {
+        console.error('Forgot password error:', error);
+        
+        // Show error toast even when request fails
+        handleCloseResetModal();
+        setToastMessage("Request processed. If that email is registered, you'll receive a temporary password shortly.");
+        setToastOpen(true);
+      } finally {
+        // Make sure to reset submitting state
+        forgotPasswordFormik.setSubmitting(false);
+      }
+    },
+  });
+
+  const handleOpenResetModal = () => {
+    setResetModalOpen(true);
+  };
+
+  const handleCloseResetModal = () => {
+    setResetModalOpen(false);
+    forgotPasswordFormik.resetForm();
+  };
+
+  const handleCloseToast = () => {
+    setToastOpen(false);
+  };
+
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 2,
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <Paper 
@@ -75,8 +147,8 @@ const Login = () => {
         <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in to Bilkent TA Management System
+        <Typography component="h1" variant="h5" textAlign="center">
+          Sign in to Bilkent University TA Management System
         </Typography>
         
         {authState.error && (
@@ -127,17 +199,63 @@ const Login = () => {
           >
             {authState.loading ? <CircularProgress size={24} /> : 'Sign In'}
           </Button>
-          <Grid container>
-            <Grid xs>
-              <Link to="/forgot-password" style={{ textDecoration: 'none' }}>
-                <Typography variant="body2" color="primary">
-                  I don't know my password
-                </Typography>
-              </Link>
-            </Grid>
-          </Grid>
+          <Box textAlign="center">
+            <Typography
+              variant="body2"
+              color="primary"
+              sx={{ cursor: 'pointer', display: 'inline-block' }}
+              onClick={handleOpenResetModal}
+            >
+              forgot/don't know my password
+            </Typography>
+          </Box>
         </Box>
       </Paper>
+
+      {/* Reset Password Modal */}
+      <Modal
+        open={resetModalOpen}
+        onClose={handleCloseResetModal}
+        aria-labelledby="reset-password-modal"
+      >
+        <Box sx={modalStyle}>
+          <Typography id="reset-password-modal" variant="h6" component="h2" mb={2}>
+            Reset Password
+          </Typography>
+          <Box component="form" onSubmit={forgotPasswordFormik.handleSubmit}>
+            <TextField
+              margin="normal"
+              fullWidth
+              id="reset-email"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              value={forgotPasswordFormik.values.email}
+              onChange={forgotPasswordFormik.handleChange}
+              onBlur={forgotPasswordFormik.handleBlur}
+              error={forgotPasswordFormik.touched.email && Boolean(forgotPasswordFormik.errors.email)}
+              helperText={forgotPasswordFormik.touched.email && forgotPasswordFormik.errors.email}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3 }}
+              disabled={forgotPasswordFormik.isSubmitting}
+            >
+              {forgotPasswordFormik.isSubmitting ? <CircularProgress size={24} /> : 'Send Temporary Password'}
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
+      {/* Success Toast */}
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseToast}
+        message={toastMessage}
+      />
     </Container>
   );
 };

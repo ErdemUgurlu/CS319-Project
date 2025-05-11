@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Typography,
   Box,
@@ -2106,33 +2106,6 @@ const ExamList: React.FC<ExamListProps> = ({
             <br /><br />
             You can still assign proctors manually from the available lists, or adjust the number of required proctors for the exam and try again.
           </DialogContentText>
-          {/* --- NEW OVERRIDE CHECKBOXES --- */}
-          <Box sx={{ mt: 2, mb: 1 }}>
-            <Typography variant="subtitle2" gutterBottom>
-              Override Options:
-            </Typography>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={overrideAcademicLevelRule}
-                  onChange={(e) => setOverrideAcademicLevelRule(e.target.checked)}
-                  name="overrideAcademicLevel"
-                />
-              }
-              label="Override academic level rule for TAs"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={overrideConsecutiveProctoringRule}
-                  onChange={(e) => setOverrideConsecutiveProctoringRule(e.target.checked)}
-                  name="overrideConsecutiveProctoring"
-                />
-              }
-              label="Override no proctoring one day before/after rule for TAs"
-            />
-          </Box>
-          {/* --- END NEW OVERRIDE CHECKBOXES --- */}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAssignFoundEligibleTAs} color="primary">

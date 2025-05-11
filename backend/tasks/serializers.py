@@ -59,11 +59,6 @@ class TaskSerializer(serializers.ModelSerializer):
         assigned_to = validated_data.pop('assigned_to', None)
         print(f"TaskSerializer.create - assigned_to value: {assigned_to}")
         
-        # TEMPORARY FIX: If assigned_to is 14, change it to 16 (Erdem's real ID)
-        if assigned_to == 14:
-            assigned_to = 16
-            print(f"TaskSerializer.create - FIXED: Changed assigned_to from 14 to 16")
-        
         if assigned_to:
             try:
                 print(f"TaskSerializer.create - looking up User with id={assigned_to}")
@@ -81,22 +76,23 @@ class TaskSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         """
         Update task instance, handling the status changes and related objects.
-        Instructors can assign tasks or update all fields.
-        TAs can only update status to IN_PROGRESS or COMPLETED.
+        Status is not updatable through this general method by any role;
+        it is managed by specific actions (complete, review) or defaults.
         """
         user = self.context['request'].user
         print(f"TaskSerializer.update - user: {user}, role: {user.role}")
-        print(f"TaskSerializer.update - received data: {validated_data}")
-        
+        print(f"TaskSerializer.update - received data (before status pop): {validated_data}")
+
+        # Status should not be updated via general edit by any role.
+        # It's handled by specific views (CompleteTaskView, ReviewTaskView) or default on creation.
+        if 'status' in validated_data:
+            original_sent_status = validated_data.pop('status')
+            print(f"TaskSerializer.update - Popped 'status: {original_sent_status}' from validated_data. It will not be updated here.")
+
         # Handle assigned_to field
         if 'assigned_to' in validated_data:
             assigned_to = validated_data.pop('assigned_to')
             print(f"TaskSerializer.update - assigned_to value: {assigned_to}")
-            
-            # TEMPORARY FIX: If assigned_to is 14, change it to 16 (Erdem's real ID)
-            if assigned_to == 14:
-                assigned_to = 16
-                print(f"TaskSerializer.update - FIXED: Changed assigned_to from 14 to 16")
             
             if assigned_to:
                 try:
@@ -111,21 +107,34 @@ class TaskSerializer(serializers.ModelSerializer):
                 validated_data['assignee'] = None
                 print("TaskSerializer.update - setting assignee to None")
         
+        # If TA is making the request, ensure they can only update specific, allowed fields (if any).
+        # For now, TAs primarily interact via CompleteTaskView, not general edit for core fields.
         if user.role == 'TA':
-            # TAs can only update status
-            if 'status' in validated_data:
-                new_status = validated_data['status']
-                # TAs can only set status to IN_PROGRESS or keep as is
-                if new_status == 'IN_PROGRESS':
-                    instance.status = new_status
-                elif new_status != instance.status:
-                    raise serializers.ValidationError({"status": "TAs can only set tasks to IN_PROGRESS"})
-                
-            # Remove all other fields for TA updates
-            for field in list(validated_data.keys()):
-                if field != 'status':
-                    validated_data.pop(field)
-        
+            # Example: If TAs were allowed to update, say, only their own notes field via general edit:
+            # allowed_ta_fields = ['ta_notes'] 
+            # for field in list(validated_data.keys()):
+            #    if field not in allowed_ta_fields and field != 'assignee': # assignee might be part of other logic
+            #        validated_data.pop(field)
+            # For now, assume TAs don't change data via this generic update, so we can clear most fields
+            # or be very restrictive. Let's prevent TA from changing core details here.
+            
+            # Preserve assignee if it was part of a TA-specific update logic (though TAs shouldn't change assignee)
+            current_assignee_id = validated_data.pop('assignee', instance.assignee_id if instance.assignee else None)
+            
+            # Clear other fields to prevent accidental updates by TA through general edit
+            # (This is a placeholder for more granular field permission if TAs could edit some parts)
+            fields_to_clear_for_ta = [key for key in validated_data.keys() if key not in ['assignee']] # Keep assignee if it was handled
+            for key in fields_to_clear_for_ta:
+                validated_data.pop(key)
+            if current_assignee_id is not None and 'assignee' not in validated_data:
+                 # This part ensures if assignee was handled by prior logic (like assigned_to pop), it's kept.
+                 # However, the `assigned_to` logic above already converts it to an assignee object.
+                 # This specific TA section may need refinement if TAs are meant to update any fields here.
+                 # Given the goal (status not manually updatable), and TAs complete tasks via specific view,
+                 # this part mostly ensures they don't accidentally update other fields if they hit this endpoint.
+                 pass # The `assignee` object is already in validated_data if `assigned_to` was present
+
+        print(f"TaskSerializer.update - data before super().update: {validated_data}")
         updated_task = super().update(instance, validated_data)
-        print(f"TaskSerializer.update - updated task: {updated_task.id}, assignee: {updated_task.assignee}")
+        print(f"TaskSerializer.update - updated task: {updated_task.id}, assignee: {updated_task.assignee}, status: {updated_task.status}")
         return updated_task 

@@ -8,7 +8,6 @@ import {
   InputLabel,
   Typography,
   Stack,
-  Divider,
   Alert,
   Switch,
   FormControlLabel
@@ -26,7 +25,8 @@ interface TaskFormProps {
   onReview?: (taskId: number, data: ReviewTaskData) => void;
 }
 
-// Task status options
+// Task status options - This will be removed
+/*
 const STATUS_OPTIONS = [
   { value: 'PENDING', label: 'Pending' },
   { value: 'IN_PROGRESS', label: 'In Progress' },
@@ -34,6 +34,7 @@ const STATUS_OPTIONS = [
   { value: 'APPROVED', label: 'Approved' },
   { value: 'REJECTED', label: 'Rejected' }
 ];
+*/
 
 const TaskForm: React.FC<TaskFormProps> = ({ 
   task, 
@@ -190,13 +191,15 @@ const TaskForm: React.FC<TaskFormProps> = ({
     }
   };
   
-  // Handle select changes
+  // Handle select changes - handleStatusChange will be removed
+  /*
   const handleStatusChange = (e: SelectChangeEvent) => {
     setFormData({
       ...formData,
       status: e.target.value
     });
   };
+  */
   
   const handleAssignedToChange = (e: SelectChangeEvent) => {
     setFormData({
@@ -281,26 +284,6 @@ const TaskForm: React.FC<TaskFormProps> = ({
               helperText="Include both date and time"
             />
           </Box>
-          
-          <Box sx={{ width: '100%' }}>
-            <FormControl fullWidth>
-              <InputLabel id="status-label">Status</InputLabel>
-              <Select
-                labelId="status-label"
-                name="status"
-                value={formData.status}
-                onChange={handleStatusChange}
-                label="Status"
-                disabled={userRole === 'TA' && formData.status !== 'PENDING' && formData.status !== 'IN_PROGRESS'}
-              >
-                {STATUS_OPTIONS.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box>
         </Stack>
         
         {userRole === 'INSTRUCTOR' && (
@@ -338,7 +321,8 @@ const TaskForm: React.FC<TaskFormProps> = ({
                     ta && ta.id ? (
                       <MenuItem key={ta.id} value={ta.id.toString()}>
                         {ta.ta_full_name || ta.full_name || `${ta.first_name || ''} ${ta.last_name || ''}`.trim() || `TA #${index + 1}`}
-                        {ta.ta_employment_type && ` (${ta.ta_employment_type.replace('_', ' ')})`}
+                        {(ta.employment_type_display || ta.employment_type || ta.ta_employment_type) && 
+                          ` (${(ta.employment_type_display || ta.employment_type || ta.ta_employment_type || '').replace('_', ' ')})`}
                       </MenuItem>
                     ) : null
                   ))
@@ -373,7 +357,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
                         {ta.ta_email && ` (${ta.ta_email})`}
                       </Typography>
                       <Typography variant="caption" sx={{ display: 'block', ml: 2 }}>
-                        • Employment: <strong>{ta.ta_employment_type || 'Not specified'}</strong>
+                        • Employment: <strong>{ta.employment_type_display || ta.employment_type || 'Not specified'}</strong>
                         {ta.current_workload && ` • Current Workload: ${ta.current_workload} hours`}
                         {ta.workload_cap && ` • Workload Cap: ${ta.workload_cap} hours`}
                         {ta.department && ` • Department: ${ta.department}`}
@@ -451,40 +435,36 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const renderTaskReviewForm = () => (
     <Box component="form" onSubmit={handleReviewTask} sx={{ mt: 2 }}>
       <Alert severity="info" sx={{ mb: 2 }}>
-        Review the completed task and provide feedback.
+        Evaluate the submitted task and provide feedback.
       </Alert>
       
-      {task?.completion && (
-        <Box sx={{ mb: 3, p: 2, bgcolor: 'background.paper', borderRadius: 1 }}>
-          <Typography variant="subtitle2" gutterBottom>
-            TA's Completion Notes:
-          </Typography>
-          <Typography variant="body2" paragraph>
-            {task.completion.completion_note}
-          </Typography>
-          
-          <Typography variant="subtitle2" gutterBottom>
-            Hours Spent: <strong>{task.completion.hours_spent}</strong>
-          </Typography>
-          
-          <Typography variant="caption" color="text.secondary">
-            Completed on: {new Date(task.completion.completed_at).toLocaleString()}
-          </Typography>
+      {task && task.completion && (
+        <Box sx={{ mb: 2, p: 2, border: '1px dashed grey', borderRadius: 1, backgroundColor: '#f9f9f9' }}>
+          <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: 'bold' }}>TA Submission Details:</Typography>
+          <TextField
+            label="Completion Note"
+            fullWidth
+            multiline
+            rows={3}
+            value={task.completion.completion_note || 'No note provided.'}
+            InputProps={{ readOnly: true }}
+            variant="outlined"
+            sx={{ mb: 1 }}
+          />
+          <TextField
+            label="Reported Hours Spent"
+            fullWidth
+            type="number"
+            value={task.completion.hours_spent || 0}
+            InputProps={{ readOnly: true }}
+            variant="outlined"
+          />
         </Box>
       )}
       
       <Stack spacing={2}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={reviewData.is_approved}
-              onChange={handleReviewChange}
-              name="is_approved"
-              color="success"
-            />
-          }
-          label={reviewData.is_approved ? "Approve Task" : "Reject Task"}
-        />
+        {/* Removing the switch and replacing with hidden state field */}
+        <input type="hidden" name="is_approved" value={reviewData.is_approved.toString()} />
         
         <TextField
           required
@@ -498,24 +478,47 @@ const TaskForm: React.FC<TaskFormProps> = ({
           placeholder="Provide feedback for the TA..."
         />
         
-        {reviewData.is_approved && task?.credit_hours && (
-          <Alert severity="success">
-            The TA will receive {task.credit_hours} credit hours upon approval.
+        {task?.credit_hours && (
+          <Alert severity="info">
+            Upon approval, the TA will receive {task.credit_hours} credit hours.
           </Alert>
         )}
         
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={onCancel} sx={{ mr: 1 }}>
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+          <Button onClick={onCancel}>
             Cancel
           </Button>
-          <Button 
-            type="submit" 
-            variant="contained" 
-            color={reviewData.is_approved ? "success" : "error"}
-            disabled={!reviewData.feedback}
-          >
-            {reviewData.is_approved ? "Approve" : "Reject"}
-          </Button>
+          
+          <Box>
+            <Button 
+              variant="contained" 
+              color="error"
+              sx={{ mr: 1 }}
+              disabled={!reviewData.feedback}
+              onClick={(e) => {
+                // Set to false (reject) and submit
+                setReviewData({...reviewData, is_approved: false});
+                // Wait for state update and then submit
+                setTimeout(() => handleReviewTask(e), 0);
+              }}
+            >
+              Reject
+            </Button>
+            
+            <Button 
+              variant="contained" 
+              color="success"
+              disabled={!reviewData.feedback}
+              onClick={(e) => {
+                // Set to true (approve) and submit
+                setReviewData({...reviewData, is_approved: true});
+                // Wait for state update and then submit
+                setTimeout(() => handleReviewTask(e), 0);
+              }}
+            >
+              Approve
+            </Button>
+          </Box>
         </Box>
       </Stack>
     </Box>
@@ -524,7 +527,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   // Determine which form to render based on context
   if (userRole === 'TA' && task?.status === 'IN_PROGRESS' && onComplete) {
     return renderTaskCompletionForm();
-  } else if (userRole === 'INSTRUCTOR' && task?.status === 'COMPLETED' && onReview) {
+  } else if (userRole === 'INSTRUCTOR' && task?.status === 'WAITING_FOR_APPROVAL' && onReview) {
     return renderTaskReviewForm();
   } else {
     return renderTaskUpdateForm();

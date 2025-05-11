@@ -4,7 +4,7 @@ from .models import LeaveType, LeaveRequest, LeaveImpact, DateUnavailability
 # Register models with the admin site
 @admin.register(LeaveType)
 class LeaveTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'requires_documentation', 'max_days_per_semester')
+    list_display = ('name', 'requires_documentation')
     search_fields = ('name', 'description')
     list_filter = ('requires_documentation',)
 

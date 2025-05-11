@@ -85,6 +85,7 @@ class ExamEligibleTAsView(APIView):
         # Exclusion 2: TAs with WeeklySchedule conflicts with THIS exam
         conflicting_schedule_ta_ids_set = set()
         if exam_dt_start_local.date() == exam_dt_end_local.date():
+            # Exam is entirely on one day (local time)
             qs = WeeklySchedule.objects.filter(
                 day=exam_day_short_code,
                 start_time__lt=exam_end_time_local,
@@ -92,18 +93,22 @@ class ExamEligibleTAsView(APIView):
             )
             conflicting_schedule_ta_ids_set.update(qs.values_list('ta_id', flat=True))
         else:
+            # Exam spans midnight (local time)
+            # Part 1: Conflict on the start day (from exam_time_start until midnight)
             qs_part1 = WeeklySchedule.objects.filter(
-                day=exam_day_short_code,
-                start_time__lt=datetime.time(23, 59, 59, 999999),
+                day=exam_day_short_code, # Day of exam_dt_start_local
+                start_time__lt=datetime.time(23, 59, 59, 999999), # End of day
                 end_time__gt=exam_start_time_local
             )
             conflicting_schedule_ta_ids_set.update(qs_part1.values_list('ta_id', flat=True))
+
+            # Part 2: Conflict on the end day (from midnight until exam_time_end)
             exam_day_end_local_code = day_mapping[exam_dt_end_local.weekday()]
             exam_time_end_on_end_day = exam_dt_end_local.time()
             qs_part2 = WeeklySchedule.objects.filter(
                 day=exam_day_end_local_code,
                 start_time__lt=exam_time_end_on_end_day,
-                end_time__gt=datetime.time(0, 0, 0)
+                end_time__gt=datetime.time(0, 0, 0) # Start of day
             )
             conflicting_schedule_ta_ids_set.update(qs_part2.values_list('ta_id', flat=True))
         
@@ -120,13 +125,13 @@ class ExamEligibleTAsView(APIView):
         # This filter applies ONLY to `further_filterable_tas`
         override_consecutive_proctoring_param = request.GET.get('override_consecutive_proctoring', 'false').lower() == 'true'
         ta_ids_with_conflicting_proctor_duties = set()
-
-        potential_ids_for_consecutive_check = list(further_filterable_tas.values_list('id', flat=True))
-        if potential_ids_for_consecutive_check:
+        if potential_ta_ids:
+            # Fetch other 'ASSIGNED' proctor duties for these TAs
+            # Exclude assignments for the current target exam itself
             existing_proctor_assignments = ProctorAssignment.objects.filter(
-                ta_id__in=potential_ids_for_consecutive_check,
+                ta_id__in=potential_ta_ids,
                 status=ProctorAssignment.Status.ASSIGNED
-            ).exclude(exam=exam).select_related('exam')
+            ).exclude(exam=exam).select_related('exam') # exam.duration and exam.date are needed
 
             target_exam_date_local = exam_dt_start_local.date()
             day_before_target = target_exam_date_local - timedelta(days=1)
@@ -134,21 +139,29 @@ class ExamEligibleTAsView(APIView):
 
             for assignment in existing_proctor_assignments:
                 assigned_exam = assignment.exam
+                
+                # Convert assigned exam's datetime to local timezone
                 assigned_exam_start_utc = assigned_exam.date
-                duration_minutes = assigned_exam.duration if assigned_exam.duration is not None else 0
+                # Ensure assigned_exam.duration is not None before using it
+                duration_minutes = assigned_exam.duration if assigned_exam.duration is not None else 0 
                 assigned_exam_end_utc = assigned_exam_start_utc + timedelta(minutes=duration_minutes)
+                
                 assigned_exam_start_local = timezone.localtime(assigned_exam_start_utc)
                 assigned_exam_end_local = timezone.localtime(assigned_exam_end_utc)
+                
                 assigned_exam_date_local = assigned_exam_start_local.date()
+
                 is_conflict = False
 
-                if not override_consecutive_proctoring_param:
-                    if assigned_exam_date_local == day_before_target:
-                        is_conflict = True
-                    elif assigned_exam_date_local == day_after_target:
-                        is_conflict = True
-                
-                if not is_conflict and assigned_exam_date_local == target_exam_date_local: # Always check same-day overlap
+                # 1. Check if the assigned exam is on the day before the target exam
+                if assigned_exam_date_local == day_before_target:
+                    is_conflict = True
+                # 2. Check if the assigned exam is on the day after the target exam
+                elif assigned_exam_date_local == day_after_target:
+                    is_conflict = True
+                # 3. Check if the assigned exam is on the same day as the target exam (check for time overlap)
+                elif assigned_exam_date_local == target_exam_date_local:
+                    # Overlap: (existing_duty_start_local < target_exam_end_local) AND (existing_duty_end_local > target_exam_start_local)
                     if (assigned_exam_start_local < exam_dt_end_local and
                             assigned_exam_end_local > exam_dt_start_local):
                         is_conflict = True
@@ -157,19 +170,17 @@ class ExamEligibleTAsView(APIView):
                     ta_ids_with_conflicting_proctor_duties.add(assignment.ta_id)
             
             if ta_ids_with_conflicting_proctor_duties:
-                further_filterable_tas = further_filterable_tas.exclude(id__in=list(ta_ids_with_conflicting_proctor_duties))
+                tas = tas.exclude(id__in=list(ta_ids_with_conflicting_proctor_duties))
 
-        # Stricter Filter 2: Academic level based on the exam's course level
-        # This filter also applies ONLY to `further_filterable_tas`
-        exam_course_level = exam.course.level.upper()
-        override_academic_level_param = request.GET.get('override_academic_level', 'false').lower() == 'true'
+        # Filter by academic level based on the exam's course level
+        exam_course_level = exam.course.level.upper() # Ensure comparison is case-insensitive (e.g., 'UNDERGRADUATE')
 
-        if override_academic_level_param and exam_course_level == Course.CourseLevel.PHD.upper():
-            further_filterable_tas = further_filterable_tas.filter(academic_level__in=[User.AcademicLevel.PHD, User.AcademicLevel.MASTERS])
-        elif exam_course_level == Course.CourseLevel.UNDERGRADUATE.upper():
-            further_filterable_tas = further_filterable_tas.filter(academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD])
+        if exam_course_level == Course.CourseLevel.UNDERGRADUATE.upper():
+            tas = tas.filter(academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD])
         elif exam_course_level in [Course.CourseLevel.GRADUATE.upper(), Course.CourseLevel.PHD.upper()]:
-            further_filterable_tas = further_filterable_tas.filter(academic_level=User.AcademicLevel.PHD)
+            tas = tas.filter(academic_level=User.AcademicLevel.PHD)
+        # If exam_course_level is something else, no further academic level filtering is applied by default.
+        # This assumes Course.level will always be one of the defined choices.
         
         # Combine the `always_include_tas_queryset` with the fully filtered `further_filterable_tas`
         # Convert to lists of IDs then combine into a set to ensure uniqueness, then filter by ID list.

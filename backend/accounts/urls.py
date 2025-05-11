@@ -1,6 +1,9 @@
 from django.urls import path, include
 from . import views
 
+# Import new view for TA import
+from .views import TAImportView, InstructorImportView
+
 app_name = 'accounts'
 
 urlpatterns = [
@@ -96,4 +99,8 @@ urlpatterns = [
     # New endpoints for Task component and TA profiles
     path('tas/', views.AllTAsListView.as_view(), name='all_tas'),
     path('tas/<int:ta_id>/profile/', views.TAProfileView.as_view(), name='ta_profile'),
+
+    # Import new view for TA import
+    path('import-tas/', TAImportView.as_view(), name='import-tas'),
+    path('import-instructors/', InstructorImportView.as_view(), name='import-instructors'),
 ] 

@@ -28,13 +28,17 @@ api.interceptors.request.use(
       config.headers['Authorization'] = `Bearer ${token}`;
     }
     
-    // Fix for double 'api/' in the URL
-    if (config.url && (
-        config.url.startsWith('api/proctoring/') || 
-        config.url.startsWith('api/workload/')
-      )) {
+    // Log the full URL being called for debugging
+    // const originalUrl = config.url; // This line will be removed
+    
+    // Fix for double 'api/' in the URL - apply to ALL urls
+    if (config.url && config.url.startsWith('api/')) {
       config.url = config.url.replace('api/', '');
+      console.log('URL fixed to avoid double api/ prefix:', config.url);
     }
+    
+    // Print the final URL for debugging
+    console.log('Final request URL:', `${API_URL}${config.url ? ('/' + config.url) : ''}`);
     
     return config;
   },

@@ -17,9 +17,18 @@ import {
   AlertTitle,
   TablePagination,
   TextField,
-  MenuItem
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Snackbar
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { Link as RouterLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
@@ -62,6 +71,22 @@ const ApproveUsers: React.FC = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [roleFilter, setRoleFilter] = useState<string>('');
   const [approvalStatus, setApprovalStatus] = useState<string>('false'); // Default to showing unapproved users
+
+  // State for Import Instructors
+  const [openInstructorImportDialog, setOpenInstructorImportDialog] = useState<boolean>(false);
+  const [selectedInstructorFile, setSelectedInstructorFile] = useState<File | null>(null);
+  const [instructorImportSummary, setInstructorImportSummary] = useState<string | null>(null);
+  const [instructorImportErrors, setInstructorImportErrors] = useState<string[]>([]);
+  const [importedInstructorDetails, setImportedInstructorDetails] = useState<Array<{ email: string; name: string; bilkent_id: string; temporary_password: string }> | null>(null);
+  const [instructorImportLoading, setInstructorImportLoading] = useState<boolean>(false);
+
+  // NEW: State for Import TAs (directly on this page)
+  const [openTaImportDialog, setOpenTaImportDialog] = useState<boolean>(false);
+  const [selectedTaFile, setSelectedTaFile] = useState<File | null>(null);
+  const [taImportSummary, setTaImportSummary] = useState<string | null>(null);
+  const [taImportErrors, setTaImportErrors] = useState<string[]>([]);
+  const [importedTaDetails, setImportedTaDetails] = useState<Array<{ email: string; name: string; bilkent_id: string; temporary_password: string }> | null>(null);
+  const [taImportLoading, setTaImportLoading] = useState<boolean>(false);
 
   // Fetch users on component mount
   useEffect(() => {
@@ -135,16 +160,143 @@ const ApproveUsers: React.FC = () => {
   // Filter for paginated display
   const displayedUsers = users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
+  const handleInstructorFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedInstructorFile(event.target.files[0]);
+      setInstructorImportErrors([]); // Clear previous errors
+      setInstructorImportSummary(null);
+    }
+  };
+
+  const handleApiCallImportInstructors = async () => {
+    if (!selectedInstructorFile) {
+      setInstructorImportErrors(['Please select a file.']);
+      return;
+    }
+    setInstructorImportLoading(true);
+    setInstructorImportErrors([]);
+    setInstructorImportSummary(null);
+    setImportedInstructorDetails(null);
+
+    const formData = new FormData();
+    formData.append('file', selectedInstructorFile);
+
+    try {
+      const response = await api.post('/accounts/import-instructors/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setInstructorImportSummary(response.data.summary || 'Instructors imported successfully.');
+      if (response.data.imported_instructors && response.data.imported_instructors.length > 0) {
+        setImportedInstructorDetails(response.data.imported_instructors);
+      }
+      if (response.data.errors && response.data.errors.length > 0) {
+        setInstructorImportErrors(response.data.errors.map((err: {row: number; errors: string[], data: any}) => `Row ${err.row}: ${err.errors.join(', ')} (${JSON.stringify(err.data)})`));
+        // If there's no overall summary, but there are errors, provide a generic error summary
+        if (!response.data.summary) {
+            setInstructorImportSummary("Instructor import completed with some errors.");
+        }
+      }
+      fetchUsers(); // Refresh user list
+    } catch (err: any) {
+      console.error('Error importing instructors:', err);
+      const errorData = err.response?.data;
+      if (errorData) {
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          setInstructorImportErrors(errorData.errors.map((e: any) => typeof e === 'string' ? e : `Row ${e.row}: ${e.errors.join(', ')}`));
+        } else if (errorData.detail) {
+          setInstructorImportErrors([errorData.detail]);
+        } else if (errorData.message) {
+          setInstructorImportErrors([errorData.message]);
+        } else {
+          setInstructorImportErrors(['An unknown error occurred during import.']);
+        }
+      } else {
+        setInstructorImportErrors(['Failed to import instructors. Check network or contact support.']);
+      }
+    } finally {
+      setInstructorImportLoading(false);
+      setOpenInstructorImportDialog(false); // Close dialog after attempting import
+      setSelectedInstructorFile(null); // Clear selected file
+    }
+  };
+
+  // NEW: Handlers for TA Import Dialog
+  const handleTaFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedTaFile(event.target.files[0]);
+      setTaImportErrors([]);
+      setTaImportSummary(null);
+      setImportedTaDetails(null); // Clear previous TA import details
+    }
+  };
+
+  const handleApiCallImportTAs = async () => {
+    if (!selectedTaFile) {
+      setTaImportErrors(['Please select a file.']);
+      return;
+    }
+    setTaImportLoading(true);
+    setTaImportErrors([]);
+    setTaImportSummary(null);
+    setImportedTaDetails(null);
+
+    const formData = new FormData();
+    formData.append('file', selectedTaFile);
+
+    try {
+      const response = await api.post('/accounts/import-tas/', formData, { // Endpoint for TA import
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      setTaImportSummary(response.data.summary || response.data.message || 'TAs imported successfully.');
+      if (response.data.imported_tas && response.data.imported_tas.length > 0) {
+        setImportedTaDetails(response.data.imported_tas);
+      }
+      if (response.data.errors && response.data.errors.length > 0) {
+        setTaImportErrors(response.data.errors.map((err: {row: number; errors: string[], data: any}) => `Row ${err.row}: ${err.errors.join(', ')} (${JSON.stringify(err.data)})`));
+        if (!response.data.summary && !response.data.message) {
+            setTaImportSummary("TA import completed with some errors.");
+        }
+      }
+      fetchUsers(); // Refresh user list
+    } catch (err: any) {
+      console.error('Error importing TAs:', err);
+      const errorData = err.response?.data;
+      if (errorData) {
+        if (errorData.errors && Array.isArray(errorData.errors)) {
+          setTaImportErrors(errorData.errors.map((e: any) => typeof e === 'string' ? e : `Row ${e.row}: ${e.errors.join(', ')}`));
+        } else if (errorData.detail) {
+          setTaImportErrors([errorData.detail]);
+        } else if (errorData.error && typeof errorData.error === 'string') { // Handle cases where error is a string under 'error' key
+            setTaImportErrors([errorData.error]);
+        } else if (errorData.message) {
+          setTaImportErrors([errorData.message]);
+        } else {
+          setTaImportErrors(['An unknown error occurred during TA import.']);
+        }
+      } else {
+        setTaImportErrors(['Failed to import TAs. Check network or contact support.']);
+      }
+    } finally {
+      setTaImportLoading(false);
+      setOpenTaImportDialog(false);
+      setSelectedTaFile(null);
+    }
+  };
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Typography variant="h4" component="h1" gutterBottom>
-        User Approval Panel
+        User Import/Approval Panel
       </Typography>
       
       <Typography variant="subtitle1" color="text.secondary" paragraph>
         {authState.user?.role === 'ADMIN' 
           ? 'As an admin, you can approve users from all departments.'
-          : `You can approve users from the ${authState.user?.department} department.`}
+          : `You can approve users from the CS department or import TA's or instructors from an Excel file.`}
       </Typography>
       
       {error && (
@@ -184,13 +336,39 @@ const ApproveUsers: React.FC = () => {
           <MenuItem value="true">Approved</MenuItem>
         </TextField>
         
-        <Button 
-          variant="outlined" 
+        <Button
+          variant="outlined"
           onClick={fetchUsers}
-          sx={{ ml: 'auto' }}
+          sx={{ ml: 1 }}
         >
           Refresh
         </Button>
+
+        {/* MODIFIED: Import TAs Button - Opens dialog */}
+        {(authState.user?.role === 'STAFF' || authState.user?.role === 'ADMIN') && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<ManageAccountsIcon />}
+            onClick={() => setOpenTaImportDialog(true)} // Changed to open dialog
+            sx={{ ml: 1 }}
+          >
+            Import TA's
+          </Button>
+        )}
+
+        {/* NEW: Import Instructors Button - Visible only to STAFF/ADMIN */}
+        {(authState.user?.role === 'STAFF' || authState.user?.role === 'ADMIN') && (
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<GroupAddIcon />}
+            onClick={() => setOpenInstructorImportDialog(true)}
+            sx={{ ml: 1 }}
+          >
+            Import Instructors
+          </Button>
+        )}
       </Box>
       
       <Paper sx={{ width: '100%', mb: 2 }}>
@@ -279,6 +457,186 @@ const ApproveUsers: React.FC = () => {
           }
         />
       </Paper>
+
+      {/* Dialog for Importing Instructors */}
+      <Dialog open={openInstructorImportDialog} onClose={() => {setOpenInstructorImportDialog(false); setSelectedInstructorFile(null); setInstructorImportErrors([]); setInstructorImportSummary(null);}} fullWidth maxWidth="sm">
+        <DialogTitle>Import Instructors from Excel</DialogTitle>
+        <DialogContent>
+          <input
+            accept=".xlsx, .xls" // Accept both xls and xlsx
+            style={{ display: 'none' }}
+            id="instructor-import-file-button"
+            type="file"
+            onChange={handleInstructorFileChange}
+          />
+          <label htmlFor="instructor-import-file-button">
+            <Button variant="outlined" component="span" startIcon={<UploadFileIcon />} sx={{ mb: 1 }}>
+              Choose Excel File
+            </Button>
+          </label>
+          {selectedInstructorFile && <Typography variant="body2" sx={{ mb: 1 }}>Selected: {selectedInstructorFile.name}</Typography>}
+          
+          <Alert severity="info" sx={{ mb: 2 }}>
+            <Typography variant="body2">Headers (case-insensitive, exact order):</Typography>
+            <ul>
+              <li>Name</li>
+              <li>Surname</li>
+              <li>Bilkent ID</li>
+              <li>Phone Number</li>
+              <li>Email</li>
+              <li>Department</li>
+            </ul>
+          </Alert>
+          
+          {/* Displaying errors or summary within the dialog if needed, or rely on Snackbar */}
+          {instructorImportErrors.length > 0 && (
+            <Alert severity="error" sx={{ mt: 1, mb:1, maxHeight: '150px', overflowY: 'auto' }}>
+              <AlertTitle>Import Errors</AlertTitle>
+              {instructorImportErrors.map((err, index) => (
+                <Typography variant="caption" display="block" key={index}>- {err}</Typography>
+              ))}
+            </Alert>
+          )}
+           {instructorImportSummary && !instructorImportErrors.length && ( // Show summary only if no errors, to avoid double messaging before snackbar
+            <Alert severity="success" sx={{mt:1, mb:1}}>
+                {instructorImportSummary}
+            </Alert>
+           )}
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {setOpenInstructorImportDialog(false); setSelectedInstructorFile(null); setInstructorImportErrors([]); setInstructorImportSummary(null);}}>Cancel</Button>
+          <Button 
+            onClick={handleApiCallImportInstructors} 
+            color="primary" 
+            variant="contained"
+            disabled={!selectedInstructorFile || instructorImportLoading}
+          >
+            {instructorImportLoading ? <CircularProgress size={24} /> : 'Upload & Process'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* NEW: Dialog for Importing TAs */}
+      <Dialog open={openTaImportDialog} onClose={() => {setOpenTaImportDialog(false); setSelectedTaFile(null); setTaImportErrors([]); setTaImportSummary(null); setImportedTaDetails(null);}} fullWidth maxWidth="md">
+        <DialogTitle>Import Teaching Assistants from Excel</DialogTitle>
+        <DialogContent>
+          <input
+            accept=".xlsx, .xls"
+            style={{ display: 'none' }}
+            id="ta-import-file-button"
+            type="file"
+            onChange={handleTaFileChange}
+          />
+          <label htmlFor="ta-import-file-button">
+            <Button variant="outlined" component="span" startIcon={<UploadFileIcon />} sx={{ mb: 1 }}>
+              Choose Excel File
+            </Button>
+          </label>
+          {selectedTaFile && <Typography variant="body2" sx={{ mb: 1 }}>Selected: {selectedTaFile.name}</Typography>}
+          
+          <Alert severity="info" sx={{ mb: 2 }}>
+            <Typography variant="subtitle1">Required Headers (case-insensitive, exact order preferred):</Typography>
+            <ul>
+              <li>Name</li>
+              <li>Surname</li>
+              <li>Email</li>
+              <li>Bilkent ID</li>
+              <li>IBAN</li>
+              <li>Phone Number</li>
+              <li>Employment Type (P/F)</li>
+              <li>Academic Level (PhD/Masters)</li>
+              <li>Undergraduate University</li>
+              <li>Workload Number</li>
+            </ul>
+          </Alert>
+          
+          {taImportErrors.length > 0 && (
+            <Alert severity="error" sx={{ mt: 1, mb:1, maxHeight: '150px', overflowY: 'auto' }}>
+              <AlertTitle>TA Import Errors</AlertTitle>
+              {taImportErrors.map((err, index) => (
+                <Typography variant="caption" display="block" key={index}>- {err}</Typography>
+              ))}
+            </Alert>
+          )}
+           {taImportSummary && !taImportErrors.length && (
+            <Alert severity="success" sx={{mt:1, mb:1}}>
+                {taImportSummary}
+            </Alert>
+           )}
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {setOpenTaImportDialog(false); setSelectedTaFile(null); setTaImportErrors([]); setTaImportSummary(null); setImportedTaDetails(null);}}>Cancel</Button>
+          <Button 
+            onClick={handleApiCallImportTAs} 
+            color="primary" 
+            variant="contained"
+            disabled={!selectedTaFile || taImportLoading}
+          >
+            {taImportLoading ? <CircularProgress size={24} /> : 'Upload & Process TAs'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Updated Snackbar to include TA import notifications */}
+      <Snackbar
+        open={Boolean(
+          error || instructorImportSummary || instructorImportErrors.length > 0 || (importedInstructorDetails && importedInstructorDetails.length > 0) ||
+          taImportSummary || taImportErrors.length > 0 || (importedTaDetails && importedTaDetails.length > 0)
+        )}
+        autoHideDuration={15000}
+        onClose={() => {
+          setError(null);
+          setInstructorImportSummary(null);
+          setInstructorImportErrors([]);
+          setImportedInstructorDetails(null);
+          setTaImportSummary(null); // Clear TA states
+          setTaImportErrors([]);
+          setImportedTaDetails(null);
+        }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert 
+          onClose={() => {
+            setError(null);
+            setInstructorImportSummary(null);
+            setInstructorImportErrors([]);
+            setImportedInstructorDetails(null);
+            setTaImportSummary(null); // Clear TA states
+            setTaImportErrors([]);
+            setImportedTaDetails(null);
+          }}
+          severity={ (error || instructorImportErrors.length > 0 || taImportErrors.length > 0) && !(instructorImportSummary || taImportSummary) ? "error" : "success" } 
+          sx={{ width: '100%', maxHeight: '400px', overflowY: 'auto' }}
+        >
+          {error /* For main page error */}
+          
+          {/* Instructor Import Messages */}
+          {instructorImportSummary && (
+             <Box sx={{ mt: (error) ? 1 : 0 }}> 
+                <Typography variant="subtitle1">
+                  {instructorImportErrors.length > 0 || importedInstructorDetails 
+                    ? `Instructor import process complete: successfully imported ${importedInstructorDetails ? importedInstructorDetails.length : 0} of ${(importedInstructorDetails ? importedInstructorDetails.length : 0) + instructorImportErrors.length} instructors.`
+                    : instructorImportSummary
+                  }
+                </Typography>
+             </Box>
+          )}
+          
+          {/* TA Import Messages */}
+          {taImportSummary && (
+             <Box sx={{ mt: (error || instructorImportSummary || importedInstructorDetails || instructorImportErrors.length > 0) ? 1 : 0 }}> 
+                <Typography variant="subtitle1">
+                  {taImportErrors.length > 0 || importedTaDetails 
+                    ? `Import process complete: successfully imported ${importedTaDetails ? importedTaDetails.length : 0} of ${(importedTaDetails ? importedTaDetails.length : 0) + taImportErrors.length} TAs.`
+                    : taImportSummary
+                  }
+                </Typography>
+             </Box>
+          )}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };

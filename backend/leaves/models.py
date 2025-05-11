@@ -11,7 +11,6 @@ class LeaveType(models.Model):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True)
     requires_documentation = models.BooleanField(default=False)
-    max_days_per_semester = models.PositiveIntegerField(default=0)  # 0 means no limit
     
     def __str__(self):
         return self.name

@@ -28,6 +28,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { useAuth } from '../context/AuthContext';
 import taskService, { Task, CompleteTaskData, ReviewTaskData } from '../services/taskService';
 import TaskForm from '../components/TaskForm';
@@ -36,97 +37,102 @@ import TaskForm from '../components/TaskForm';
 const STATUS_OPTIONS = [
   { value: 'PENDING', label: 'Pending', color: 'default' },
   { value: 'IN_PROGRESS', label: 'In Progress', color: 'primary' },
+  { value: 'WAITING_FOR_APPROVAL', label: 'Waiting for Approval', color: 'warning' },
   { value: 'COMPLETED', label: 'Completed', color: 'info' },
   { value: 'APPROVED', label: 'Approved', color: 'success' },
   { value: 'REJECTED', label: 'Rejected', color: 'error' }
 ];
 
 const TaskList: React.FC = () => {
-  const { authState } = useAuth();
-  const { user } = authState;
-  
-  // State for tasks
+  const { user } = useAuth().authState;
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  
-  // State for filters
-  const [statusFilter, setStatusFilter] = useState('');
+  const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // State for task dialog
-  const [openDialog, setOpenDialog] = useState(false);
+  const [statusFilter, setStatusFilter] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [openTaskDialog, setOpenTaskDialog] = useState(false);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
-  const [dialogMode, setDialogMode] = useState<'edit' | 'complete' | 'review'>('edit');
-  
+  const [dialogMode, setDialogMode] = useState<'add' | 'edit' | 'complete' | 'review'>('add');
+  const [snackbar, setSnackbar] = useState<{open: boolean, message: string, severity: 'success' | 'error'}>({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
+
   // Fetch tasks on component mount
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-  
   const fetchTasks = async () => {
     setLoading(true);
     try {
       const response = await taskService.getTasks();
-      // Ensure tasks is always an array
-      const tasksData = Array.isArray(response.data) ? response.data : [];
-      setTasks(tasksData);
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching tasks:', err);
-      setError('Failed to load tasks. Please try again later.');
-      // Initialize with empty array on error
-      setTasks([]);
+      console.log('Tasks response:', response.data);
+      
+      if (response.data) {
+        setTasks(response.data);
+        setFilteredTasks(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      setSnackbar({
+        open: true,
+        message: 'Failed to load tasks. Please try again later.',
+        severity: 'error'
+      });
     } finally {
       setLoading(false);
     }
   };
   
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+  
   // Filter tasks based on status and search query
-  // Use array check to ensure tasks is always an array before filtering
-  const filteredTasks = Array.isArray(tasks) ? tasks.filter(task => {
-    const matchesStatus = statusFilter ? task.status === statusFilter : true;
-    const matchesSearch = searchQuery 
-      ? task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        task.description.toLowerCase().includes(searchQuery.toLowerCase())
-      : true;
-    return matchesStatus && matchesSearch;
-  }) : [];
+  useEffect(() => {
+    // Update filteredTasks whenever tasks, statusFilter, or searchQuery changes
+    const filtered = Array.isArray(tasks) ? tasks.filter(task => {
+      const matchesStatus = statusFilter ? task.status === statusFilter : true;
+      const matchesSearch = searchQuery 
+        ? task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          task.description.toLowerCase().includes(searchQuery.toLowerCase())
+        : true;
+      return matchesStatus && matchesSearch;
+    }) : [];
+    
+    setFilteredTasks(filtered);
+  }, [tasks, statusFilter, searchQuery]);
   
   // Handle opening the task dialog
   const handleAddTask = () => {
     setCurrentTask(null);
     setDialogMode('edit');
-    setOpenDialog(true);
+    setOpenTaskDialog(true);
   };
   
   const handleEditTask = (task: Task) => {
     setCurrentTask(task);
     setDialogMode('edit');
-    setOpenDialog(true);
+    setOpenTaskDialog(true);
   };
   
   const handleCompleteTask = (task: Task) => {
     setCurrentTask(task);
     setDialogMode('complete');
-    setOpenDialog(true);
+    setOpenTaskDialog(true);
   };
   
   const handleReviewTask = (task: Task) => {
     setCurrentTask(task);
     setDialogMode('review');
-    setOpenDialog(true);
+    setOpenTaskDialog(true);
   };
   
   const handleCloseDialog = () => {
-    setOpenDialog(false);
+    setOpenTaskDialog(false);
     setCurrentTask(null);
   };
   
   const handleCloseSnackbar = () => {
-    setSuccessMessage(null);
-    setError(null);
+    setSnackbar({ ...snackbar, open: false });
   };
   
   // Handle task status chip color
@@ -145,12 +151,13 @@ const TaskList: React.FC = () => {
     if (!user) return null;
     
     const userRole = (user.role || '').toUpperCase();
+    const isUserAssignee = task.assignee?.id === user.user_id;
     
     if (userRole === 'INSTRUCTOR') {
       return (
         <>
-          {task.status === 'COMPLETED' && (
-            <Tooltip title="Review Task">
+          {task.status === 'WAITING_FOR_APPROVAL' && (
+            <Tooltip title="Evaluate">
               <IconButton 
                 onClick={() => handleReviewTask(task)} 
                 size="small"
@@ -171,11 +178,22 @@ const TaskList: React.FC = () => {
       );
     }
     
-    if (userRole === 'TA') {
-      // TAs can mark tasks as completed
+    if (userRole === 'TA' && isUserAssignee) {
       return (
         <>
-          {task.status === 'IN_PROGRESS' && (
+          {task.status === 'PENDING' && (
+            <Tooltip title="Accept Task">
+              <IconButton 
+                onClick={() => handleAcceptTaskAction(task)} 
+                size="small"
+                color="info"
+                sx={{ mr: 1 }}
+              >
+                <ThumbUpAltIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
+          {(task.status === 'IN_PROGRESS' || task.status === 'PENDING') && (
             <Tooltip title="Mark as Completed">
               <IconButton 
                 onClick={() => handleCompleteTask(task)} 
@@ -211,16 +229,48 @@ const TaskList: React.FC = () => {
     return null;
   };
   
+  // Accept Task
+  const handleAcceptTaskAction = async (taskToAccept: Task) => {
+    if (!taskToAccept.id) return;
+    if (window.confirm(`Are you sure you want to accept the task "${taskToAccept.title}"? This will change its status to In Progress.`)) {
+      try {
+        await taskService.acceptTask(taskToAccept.id);
+        setSnackbar({
+          open: true,
+          message: 'Task accepted and status moved to In Progress.',
+          severity: 'success'
+        });
+        fetchTasks(); // Refresh the task list
+      } catch (err) {
+        console.error('Error accepting task:', err);
+        const errorMessage = (err as any)?.response?.data?.error || 'Failed to accept task. Please try again.';
+        setSnackbar({
+          open: true,
+          message: errorMessage,
+          severity: 'error'
+        });
+      }
+    }
+  };
+  
   // Delete task
   const handleDeleteTask = async (taskId: number) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
         await taskService.deleteTask(taskId);
         setTasks(tasks.filter(task => task.id !== taskId));
-        setSuccessMessage('Task deleted successfully');
+        setSnackbar({
+          open: true,
+          message: 'Task deleted successfully',
+          severity: 'success'
+        });
       } catch (err) {
         console.error('Error deleting task:', err);
-        setError('Failed to delete task. Please try again.');
+        setSnackbar({
+          open: true,
+          message: 'Failed to delete task. Please try again.',
+          severity: 'error'
+        });
       }
     }
   };
@@ -233,7 +283,11 @@ const TaskList: React.FC = () => {
       if (task.id) {
         // Update existing task
         response = await taskService.updateTask(task.id, task);
-        setSuccessMessage('Task updated successfully');
+        setSnackbar({
+          open: true,
+          message: 'Task updated successfully',
+          severity: 'success'
+        });
         
         // Update task list - ensure we're not mutating the original array
         const updatedTasks = tasks.map(t => t.id === task.id ? response.data : t);
@@ -241,7 +295,11 @@ const TaskList: React.FC = () => {
       } else {
         // Create new task
         response = await taskService.createTask(task);
-        setSuccessMessage('Task created successfully');
+        setSnackbar({
+          open: true,
+          message: 'Task created successfully',
+          severity: 'success'
+        });
         
         // Add new task to the list
         setTasks(prevTasks => [...prevTasks, response.data]);
@@ -253,7 +311,11 @@ const TaskList: React.FC = () => {
       handleCloseDialog();
     } catch (err) {
       console.error('Error saving task:', err);
-      setError('Failed to save task. Please try again.');
+      setSnackbar({
+        open: true,
+        message: 'Failed to save task. Please try again.',
+        severity: 'error'
+      });
     }
   };
   
@@ -265,11 +327,19 @@ const TaskList: React.FC = () => {
       // Refresh tasks to get updated status
       await fetchTasks();
       
-      setSuccessMessage('Task marked as completed');
+      setSnackbar({
+        open: true,
+        message: 'Task marked as completed',
+        severity: 'success'
+      });
       handleCloseDialog();
     } catch (err) {
       console.error('Error marking task as completed:', err);
-      setError('Failed to mark task as completed. Please try again.');
+      setSnackbar({
+        open: true,
+        message: 'Failed to mark task as completed. Please try again.',
+        severity: 'error'
+      });
     }
   };
   
@@ -281,14 +351,22 @@ const TaskList: React.FC = () => {
       // Refresh tasks to get updated status
       await fetchTasks();
       
-      setSuccessMessage(data.is_approved 
-        ? 'Task approved successfully' 
-        : 'Task rejected. TA has been notified.');
+      setSnackbar({
+        open: true,
+        message: data.is_approved 
+          ? 'Task approved successfully' 
+          : 'Task rejected. TA has been notified.',
+        severity: 'success'
+      });
       
       handleCloseDialog();
     } catch (err) {
-      console.error('Error reviewing task:', err);
-      setError('Failed to review task. Please try again.');
+      console.error('Error evaluating task:', err);
+      setSnackbar({
+        open: true,
+        message: 'Failed to evaluate task. Please try again.',
+        severity: 'error'
+      });
     }
   };
   
@@ -300,7 +378,7 @@ const TaskList: React.FC = () => {
       case 'complete':
         return 'Mark Task as Completed';
       case 'review':
-        return 'Review Completed Task';
+        return 'Evaluate Task';
       default:
         return currentTask ? 'Edit Task' : 'New Task';
     }
@@ -405,7 +483,7 @@ const TaskList: React.FC = () => {
           )}
           
           {/* Task dialog */}
-          <Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
+          <Dialog open={openTaskDialog} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
             <DialogTitle>
               {getDialogTitle()}
             </DialogTitle>
@@ -422,34 +500,18 @@ const TaskList: React.FC = () => {
           
           {/* Success and error messages */}
           <Snackbar
-            open={!!successMessage}
+            open={snackbar.open}
             autoHideDuration={5000}
             onClose={handleCloseSnackbar}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           >
             <Alert 
               onClose={handleCloseSnackbar} 
-              severity="success" 
+              severity={snackbar.severity} 
               variant="filled"
               sx={{ width: '100%' }}
             >
-              {successMessage}
-            </Alert>
-          </Snackbar>
-          
-          <Snackbar
-            open={!!error}
-            autoHideDuration={5000}
-            onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          >
-            <Alert 
-              onClose={handleCloseSnackbar} 
-              severity="error" 
-              variant="filled"
-              sx={{ width: '100%' }}
-            >
-              {error}
+              {snackbar.message}
             </Alert>
           </Snackbar>
         </Paper>

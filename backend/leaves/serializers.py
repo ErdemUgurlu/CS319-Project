@@ -8,7 +8,7 @@ class LeaveTypeSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = LeaveType
-        fields = ('id', 'name', 'description', 'requires_documentation', 'max_days_per_semester')
+        fields = ('id', 'name', 'description', 'requires_documentation')
 
 
 class LeaveRequestListSerializer(serializers.ModelSerializer):

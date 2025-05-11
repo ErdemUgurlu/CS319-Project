@@ -10,7 +10,7 @@ from django.utils.encoding import force_bytes, force_str
 from rest_framework import status, generics, permissions, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 import uuid
 import logging
@@ -50,6 +50,22 @@ from decimal import Decimal
 import os
 from .utils import process_student_list_file
 from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate, login, logout
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.conf import settings
+from django.db import transaction
+from django.db.models import Q, Count, Prefetch, Sum, F # Added Sum and F
+from django.utils.crypto import get_random_string # For password generation
+import pandas as pd # For Excel processing
+import logging # Added logging
+import openpyxl # Ensure openpyxl is available for xlsx
 
 logger = logging.getLogger(__name__)
 
@@ -1222,16 +1238,18 @@ class ReactivateUserView(APIView):
 
 
 class MyTAsListView(generics.ListAPIView):
-    """API endpoint for instructors to view their assigned TAs."""
-    serializer_class = serializers.InstructorTAAssignmentSerializer
+    """API endpoint for instructors to view TAs assigned to them."""
+    serializer_class = serializers.TADetailSerializer # CHANGED
     permission_classes = [IsAuthenticated]
-    
+
     def get_queryset(self):
         user = self.request.user
-        if user.role != 'INSTRUCTOR':
-            return InstructorTAAssignment.objects.none()
-        
-        return InstructorTAAssignment.objects.filter(instructor=user)
+        if user.role == User.Role.INSTRUCTOR:
+            # Get IDs of TAs assigned to this instructor
+            assigned_ta_ids = InstructorTAAssignment.objects.filter(instructor=user).values_list('ta_id', flat=True)
+            # Return User objects for these TAs, ensuring they are active and approved
+            return User.objects.filter(id__in=assigned_ta_ids, role=User.Role.TA, is_active=True, is_approved=True).select_related('ta_profile')
+        return User.objects.none()
 
 
 class AvailableTAsListView(generics.ListAPIView):
