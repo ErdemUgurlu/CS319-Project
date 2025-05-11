@@ -22,6 +22,8 @@ import InstructorProctoring from './pages/instructor/InstructorProctoring';
 import CourseManagement from './pages/staff/CourseManagement';
 // Dean's Office pages
 import DeanExamManagement from './pages/dean/DeanExamManagement';
+// TA pages
+import ProctoringDutiesPage from './pages/TA/ProctoringDutiesPage';
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
@@ -81,6 +83,7 @@ const ProtectedLayout = () => {
           <Route path="/leaves" element={<LeaveRequests />} />
           <Route path="/proctoring" element={<ProctoringRoute />} />
           <Route path="/workload" element={<MyWorkload />} />
+          <Route path="/proctoring-duties" element={<ProctoringDutiesPage />} />
           <Route path="/approve-users" element={<ApproveUsers />} />
           <Route path="/manage-tas" element={<ManageTeachingAssistants />} />
           <Route path="/manage-workload/:taId" element={<ManageWorkload />} />

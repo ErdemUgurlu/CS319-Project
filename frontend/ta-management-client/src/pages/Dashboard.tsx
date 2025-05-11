@@ -58,7 +58,7 @@ const Dashboard: React.FC = () => {
                   </CardActionArea>
                 </Card>
               </Box>
-              <Box sx={{ width: { xs: '100%', md: '47%' } }}>
+              {/* <Box sx={{ width: { xs: '100%', md: '47%' } }}>
                 <Card>
                   <CardActionArea onClick={() => navigate('/proctoring')}>
                     <CardHeader title="Proctoring Assignments" />
@@ -69,7 +69,7 @@ const Dashboard: React.FC = () => {
                     </CardContent>
                   </CardActionArea>
                 </Card>
-              </Box>
+              </Box> */}
               <Box sx={{ width: { xs: '100%', md: '47%' } }}>
                 <Card>
                   <CardActionArea onClick={() => navigate('/leaves')}>
@@ -186,7 +186,7 @@ const Dashboard: React.FC = () => {
                   </CardActionArea>
                 </Card>
               </Box>
-              <Box sx={{ width: { xs: '100%', md: '47%' } }}>
+              {/* <Box sx={{ width: { xs: '100%', md: '47%' } }}>
                 <Card>
                   <CardActionArea onClick={() => navigate('/proctoring')}>
                     <CardHeader title="Proctoring Management" />
@@ -197,7 +197,7 @@ const Dashboard: React.FC = () => {
                     </CardContent>
                   </CardActionArea>
                 </Card>
-              </Box>
+              </Box> */}
               <Box sx={{ width: { xs: '100%', md: '47%' } }}>
                 <Card>
                   <CardActionArea onClick={() => navigate('/reports')}>

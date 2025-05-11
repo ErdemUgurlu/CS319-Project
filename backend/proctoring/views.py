@@ -5,7 +5,7 @@ from datetime import timedelta, datetime
 from rest_framework import generics, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from accounts.models import User, Exam, Course, WeeklySchedule, TAAssignment, Department
+from accounts.models import User, Exam, Course, WeeklySchedule, TAAssignment
 from accounts.permissions import IsStaffOrInstructor
 from .models import ProctorAssignment
 from .serializers import (
@@ -13,89 +13,6 @@ from .serializers import (
     EligibleProctorSerializer,
     ProctorAssignmentCreateSerializer
 )
-
-class RequestCrossDepartmentalProctorsView(APIView):
-    """
-    API endpoint for requesting cross-departmental proctors for an exam.
-    This sets the exam status to AWAITING_DEAN_CROSS_APPROVAL.
-    """
-    permission_classes = [permissions.IsAuthenticated, IsStaffOrInstructor] # Or more specific permissions if needed
-
-    def post(self, request, pk=None):
-        exam = get_object_or_404(Exam, pk=pk)
-
-        # Check if the exam is in a state that allows this request
-        # For example, it should probably be in AWAITING_PROCTORS
-        if exam.status != Exam.Status.AWAITING_PROCTORS:
-            return Response(
-                {"error": f"Cross-departmental proctors can only be requested if the exam is in 'Awaiting Proctors' status. Current status: {exam.get_status_display()}`"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        exam.status = Exam.Status.AWAITING_DEAN_CROSS_APPROVAL
-        exam.save(update_fields=['status'])
-        
-        # Optionally, log this action or send a notification
-        # AuditLog.objects.create(...)
-
-        return Response(
-            {"message": "Request for cross-departmental proctors submitted. Exam is now awaiting dean's office approval.",
-             "exam_status": exam.get_status_display()},
-            status=status.HTTP_200_OK
-        )
-
-class DeanCrossDepartmentalApprovalView(APIView):
-    """
-    API endpoint for Dean's Office to approve or reject cross-departmental proctoring requests.
-    """
-    permission_classes = [permissions.IsAuthenticated, permissions.DjangoModelPermissions] # Using DjangoModelPermissions with a custom model for Dean's Office if more granular control is needed, or a custom IsDeanOffice permission.
-    # For simplicity, assuming IsDeanOffice permission exists or IsStaffOrInstructor is temporarily okay for Staff to test.
-    # Replace with a proper IsDeanOffice permission.
-    # from accounts.permissions import IsDeanOffice # Assuming this exists
-    # permission_classes = [permissions.IsAuthenticated, IsDeanOffice]
-
-    def get_queryset(self): # Required for DjangoModelPermissions if model is not set on view
-        return Exam.objects.all()
-
-    def post(self, request, pk=None):
-        exam = get_object_or_404(Exam, pk=pk)
-        action = request.data.get('action')
-        helping_dept_code = request.data.get('helping_department_code')
-
-        if exam.status != Exam.Status.AWAITING_DEAN_CROSS_APPROVAL:
-            return Response(
-                {"error": f"This action can only be performed if the exam is 'Awaiting Dean Approval for Cross-Departmental'. Current status: {exam.get_status_display()}`"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if action == 'APPROVE':
-            if not helping_dept_code:
-                return Response({"error": "Helping department code is required for approval."}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Validate helping_dept_code (e.g., check if it's a valid department and not the exam's own department)
-            try:
-                # Assuming Department model has a 'code' field and is imported
-                helping_department = Department.objects.get(code=helping_dept_code)
-                if helping_department.code == exam.course.department.code:
-                    return Response({"error": "Helping department cannot be the same as the exam's own department."}, status=status.HTTP_400_BAD_REQUEST)
-            except Department.DoesNotExist:
-                return Response({"error": f"Invalid helping department code: {helping_dept_code}"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            exam.status = Exam.Status.AWAITING_CROSS_DEPARTMENT_PROCTORS
-            exam.helping_department_code = helping_dept_code
-            exam.save(update_fields=['status', 'helping_department_code'])
-            # Log action: AuditLog.objects.create(...)
-            return Response({"message": f"Cross-departmental proctoring request approved. Exam assigned to {helping_dept_code} for proctoring.", "exam_status": exam.get_status_display()}, status=status.HTTP_200_OK)
-        
-        elif action == 'REJECT':
-            exam.status = Exam.Status.AWAITING_PROCTORS
-            exam.helping_department_code = None # Clear if previously set
-            exam.save(update_fields=['status', 'helping_department_code'])
-            # Log action: AuditLog.objects.create(...)
-            return Response({"message": "Cross-departmental proctoring request rejected. Exam status reverted to Awaiting Proctors.", "exam_status": exam.get_status_display()}, status=status.HTTP_200_OK)
-        
-        else:
-            return Response({"error": "Invalid action. Must be 'APPROVE' or 'REJECT'."}, status=status.HTTP_400_BAD_REQUEST)
 
 class ExamEligibleTAsView(APIView):
     """
@@ -105,10 +22,36 @@ class ExamEligibleTAsView(APIView):
     
     def get(self, request, pk=None):
         exam = get_object_or_404(Exam, pk=pk)
-        exam_department_code = exam.course.department.code # Get the department code (e.g., 'CS')
-        exam_course = exam.course # Get the exam's course instance
-        
-        # Get IDs of TAs teaching sections of this specific course
+        exam_department_code = exam.course.department.code
+        exam_course = exam.course
+
+        # Get IDs of TAs currently assigned to THIS specific exam
+        currently_assigned_ta_ids_for_this_exam = set(
+            ProctorAssignment.objects.filter(exam=exam, status=ProctorAssignment.Status.ASSIGNED)
+                                    .values_list('ta_id', flat=True)
+        )
+
+        # Phase 1: Get TAs ALREADY ASSIGNED to this exam. These should always be included in the initial list for consideration.
+        # We fetch them without department constraints initially, as they are already linked.
+        always_include_tas_queryset = User.objects.filter(id__in=list(currently_assigned_ta_ids_for_this_exam), role='TA', is_active=True)
+
+        # Phase 2: Determine the pool for finding ADDITIONAL TAs based on exam status and department rules.
+        department_codes_to_consider = set()
+        if exam.status == Exam.Status.AWAITING_CROSS_DEPARTMENT_PROCTOR:
+            assisting_department_codes = list(exam.assisting_departments.all().values_list('code', flat=True))
+            department_codes_to_consider.update(assisting_department_codes)
+            department_codes_to_consider.add(exam_department_code) # Also include exam's own department
+        else:
+            department_codes_to_consider.add(exam_department_code) # Default: only exam's own department
+
+        # Build the pool for TAs who are NOT YET assigned to this exam.
+        potential_additional_tas_queryset = User.objects.filter(
+            role='TA',
+            is_active=True,
+            department__in=list(department_codes_to_consider)
+        ).exclude(id__in=list(currently_assigned_ta_ids_for_this_exam)) # Exclude those already assigned
+
+        # Get IDs of TAs teaching sections of this specific course (used for sorting/preference later)
         ta_ids_teaching_this_course = set(
             TAAssignment.objects.filter(section__course=exam_course)
                                 .values_list('ta_id', flat=True)
@@ -135,23 +78,11 @@ class ExamEligibleTAsView(APIView):
         exam_start_time_local = exam_dt_start_local.time()
         exam_end_time_local = exam_dt_end_local.time()
 
-        # Get IDs of TAs currently assigned to this specific exam
-        currently_assigned_ta_ids_for_this_exam = set(
-            ProctorAssignment.objects.filter(exam=exam, status=ProctorAssignment.Status.ASSIGNED)
-                                    .values_list('ta_id', flat=True)
-        )
+        # Apply Fundamental Exclusions to the `potential_additional_tas_queryset`
+        # Exclusion 1: TAs enrolled in the exam's course
+        potential_additional_tas_queryset = potential_additional_tas_queryset.exclude(ta_profile__enrolled_courses=exam.course)
 
-        # Initial pool: TAs from the same department as the exam's course
-        base_tas_queryset = User.objects.filter(
-            role='TA', 
-            is_active=True,
-            department=exam_department_code
-        )
-        
-        # Fundamental Exclusion 1: TAs enrolled in the exam's course
-        base_tas_queryset = base_tas_queryset.exclude(ta_profile__enrolled_courses=exam.course)
-
-        # Fundamental Exclusion 2: TAs with WeeklySchedule conflicts with THIS exam
+        # Exclusion 2: TAs with WeeklySchedule conflicts with THIS exam
         conflicting_schedule_ta_ids_set = set()
         if exam_dt_start_local.date() == exam_dt_end_local.date():
             qs = WeeklySchedule.objects.filter(
@@ -176,13 +107,14 @@ class ExamEligibleTAsView(APIView):
             )
             conflicting_schedule_ta_ids_set.update(qs_part2.values_list('ta_id', flat=True))
         
-        base_tas_queryset = base_tas_queryset.exclude(id__in=list(conflicting_schedule_ta_ids_set))
+        # Apply schedule conflict exclusion to the potential_additional_tas_queryset
+        potential_additional_tas_queryset = potential_additional_tas_queryset.exclude(id__in=list(conflicting_schedule_ta_ids_set))
 
-        # Separate TAs already assigned to this exam - they bypass some subsequent filters
-        always_include_tas = base_tas_queryset.filter(id__in=list(currently_assigned_ta_ids_for_this_exam))
-        
-        # TAs not yet assigned to this exam will undergo further filtering
-        further_filterable_tas = base_tas_queryset.exclude(id__in=list(currently_assigned_ta_ids_for_this_exam))
+        # At this point, `always_include_tas_queryset` contains TAs already assigned (and active).
+        # `potential_additional_tas_queryset` contains other TAs from relevant departments, with fundamental exclusions applied.
+        # Now, apply stricter filters ONLY to `potential_additional_tas_queryset`.
+
+        further_filterable_tas = potential_additional_tas_queryset # Rename for clarity in subsequent logic
 
         # Stricter Filter 1: Conflicting existing Proctoring Duties (One Day Before/After)
         # This filter applies ONLY to `further_filterable_tas`
@@ -239,10 +171,9 @@ class ExamEligibleTAsView(APIView):
         elif exam_course_level in [Course.CourseLevel.GRADUATE.upper(), Course.CourseLevel.PHD.upper()]:
             further_filterable_tas = further_filterable_tas.filter(academic_level=User.AcademicLevel.PHD)
         
-        # Combine the `always_include_tas` with the `further_filterable_tas`
-        # Convert to lists of IDs then combine into a set to ensure uniqueness, then filter by ID list
-        # This handles the case where an already-assigned TA might also meet all other criteria.
-        final_ta_ids = set(always_include_tas.values_list('id', flat=True)) | set(further_filterable_tas.values_list('id', flat=True))
+        # Combine the `always_include_tas_queryset` with the fully filtered `further_filterable_tas`
+        # Convert to lists of IDs then combine into a set to ensure uniqueness, then filter by ID list.
+        final_ta_ids = set(always_include_tas_queryset.values_list('id', flat=True)) | set(further_filterable_tas.values_list('id', flat=True))
         tas = User.objects.filter(id__in=list(final_ta_ids))
         
         # Calculate current proctor workload for each TA in the final list
@@ -329,11 +260,15 @@ class AssignProctorsToExamView(APIView):
         replace_existing = validated_data.get('replace_existing', False)
         is_paid_assignment = validated_data.get('is_paid', False) # Get is_paid, default to False
 
-        # Allow changes if AWAITING_PROCTORS or READY.
-        # The subsequent logic will handle replace_existing and counts.
-        if not (exam.status == Exam.Status.AWAITING_PROCTORS or exam.status == Exam.Status.READY):
+        # Allow changes if AWAITING_PROCTORS, AWAITING_CROSS_DEPARTMENT_PROCTOR or READY.
+        allowed_statuses_for_assignment = [
+            Exam.Status.AWAITING_PROCTORS,
+            Exam.Status.AWAITING_CROSS_DEPARTMENT_PROCTOR,
+            Exam.Status.READY
+        ]
+        if exam.status not in allowed_statuses_for_assignment:
             return Response(
-                {"error": f"Exam is currently '{exam.get_status_display()}'. Proctors can only be modified if status is 'Awaiting Proctors' or 'Ready'."},
+                {"error": f"Exam is currently '{exam.get_status_display()}'. Proctors can only be modified if status is 'Awaiting Proctors', 'Awaiting Cross-Department Proctor', or 'Ready'."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
@@ -430,6 +365,114 @@ class AssignProctorsToExamView(APIView):
                 {"error": "Automatic assignment is not yet implemented"},
                 status=status.HTTP_501_NOT_IMPLEMENTED
             )
+
+class MyProctoringsView(APIView):
+    """
+    API endpoint for TAs to view their own proctoring assignments.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        # Check if the user is a TA
+        if request.user.role != 'TA':
+            return Response(
+                {"error": "Only TAs can access their proctoring assignments"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get the TA's proctor assignments
+        assignments = ProctorAssignment.objects.filter(
+            ta=request.user
+        ).select_related(
+            'exam', 
+            'exam__course', 
+            'exam__classroom',
+            'assigned_by'
+        )
+        
+        # Serialize and return the data
+        serializer = ProctorAssignmentSerializer(assignments, many=True)
+        return Response(serializer.data)
+
+class ConfirmAssignmentView(APIView):
+    """
+    API endpoint for TAs to confirm their proctoring assignments.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, pk):
+        # Check if the user is a TA
+        if request.user.role != 'TA':
+            return Response(
+                {"error": "Only TAs can confirm their proctoring assignments"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        try:
+            # Get the assignment
+            assignment = ProctorAssignment.objects.get(id=pk, ta=request.user)
+            
+            # Check if the assignment is in ASSIGNED status
+            if assignment.status != ProctorAssignment.Status.ASSIGNED:
+                return Response(
+                    {"error": "Only assignments with 'Assigned' status can be confirmed"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Update the assignment status to CONFIRMED
+            assignment.status = ProctorAssignment.Status.CONFIRMED
+            assignment.save()
+            
+            # Return the updated assignment
+            serializer = ProctorAssignmentSerializer(assignment)
+            return Response(serializer.data)
+            
+        except ProctorAssignment.DoesNotExist:
+            return Response(
+                {"error": "Assignment not found or you don't have permission to confirm it"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+class RejectAssignmentView(APIView):
+    """
+    API endpoint for TAs to reject (delete) their proctoring assignments.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def delete(self, request, pk=None):
+        # Ensure the user is a TA
+        if request.user.role != 'TA':
+            return Response(
+                {"error": "Only TAs can reject assignments."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Get the specific assignment, ensuring it belongs to the requesting TA
+        assignment = get_object_or_404(ProctorAssignment, pk=pk, ta=request.user)
+        exam = assignment.exam # Get the associated exam before deleting the assignment
+        
+        # Optional: Check if the assignment can be rejected based on its current status
+        # For example, only allow rejection if status is 'ASSIGNED'
+        if assignment.status != ProctorAssignment.Status.ASSIGNED:
+            return Response(
+                {"error": f"Assignment in status '{assignment.get_status_display()}' cannot be rejected."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        assignment.delete()
+
+        # After deletion, re-evaluate the exam status
+        remaining_assignments_count = ProctorAssignment.objects.filter(exam=exam, status=ProctorAssignment.Status.ASSIGNED).count()
+        
+        if exam.proctor_count == 0: # If 0 proctors are needed, it's always ready.
+            exam.status = Exam.Status.READY
+        elif remaining_assignments_count >= exam.proctor_count:
+            exam.status = Exam.Status.READY
+        else:
+            exam.status = Exam.Status.AWAITING_PROCTORS
+        exam.save(update_fields=['status'])
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Register this in your urls.py:
 # path('exams/<int:pk>/eligible-tas/', ExamEligibleTAsView.as_view(), name='exam-eligible-tas'),

@@ -3,11 +3,14 @@ from django.contrib.auth.password_validation import validate_password
 from .models import (
     User, Student, Department, Course, 
     Section, TAAssignment, Classroom, WeeklySchedule, InstructorTAAssignment, Exam,
-    TAProfile
+    TAProfile, Notification
 )
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from proctoring.models import ProctorAssignment
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -387,11 +390,17 @@ class ExamSerializer(serializers.ModelSerializer):
     )
     created_by_name = serializers.SerializerMethodField()
     type_display = serializers.CharField(source='get_type_display', read_only=True)
-    status = serializers.CharField(read_only=True, required=False, allow_null=True, default='WAITING_FOR_PLACES')
+    status = serializers.CharField(required=False, allow_null=True)
     status_display = serializers.CharField(read_only=True, required=False, allow_null=True)
     student_list_file = serializers.FileField(required=False, allow_null=True)
     has_student_list = serializers.BooleanField(read_only=True)
     assigned_proctor_count = serializers.SerializerMethodField()
+    assisting_departments = DepartmentSerializer(many=True, read_only=True)
+    cross_approved_department_codes = serializers.ListField(
+        child=serializers.CharField(max_length=10),
+        write_only=True,
+        required=False
+    )
     
     class Meta:
         model = Exam
@@ -400,9 +409,10 @@ class ExamSerializer(serializers.ModelSerializer):
             'date', 'duration', 'classroom', 'classroom_id', 'proctor_count',
             'created_by', 'created_by_name', 'created_at', 'updated_at',
             'status', 'status_display', 'student_count', 'student_list_file',
-            'has_student_list', 'assigned_proctor_count'
+            'has_student_list', 'assigned_proctor_count', 'assisting_departments',
+            'cross_approved_department_codes'
         )
-        read_only_fields = ('created_by', 'created_at', 'updated_at', 'has_student_list')
+        read_only_fields = ('created_by', 'created_at', 'updated_at', 'has_student_list', 'status_display', 'type_display', 'assigned_proctor_count', 'assisting_departments')
     
     def get_created_by_name(self, obj):
         if obj.created_by:
@@ -434,7 +444,26 @@ class ExamSerializer(serializers.ModelSerializer):
             validated_data['has_student_list'] = True
             # Student count will be calculated in a view or signal
             
-        return super().update(instance, validated_data)
+        # Handle assisting departments
+        cross_approved_codes = validated_data.pop('cross_approved_department_codes', None)
+
+        # Call super().update() first to save other fields
+        instance = super().update(instance, validated_data)
+
+        if cross_approved_codes is not None: # Allow empty list to clear selection
+            departments = []
+            for code in cross_approved_codes:
+                try:
+                    department = Department.objects.get(code=code)
+                    departments.append(department)
+                except Department.DoesNotExist:
+                    # Optionally, raise an error or log if a department code is invalid
+                    # For now, we'll just skip invalid codes
+                    logger.warning(f"Department with code '{code}' not found while updating exam {instance.id}")
+                    pass # Or raise serializers.ValidationError(f"Department with code '{code}' not found.")
+            instance.assisting_departments.set(departments)
+            
+        return instance
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -633,6 +662,8 @@ class TAProfileSerializer(serializers.ModelSerializer):
     academic_level_display = serializers.CharField(source='user.get_academic_level_display', read_only=True)
     employment_type = serializers.CharField(source='user.employment_type', read_only=True)
     employment_type_display = serializers.CharField(source='user.get_employment_type_display', read_only=True)
+    enrolled_courses_details = CourseSerializer(source='enrolled_courses', many=True, read_only=True)
+    supervisor_email = serializers.EmailField(source='supervisor.email', allow_null=True, read_only=True)
     
     class Meta:
         model = TAProfile
@@ -640,6 +671,44 @@ class TAProfileSerializer(serializers.ModelSerializer):
             'id', 'user_id', 'email', 'first_name', 'last_name', 'full_name',
             'department', 'academic_level', 'academic_level_display',
             'employment_type', 'employment_type_display',
-            'undergrad_university', 'supervisor', 'workload_number', 'workload_credits', 'schedule_json'
+            'undergrad_university', 'supervisor', 'workload_number', 'workload_credits', 'schedule_json',
+            'enrolled_courses_details', 'supervisor_email'
         )
-        read_only_fields = ('id', 'user_id', 'workload_number') 
+        read_only_fields = ('id', 'user_id', 'workload_number')
+
+    def update(self, instance, validated_data):
+        # Workload number is immutable once set
+        if instance.workload_number is not None and 'workload_number' in validated_data:
+            validated_data.pop('workload_number')
+        return super().update(instance, validated_data)
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    """
+    Serializer for the Notification model.
+    """
+    user_email = serializers.EmailField(source='user.email', read_only=True)
+    # To display exam details more meaningfully, you could use a nested serializer
+    # or add more source fields from the related_exam.
+    related_exam_info = serializers.StringRelatedField(source='related_exam', read_only=True)
+
+    class Meta:
+        model = Notification
+        fields = [
+            'id',
+            'user',
+            'user_email',
+            'message',
+            'notification_type',
+            'created_at',
+            'is_read',
+            'read_at',
+            'related_exam',
+            'related_exam_info',
+            'link'
+        ]
+        read_only_fields = ('id', 'user', 'user_email', 'created_at', 'read_at', 'related_exam_info')
+
+    # If you need to allow creating notifications via this serializer (e.g., for admin purposes),
+    # you might need to adjust read_only_fields and handle user assignment.
+    # For now, it's primarily for displaying notifications. 

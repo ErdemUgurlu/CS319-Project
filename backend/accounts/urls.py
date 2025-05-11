@@ -70,9 +70,15 @@ urlpatterns = [
     path('exams/<int:pk>/set-proctors/', views.ExamSetProctorsView.as_view(), name='exam_set_proctors'),
     path('exams/<int:pk>/upload-student-list/', views.ExamStudentListUploadView.as_view(), name='exam_upload_student_list'),
     path('exams/import-placements/', views.ExamPlacementImportView.as_view(), name='exam_import_placements'),
+    path('exams/<int:pk>/notify-department-tas/', views.NotifyDepartmentTAsView.as_view(), name='exam_notify_department_tas'),
     
     # Classroom endpoints
     path('classrooms/', views.ClassroomListView.as_view(), name='classroom_list'),
+    
+    # Notification endpoints
+    path('notifications/', views.UserNotificationsView.as_view(), name='user_notifications'),
+    path('notifications/<int:pk>/read/', views.MarkNotificationAsReadView.as_view(), name='notification_mark_read'),
+    path('notifications/mark-all-read/', views.MarkAllNotificationsAsReadView.as_view(), name='notification_mark_all_read'),
     
     path('ta-assignments/', views.TAAssignmentListCreateView.as_view(), name='ta_assignment_list_create'),
     path('ta-assignments/<int:pk>/', views.TAAssignmentDetailView.as_view(), name='ta_assignment_detail'),

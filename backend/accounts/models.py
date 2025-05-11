@@ -4,6 +4,11 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
+from django.conf import settings
+import logging # Add this line
+
+logger = logging.getLogger(__name__) # Add this line
 
 
 class UserManager(BaseUserManager):
@@ -153,7 +158,7 @@ class User(AbstractUser):
 class Student(models.Model):
     """Student model representing a student who may also be a TA."""
     
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='student_profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='student_profile')
     student_id = models.CharField(max_length=20, unique=True)
     department_name = models.CharField(max_length=100)
     is_ta = models.BooleanField(default=False)
@@ -204,7 +209,7 @@ class Section(models.Model):
     
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='sections',)
     section_number = models.CharField(max_length=3)
-    instructor = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, 
+    instructor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, 
                                   limit_choices_to={'role': 'INSTRUCTOR'})
     student_count = models.PositiveIntegerField(default=0)
     
@@ -218,7 +223,7 @@ class Section(models.Model):
 class TAAssignment(models.Model):
     """Model representing a TA assignment to a course section."""
     
-    ta = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'TA'})
+    ta = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'role': 'TA'})
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     assigned_date = models.DateField(auto_now_add=True)
     
@@ -256,7 +261,7 @@ class WeeklySchedule(models.Model):
         ('SUN', 'Sunday'),
     ]
     
-    ta = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'TA'})
+    ta = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, limit_choices_to={'role': 'TA'})
     day = models.CharField(max_length=3, choices=DAY_CHOICES)
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -281,19 +286,23 @@ class AuditLog(models.Model):
         ('SWAP', 'Swap'),
         ('OVERRIDE', 'Override'),
         ('IMPORT', 'Import'),
+        ('NOTIFY_TAS', 'Notify TAs'),
     ]
     
     timestamp = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    action = models.CharField(max_length=10, choices=ACTION_CHOICES)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES)
     object_type = models.CharField(max_length=50)
-    object_id = models.IntegerField(null=True)
+    object_id = models.IntegerField(null=True, blank=True)
     description = models.TextField()
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     override_flag = models.BooleanField(default=False)
     
     def __str__(self):
         return f"{self.timestamp} - {self.user} - {self.action} - {self.object_type}"
+
+    class Meta:
+        ordering = ['-timestamp']
 
 
 class Exam(models.Model):
@@ -308,8 +317,8 @@ class Exam(models.Model):
         WAITING_FOR_STUDENT_LIST = 'WAITING_FOR_STUDENT_LIST', _('Waiting for Student List')
         WAITING_FOR_PLACES = 'WAITING_FOR_PLACES', _('Waiting for Places')
         AWAITING_PROCTORS = 'AWAITING_PROCTORS', _('Awaiting Proctors')
-        AWAITING_DEAN_CROSS_APPROVAL = 'AWAITING_DEAN_CROSS_APPROVAL', _('Awaiting Dean Approval for Cross-Departmental')
-        AWAITING_CROSS_DEPARTMENT_PROCTORS = 'AWAITING_CROSS_DEPARTMENT_PROCTORS', _('Awaiting Cross-Department Proctors')
+        WAITING_FOR_CROSS_DEPARTMENT_APPROVAL = 'WAITING_FOR_CROSS_DEPARTMENT_APPROVAL', _('Waiting for Cross-Department Approval')
+        AWAITING_CROSS_DEPARTMENT_PROCTOR = 'AWAITING_CROSS_DEPARTMENT_PROCTOR', _('Awaiting Cross-Department Proctor')
         READY = 'READY', _('Ready')
     
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exams')
@@ -318,7 +327,7 @@ class Exam(models.Model):
     duration = models.PositiveIntegerField(default=120, help_text="Duration of the exam in minutes")
     classroom = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True)
     proctor_count = models.PositiveIntegerField(default=1)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_exams')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='created_exams')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=50, choices=Status.choices, default=Status.WAITING_FOR_STUDENT_LIST)
@@ -326,88 +335,130 @@ class Exam(models.Model):
     student_list_file = models.FileField(upload_to='exam_student_lists/', null=True, blank=True, 
                                         help_text="Excel file containing the list of students for this exam")
     has_student_list = models.BooleanField(default=False, help_text="Indicates if a student list has been uploaded")
-    helping_department_code = models.CharField(max_length=10, null=True, blank=True, help_text="Department code of the department helping with proctors, if cross-departmental request is approved.")
     
+    # For cross-department proctoring
+    assisting_departments = models.ManyToManyField(
+        Department, 
+        blank=True, 
+        related_name="assisting_exams",
+        help_text="Departments approved to assist with proctoring for this exam."
+    )
+
     class Meta:
         ordering = ['date']
         verbose_name = 'Exam'
         verbose_name_plural = 'Exams'
-    
+
     def save(self, *args, **kwargs):
-        """Override save method to ensure status transitions happen correctly."""
-        
-        # Check if this is an update and if 'classroom' is one of the fields being updated.
-        # Or if it's a new instance and classroom is set.
         is_new = self._state.adding
-        original_status = self.status
-
-        # Logic to set to AWAITING_PROCTORS when classroom is assigned.
-        # This should only happen if the classroom is being set and the exam isn't already READY.
-        if self.classroom and self.status != Exam.Status.READY:
-            # If it's a new exam with a classroom, or if the classroom field has changed for an existing exam
-            if is_new or (kwargs.get('update_fields') and 'classroom' in kwargs.get('update_fields')) or (not kwargs.get('update_fields') and self.pk and Exam.objects.get(pk=self.pk).classroom != self.classroom):
-                # Only revert to AWAITING_PROCTORS if it wasn't already AWAITING_PROCTORS or if it was something earlier
-                if self.status in [Exam.Status.WAITING_FOR_STUDENT_LIST, Exam.Status.WAITING_FOR_PLACES]:
-                    self.status = Exam.Status.AWAITING_PROCTORS
-                # If the classroom is being assigned and the status *was* AWAITING_PROCTORS, keep it there. 
-                # If the signal has set it to READY, this part won't execute due to `self.status != Exam.Status.READY`
-
-        # If the signal handler changed the status (e.g., to READY), 
-        # and no other part of this save method changed it back, then kwargs['update_fields'] from the signal will be used.
-        # If update_fields is not passed from the signal, a full save occurs.
-
-        # Special handling if the call to save() explicitly targets the status field, e.g. from the signal
-        if kwargs.get('update_fields') and 'status' in kwargs.get('update_fields') and len(kwargs.get('update_fields')) == 1:
-            # This means the save is likely coming from our signal, trying to set the status. 
-            # In this case, we trust the status value that has been set on the instance before calling save.
-            pass # The status set by the signal will be saved.
-        elif self.status == original_status and self.classroom and self.status != Exam.Status.READY: 
-             # If status wasn't changed by signal, and classroom exists, and it's not READY, ensure AWAITING_PROCTORS
-             # This handles the case where an exam is edited in admin, classroom is present, but status isn't READY.
-             self.status = Exam.Status.AWAITING_PROCTORS
-
         super().save(*args, **kwargs)
-    
+        if is_new and self.student_list_file:
+            # If new and has student list, process it (e.g., count students)
+            # This logic can be in a signal or a dedicated method
+            pass # Placeholder for student list processing logic
+        
+        # Update status based on completeness
+        if self.has_student_list and not self.classroom and self.status == self.Status.WAITING_FOR_STUDENT_LIST:
+            self.status = self.Status.WAITING_FOR_PLACES
+            super().save(update_fields=['status'])
+        elif self.classroom and self.status == self.Status.WAITING_FOR_PLACES:
+            # If a TA proctoring system is integrated, this might go to AWAITING_PROCTORS
+            self.status = self.Status.AWAITING_PROCTORS # Or READY if no proctor system
+            super().save(update_fields=['status'])
+
     def __str__(self):
-        return f"{self.course} - {self.get_type_display()} on {self.date.strftime('%Y-%m-%d %H:%M')}"
-    
+        return f"{self.course} - {self.get_type_display()} ({self.date.strftime('%Y-%m-%d %H:%M')})"
+
     @property
     def status_display(self):
         return self.get_status_display()
-
+    
     def update_status_based_on_proctoring(self):
-        """
-        Updates the exam's status based on the current number of assigned proctors
-        and the required proctor_count.
-        This method should be called after proctor_count changes or proctor assignments change.
-        """
-        from proctoring.models import ProctorAssignment # Local import to avoid circular dependency issues
+        """ Updates the exam status based on proctor assignment status. """
+        from proctoring.models import ProctorAssignment # Import here
+        # Ensure created_by field is populated before accessing it
+        if not self.created_by:
+            logger.warning(f"Exam {self.id} has no created_by user. Cannot determine if it's instructor's own exam.")
+            # Default behavior: If no creator, it cannot be self-proctored this way.
         
-        assigned_proctor_count = ProctorAssignment.objects.filter(
-            exam=self,
-            status=ProctorAssignment.Status.ASSIGNED
-        ).count()
-        
-        original_status = self.status
-        new_status = original_status
-
-        if self.proctor_count > 0 and assigned_proctor_count >= self.proctor_count:
-            new_status = Exam.Status.READY
-        elif self.proctor_count == 0: # If no proctors needed, it's always ready
-            new_status = Exam.Status.READY
-        else:
-            new_status = Exam.Status.AWAITING_PROCTORS
+        if self.status == self.Status.AWAITING_PROCTORS:
+            assigned_count = self.proctor_assignments.filter(status=ProctorAssignment.Status.ASSIGNED).count()
             
-        if original_status != new_status:
-            self.status = new_status
-            self.save(update_fields=['status'])
-            print(f"[Exam.update_status_based_on_proctoring] Exam ID {self.id} status updated to: {self.status}")
-        else:
-            print(f"[Exam.update_status_based_on_proctoring] Exam ID {self.id} status ({self.status}) unchanged.")
+            # Handle case where proctor_count might be None or 0
+            required_count = self.proctor_count if self.proctor_count is not None else 0
+            
+            if assigned_count >= required_count and required_count > 0:
+                self.status = self.Status.READY
+                self.save(update_fields=['status'])
+                logger.info(f"Exam {self.id} status updated to READY. Assigned: {assigned_count}, Required: {required_count}")
+            elif required_count == 0:
+                # If 0 proctors are explicitly required, and it was AWAITING_PROCTORS, it's considered READY.
+                # This could be an edge case where an exam doesn't need proctors.
+                self.status = self.Status.READY
+                self.save(update_fields=['status'])
+                logger.info(f"Exam {self.id} status updated to READY as 0 proctors required.")
+            else:
+                # Stays in AWAITING_PROCTORS if not enough are assigned or if required_count is not set properly.
+                logger.info(f"Exam {self.id} remains AWAITING_PROCTORS. Assigned: {assigned_count}, Required: {required_count}")
+        elif self.status == self.Status.AWAITING_CROSS_DEPARTMENT_PROCTOR:
+            # Logic for when TAs are assigned from other departments
+            # This might involve checking a different set of assignments or flags
+            # For now, let's assume it transitions to READY when enough cross-department proctors are assigned
+            # This part needs more detailed logic based on how cross-department assignments are tracked
+            pass # Placeholder for cross-department proctor assignment check
+
+
+class Notification(models.Model):
+    """Model for system notifications to users."""
+    
+    NOTIFICATION_TYPE_CHOICES = [
+        ('PROCTORING_INVITATION', 'Proctoring Invitation'),
+        ('PROCTORING_ASSIGNMENT', 'Proctoring Assignment'),
+        ('EXAM_UPDATE', 'Exam Update'),
+        ('GENERAL_INFO', 'General Information'),
+        ('TASK_ASSIGNMENT', 'Task Assignment'),
+        ('LEAVE_REQUEST_STATUS', 'Leave Request Status'),
+        # Add other specific types as needed
+    ]
+    
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='notifications', help_text="The user who will receive the notification.")
+    message = models.TextField(help_text="The content of the notification.")
+    notification_type = models.CharField(
+        max_length=50,
+        choices=NOTIFICATION_TYPE_CHOICES,
+        default='GENERAL_INFO',
+        help_text="The type of notification."
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False, help_text="Has the user read this notification?")
+    read_at = models.DateTimeField(null=True, blank=True, help_text="When the notification was marked as read.")
+    
+    related_exam = models.ForeignKey(Exam, on_delete=models.SET_NULL, null=True, blank=True, related_name='notifications')
+    link = models.CharField(max_length=255, blank=True, null=True, help_text="A URL link related to the notification, e.g., to view the exam details.")
+
+    def __str__(self):
+        return f"Notification for {self.user.email} ({self.get_notification_type_display()}) - {'Read' if self.is_read else 'Unread'}"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Notification"
+        verbose_name_plural = "Notifications"
+
+    def mark_as_read(self):
+        if not self.is_read:
+            self.is_read = True
+            self.read_at = timezone.now()
+            self.save(update_fields=['is_read', 'read_at'])
+
+    def mark_as_unread(self):
+        if self.is_read:
+            self.is_read = False
+            self.read_at = None
+            self.save(update_fields=['is_read', 'read_at'])
 
 
 class Leave(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='leaves')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='leaves')
     start_date = models.DateField()
     end_date = models.DateField()
     reason = models.TextField(blank=True, null=True)
@@ -435,13 +486,13 @@ class Leave(models.Model):
 class InstructorTAAssignment(models.Model):
     """Model for tracking which TAs are assigned to which instructors."""
     instructor = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='assigned_tas',
         limit_choices_to={'role': 'INSTRUCTOR'}
     )
     ta = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name='assigned_to_instructor',
         limit_choices_to={'role': 'TA'}
@@ -468,7 +519,7 @@ class TAProfile(models.Model):
     Contains additional fields specific to TAs.
     """
     user = models.OneToOneField(
-        User, 
+        settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
         related_name='ta_profile',
         limit_choices_to={'role': 'TA'}
@@ -489,7 +540,7 @@ class TAProfile(models.Model):
     )
     
     supervisor = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -540,13 +591,13 @@ class TAProfile(models.Model):
         super().save(*args, **kwargs)
 
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_ta_profile(sender, instance, created, **kwargs):
     """Create a TAProfile when a User with role 'TA' is created."""
     if created and instance.role == 'TA':
         TAProfile.objects.create(user=instance)
 
-@receiver(post_save, sender=User)
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def update_ta_profile(sender, instance, created, **kwargs):
     """Update TAProfile when a User's role changes to or from 'TA'."""
     if not created:

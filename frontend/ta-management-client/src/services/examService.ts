@@ -79,7 +79,14 @@ export const examService = {
 
   // Delete an exam
   deleteExam: async (id: number): Promise<any> => {
-    return api.delete(`/accounts/exams/${id}/delete/`);
+    try {
+      const response = await api.delete(`/accounts/exams/${id}/`);
+      console.log('API response deleteExam:', response);
+      return response;
+    } catch (error) {
+      console.error(`Error in deleteExam for ID ${id}:`, error);
+      throw error;
+    }
   },
 
   // Assign places to an exam
@@ -89,7 +96,14 @@ export const examService = {
 
   // Get available classrooms
   getClassrooms: async (): Promise<any> => {
-    return api.get('/accounts/classrooms/');
+    try {
+      const response = await api.get('/accounts/classrooms/');
+      console.log('API response getClassrooms:', response);
+      return response;
+    } catch (error) {
+      console.error('Error in getClassrooms:', error);
+      throw error;
+    }
   },
 
   // Set proctor count for an exam
@@ -97,16 +111,21 @@ export const examService = {
     return api.patch(`/accounts/exams/${id}/set-proctors/`, data);
   },
 
-  // Upload student list file for an exam
-  uploadStudentList: async (id: number, file: File): Promise<any> => {
+  // Upload student list for an exam
+  uploadStudentList: async (examId: number, file: File): Promise<any> => {
     const formData = new FormData();
     formData.append('student_list_file', file);
-    
-    return api.patch(`/accounts/exams/${id}/upload-student-list/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
+    try {
+      const response = await api.post(`/accounts/exams/${examId}/upload-student-list/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error uploading student list for exam ${examId}:`, error);
+      throw error;
+    }
   },
 
   // Add a function to upload exam placements from Excel file
@@ -126,20 +145,66 @@ export const examService = {
     });
   },
 
-  // Request cross-departmental proctors for an exam
-  requestCrossDepartmentalProctors: async (examId: number): Promise<any> => {
-    // The backend URL is in proctoring app, not accounts
-    return api.post(`/proctoring/exams/${examId}/request-cross-departmental/`);
+  // Import places from Excel
+  importPlacesFromExcel: async (examId: number, file: File): Promise<any> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await api.post(`/accounts/exams/${examId}/import-places/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(`Error importing places for exam ${examId}:`, error);
+      throw error;
+    }
   },
 
-  // Dean action for cross-departmental proctoring requests
-  deanCrossDepartmentalAction: async (examId: number, action: 'APPROVE' | 'REJECT', helpingDepartmentCode?: string): Promise<any> => {
-    const payload: any = { action };
-    if (action === 'APPROVE' && helpingDepartmentCode) {
-      payload.helping_department_code = helpingDepartmentCode;
+  // Request cross-department proctors
+  requestCrossDepartmentProctors: async (examId: number, departmentIds: number[]): Promise<any> => {
+    try {
+      const response = await api.post(`/accounts/exams/${examId}/request-cross-department/`, { department_ids: departmentIds });
+      return response.data; // Or simply response if the backend sends 204 or similar
+    } catch (error) {
+      console.error(`Error requesting cross-department proctors for exam ${examId}:`, error);
+      throw error;
     }
-    // The backend URL is in proctoring app
-    return api.post(`/proctoring/exams/${examId}/dean-cross-departmental-approval/`, payload);
+  },
+
+  approveCrossDepartmentRequest: async (examId: number, departmentIds: number[]): Promise<any> => {
+    try {
+      const response = await api.post(`/accounts/exams/${examId}/approve-cross-department/`, { department_ids: departmentIds });
+      return response.data; 
+    } catch (error) {
+      console.error(`Error approving cross-department request for exam ${examId}:`, error);
+      throw error;
+    }
+  },
+
+  rejectCrossDepartmentRequest: async (examId: number, reason: string): Promise<any> => {
+    try {
+      const response = await api.post(`/accounts/exams/${examId}/reject-cross-department/`, { reason });
+      return response.data;
+    } catch (error) {
+      console.error(`Error rejecting cross-department request for exam ${examId}:`, error);
+      throw error;
+    }
+  },
+
+  // Notify TAs for cross-department proctoring
+  notifyTAsForCrossDepartmentProctoring: async (examId: number, departmentId: number): Promise<any> => {
+    try {
+      console.log(`Sending request to notify TAs for exam ${examId} in department ${departmentId}`);
+      // The endpoint will be POST /accounts/exams/{examId}/notify-department-tas/
+      const response = await api.post(`/accounts/exams/${examId}/notify-department-tas/`, { department_id: departmentId });
+      console.log('API response notifyTAsForCrossDepartmentProctoring:', response);
+      return response; // Or response.data depending on what the backend returns
+    } catch (error) {
+      console.error(`Error in notifyTAsForCrossDepartmentProctoring for exam ${examId}, department ${departmentId}:`, error);
+      throw error;
+    }
   }
 };
 

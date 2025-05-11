@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   Container, 
   Typography, 
@@ -27,7 +27,10 @@ import {
   Grid as MuiGrid,
   IconButton,
   Tooltip,
-  Badge
+  Badge,
+  Snackbar,
+  Link as MuiLink,
+  MenuItem
 } from '@mui/material';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -36,13 +39,19 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import RoomIcon from '@mui/icons-material/Room';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import CloseIcon from '@mui/icons-material/Close';
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 import { useAuth } from '../context/AuthContext';
-import { format, isPast, isToday, isTomorrow, isAfter } from 'date-fns';
+import { format, isPast, isToday, isTomorrow, isAfter, parseISO } from 'date-fns';
 import proctoringService, {
   ProctorAssignment,
   EligibleProctor,
   SwapRequestData
 } from '../services/proctoringService';
+import notificationService from '../services/notificationService';
+import { Notification } from '../interfaces/notification';
+import { Link as RouterLink } from 'react-router-dom';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -87,6 +96,39 @@ const MyProctorings: React.FC = () => {
   const [tabValue, setTabValue] = useState(0);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
+  // --- NEW State for Notifications ---
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loadingNotifications, setLoadingNotifications] = useState(false);
+  const [notificationError, setNotificationError] = useState<string | null>(null);
+  const [snackbarMessage, setSnackbarMessage] = useState<string | null>(null);
+  // --- END NEW State ---
+
+  // --- Moved Notification Handlers Here ---
+  const handleMarkNotificationAsRead = async (notificationId: number) => {
+    try {
+      await notificationService.markAsRead(notificationId);
+      setNotifications(prev => 
+        prev.map(n => n.id === notificationId ? { ...n, is_read: true } : n)
+      );
+      setSnackbarMessage('Notification marked as read.');
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
+      setSnackbarMessage('Failed to mark notification as read.');
+    }
+  };
+
+  const handleMarkAllNotificationsAsRead = async () => {
+    try {
+      await notificationService.markAllAsRead();
+      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+      setSnackbarMessage('All notifications marked as read.');
+    } catch (err) {
+      console.error('Error marking all notifications as read:', err);
+      setSnackbarMessage('Failed to mark all notifications as read.');
+    }
+  };
+  // --- END Moved Notification Handlers ---
+
   // Handle tab change
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
@@ -120,8 +162,23 @@ const MyProctorings: React.FC = () => {
       }
     };
 
+    const fetchNotifications = async () => {
+      setLoadingNotifications(true);
+      try {
+        const data = await notificationService.getMyNotifications();
+        setNotifications(data);
+        setNotificationError(null);
+      } catch (err: any) {
+        setNotificationError('Failed to load notifications.');
+        console.error('Error fetching notifications:', err);
+      } finally {
+        setLoadingNotifications(false);
+      }
+    };
+
     fetchAssignments();
     fetchSwapHistory();
+    fetchNotifications();
   }, [refreshTrigger]);
 
   // Check if an exam is within 3 hours
@@ -147,6 +204,7 @@ const MyProctorings: React.FC = () => {
     } catch (err: any) {
       setSwapError(err.response?.data?.error || 'Error fetching eligible proctors');
       console.error('Error fetching eligible proctors:', err);
+      setEligibleProctors([]); // Ensure it is an array on error
     }
   };
 
@@ -160,11 +218,12 @@ const MyProctorings: React.FC = () => {
   const handleConfirmAssignment = async (assignmentId: number) => {
     try {
       await proctoringService.confirmAssignment(assignmentId);
-      // Refresh data
       setRefreshTrigger(prev => prev + 1);
+      setSnackbarMessage('Assignment confirmed successfully!');
     } catch (err: any) {
       console.error('Error confirming assignment:', err);
       setError(err.response?.data?.detail || 'Error confirming assignment');
+      setSnackbarMessage('Failed to confirm assignment.');
     }
   };
 
@@ -183,15 +242,12 @@ const MyProctorings: React.FC = () => {
         reason: swapReason
       };
       
-      const response = await proctoringService.requestSwap(swapData);
+      await proctoringService.requestSwap(swapData);
       
       setSwapSuccess(true);
       setSwapError(null);
-
-      // Refresh the assignments and swap history
+      setSnackbarMessage('Swap request submitted successfully!');
       setRefreshTrigger(prev => prev + 1);
-
-      // Close dialog after a short delay to show success message
       setTimeout(() => {
         handleCloseSwapDialog();
       }, 2000);
@@ -244,11 +300,17 @@ const MyProctorings: React.FC = () => {
   };
 
   // Format date for display
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    if (isToday(date)) return 'Today';
-    if (isTomorrow(date)) return 'Tomorrow';
-    return format(date, 'MMMM d, yyyy');
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return 'N/A';
+    try {
+      return format(parseISO(dateString), 'MMM d, yyyy');
+    } catch (error) {
+      try { // Fallback for non-ISO strings, though backend should be consistent
+        return format(new Date(dateString), 'MMM d, yyyy');
+      } catch (e) {
+        return dateString; 
+      }
+    }
   };
 
   if (loading && assignments.length === 0) {
@@ -268,20 +330,94 @@ const MyProctorings: React.FC = () => {
     assignment => isPast(new Date(`${assignment.exam.date}T${assignment.exam.end_time}`))
   );
 
+  const unreadNotificationsCount = notifications.filter(n => !n.is_read).length;
+
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      {/* --- NEW Notification Display Area --- */}
+      {notificationError && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {notificationError}
+        </Alert>
+      )}
+      {loadingNotifications && (
+        <Box display="flex" justifyContent="center" sx={{ mb: 2 }}>
+          <CircularProgress size={24} /> <Typography sx={{ ml: 1 }}>Loading notifications...</Typography>
+        </Box>
+      )}
+      {!loadingNotifications && notifications.length > 0 && (
+        <Paper sx={{ p: 2, mb: 3, maxHeight: 300, overflow: 'auto' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+            <Typography variant="h6">Notifications ({unreadNotificationsCount} unread)</Typography>
+            {unreadNotificationsCount > 0 && (
+              <Button 
+                size="small" 
+                onClick={handleMarkAllNotificationsAsRead}
+                startIcon={<MarkEmailReadIcon />}
+              >
+                Mark all as read
+              </Button>
+            )}
+          </Box>
+          <List dense>
+            {notifications.map((notification) => (
+              <ListItemButton 
+                key={notification.id} 
+                sx={{ 
+                  mb: 0.5, 
+                  borderRadius: 1,
+                  backgroundColor: notification.is_read ? 'action.hover' : 'primary.lighter',
+                  opacity: notification.is_read ? 0.7 : 1,
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <Typography variant="body2" sx={{ fontWeight: notification.is_read ? 'normal' : 'bold' }}>
+                      {notification.message}
+                    </Typography>
+                  }
+                  secondary={
+                    <>
+                      <Typography component="span" variant="caption" color="text.secondary">
+                        {format(parseISO(notification.created_at), 'MMM d, yyyy HH:mm')}
+                        {notification.related_exam_info && ` - ${notification.related_exam_info}`}
+                      </Typography>
+                      {notification.link && (
+                        <MuiLink component={RouterLink} to={notification.link} variant="caption" sx={{ ml: 1, display: 'inline-block' }}>
+                          View Details
+                        </MuiLink>
+                      )}
+                    </>
+                  }
+                />
+                {!notification.is_read && (
+                   <Tooltip title="Mark as read">
+                    <IconButton size="small" onClick={(e) => { e.stopPropagation(); handleMarkNotificationAsRead(notification.id);}}>
+                      <CheckCircleOutlineIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </ListItemButton>
+            ))}
+          </List>
+        </Paper>
+      )}
+      {/* --- END NEW Notification Display Area --- */}
+
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography variant="h4" component="h1">
           My Proctoring Assignments
         </Typography>
-        <IconButton 
-          onClick={handleRefresh} 
-          color="primary"
-          disabled={loading}
-          aria-label="refresh data"
-        >
-          <RefreshIcon />
-        </IconButton>
+        <Tooltip title="Refresh Data">
+          <IconButton 
+            onClick={handleRefresh} 
+            color="primary"
+            disabled={loading || loadingNotifications}
+            aria-label="refresh data"
+          >
+            <RefreshIcon />
+          </IconButton>
+        </Tooltip>
       </Box>
 
       {error && (
@@ -569,92 +705,77 @@ const MyProctorings: React.FC = () => {
       <Dialog 
         open={openSwapDialog} 
         onClose={handleCloseSwapDialog}
-        maxWidth="md"
+        maxWidth="sm"
         fullWidth
       >
-        <DialogTitle>
-          Request Proctor Swap
-        </DialogTitle>
+        <DialogTitle>Request Proctor Swap</DialogTitle>
         <DialogContent>
+          {swapLoading && <CircularProgress sx={{ mb: 2 }} />}
+          {swapError && <Alert severity="error" sx={{ mb: 2 }}>{swapError}</Alert>}
+          {swapSuccess && <Alert severity="success" sx={{ mb: 2 }}>Swap request submitted successfully!</Alert>}
+          
           {selectedAssignment && (
-            <Box>
-              <DialogContentText sx={{ mb: 2 }}>
-                You are requesting a swap for:
-              </DialogContentText>
-              <Paper sx={{ p: 2, mb: 3, backgroundColor: '#f8f9fa' }}>
-                <Typography variant="subtitle1" gutterBottom>
-                  <strong>{selectedAssignment.exam.title}</strong> - {selectedAssignment.exam.section.course.code}
-                </Typography>
-                <Typography variant="body2">
-                  {format(new Date(selectedAssignment.exam.date), 'MMMM d, yyyy')} | {selectedAssignment.exam.start_time} - {selectedAssignment.exam.end_time}
-                </Typography>
-                {selectedAssignment.exam_room && (
-                  <Typography variant="body2">
-                    Location: {selectedAssignment.exam_room.classroom_name} - Room {selectedAssignment.exam_room.room_number}
-                  </Typography>
-                )}
-              </Paper>
-
-              <DialogContentText sx={{ mb: 2 }}>
-                Select an eligible TA to swap with:
-              </DialogContentText>
-
-              {swapError && <Alert severity="error" sx={{ mb: 2 }}>{swapError}</Alert>}
-              {swapSuccess && <Alert severity="success" sx={{ mb: 2 }}>Swap request submitted successfully!</Alert>}
-
-              {eligibleProctors.length === 0 ? (
-                <Alert severity="info" sx={{ mb: 3 }}>
-                  No TAs available for swap.
-                </Alert>
-              ) : (
-                <Paper variant="outlined" sx={{ mb: 3, maxHeight: '250px', overflow: 'auto' }}>
-                  <List>
-                    {eligibleProctors.map(proctor => (
-                      <React.Fragment key={proctor.id}>
-                        <ListItemButton 
-                          selected={selectedProctor === proctor.id}
-                          onClick={() => setSelectedProctor(proctor.id)}
-                        >
-                          <ListItemText 
-                            primary={`${proctor.full_name} (Workload: ${proctor.details?.workload?.current ?? 'N/A'})`}
-                            secondary={proctor.email}
-                          />
-                        </ListItemButton>
-                        <Divider />
-                      </React.Fragment>
-                    ))}
-                  </List>
-                </Paper>
-              )}
-
-              <TextField
-                label="Reason for Swap Request"
-                fullWidth
-                multiline
-                rows={3}
-                value={swapReason}
-                onChange={(e) => setSwapReason(e.target.value)}
-                placeholder="Please provide a detailed reason for your swap request"
-                variant="outlined"
-              />
-            </Box>
+            <Typography gutterBottom>
+              Requesting swap for: <strong>{selectedAssignment.exam.title}</strong> on {formatDate(selectedAssignment.exam.date)}
+            </Typography>
           )}
+          <TextField
+            select
+            fullWidth
+            label="Select Proctor to Swap With"
+            value={selectedProctor || ''}
+            onChange={(e) => setSelectedProctor(Number(e.target.value))}
+            helperText="Choose an eligible proctor from the list"
+            sx={{ mt: 2 }}
+            disabled={swapLoading || swapSuccess}
+          >
+            <MenuItem value="" disabled><em>Select a Proctor</em></MenuItem>
+            {eligibleProctors.map((proctor) => (
+              <MenuItem key={proctor.id} value={proctor.id}>
+                {proctor.full_name} ({proctor.email}) - Current Workload: {proctor.current_workload ?? 'N/A'}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            fullWidth
+            multiline
+            rows={3}
+            label="Reason for Swap Request"
+            value={swapReason}
+            onChange={(e) => setSwapReason(e.target.value)}
+            sx={{ mt: 2 }}
+            disabled={swapLoading || swapSuccess}
+          />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseSwapDialog} disabled={swapLoading}>
-            Cancel
-          </Button>
+          <Button onClick={handleCloseSwapDialog} disabled={swapLoading}>Cancel</Button>
           <Button 
             onClick={handleRequestSwap} 
             variant="contained" 
-            color="primary"
-            disabled={!selectedProctor || swapReason.trim() === '' || swapLoading}
-            startIcon={swapLoading && <CircularProgress size={20} color="inherit" />}
+            disabled={!selectedProctor || !swapReason.trim() || swapLoading || swapSuccess}
           >
-            {swapLoading ? 'Submitting...' : 'Submit Swap Request'}
+            Submit Request
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Snackbar for general messages */}
+      <Snackbar
+        open={!!snackbarMessage}
+        autoHideDuration={4000}
+        onClose={() => setSnackbarMessage(null)}
+        message={snackbarMessage}
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={() => setSnackbarMessage(null)}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        }
+      />
     </Container>
   );
 };

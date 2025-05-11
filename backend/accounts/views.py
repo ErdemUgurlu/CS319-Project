@@ -18,7 +18,7 @@ from . import serializers
 from .models import (
     User, Student, Department, Course, 
     Section, TAAssignment, Classroom, WeeklySchedule, AuditLog, InstructorTAAssignment, Exam,
-    TAProfile
+    TAProfile, Notification
 )
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.contrib.auth.password_validation import validate_password
@@ -39,7 +39,8 @@ from .serializers import (
     UserUpdateSerializer, UserListSerializer, UserDetailSerializer, WeeklyScheduleSerializer,
     DepartmentSerializer, CourseSerializer, SectionSerializer, TAAssignmentSerializer,
     ClassroomSerializer, CustomTokenObtainPairSerializer, AdminCreateStaffSerializer,
-    InstructorTAAssignmentSerializer, TADetailSerializer, ExamSerializer, TAProfileSerializer
+    InstructorTAAssignmentSerializer, TADetailSerializer, ExamSerializer, TAProfileSerializer,
+    NotificationSerializer
 )
 import random
 from datetime import timedelta
@@ -2589,7 +2590,30 @@ class ExamListView(generics.ListAPIView):
             # Superusers and ADMIN role see all exams
             pass 
         elif hasattr(user, 'role') and user.role == User.Role.STAFF:
-            queryset = queryset.filter(course__department__code=user.department)
+            if user.department:
+                department_obj = Department.objects.filter(code=user.department).first()
+                if department_obj:
+                    # Staff can see exams from their own department
+                    own_department_exams = Q(course__department=department_obj)
+                    
+                    # Staff can see exams they are assisting with, IF those exams are
+                    # specifically AWAITING_CROSS_DEPARTMENT_PROCTOR
+                    assisting_cross_department_exams = Q(
+                        assisting_departments=department_obj,
+                        status=Exam.Status.AWAITING_CROSS_DEPARTMENT_PROCTOR
+                    )
+                    
+                    queryset = queryset.filter(
+                        own_department_exams | assisting_cross_department_exams
+                    ).distinct()
+                else:
+                    # User has a department code not in DB? Should not happen.
+                    # Fallback to only exams created by them if their dept code is invalid.
+                    queryset = queryset.filter(created_by=user).distinct()
+            else:
+                # Staff not assigned to a department (should not happen ideally)
+                # can only see exams they created.
+                queryset = queryset.filter(created_by=user).distinct()
         elif hasattr(user, 'role') and user.role == User.Role.DEAN_OFFICE:
             pass # Retains current behavior of seeing all for Dean's Office
         elif hasattr(user, 'role') and user.role == User.Role.INSTRUCTOR:
@@ -3087,6 +3111,111 @@ class ExamPlacementImportView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class NotifyDepartmentTAsView(APIView):
+    """
+    API endpoint for staff to notify TAs of their own department about an exam requiring cross-department proctors.
+    This creates in-app notifications.
+    """
+    permission_classes = [IsAuthenticated, IsStaffUser]
+
+    def post(self, request, pk): # pk is exam_id
+        exam = get_object_or_404(Exam, pk=pk)
+        
+        staff_department_code = request.user.department
+        if not staff_department_code:
+            # This should ideally not happen if department is a required field for staff.
+            logger.error(f"Staff user {request.user.email} (ID: {request.user.id}) has no department assigned.")
+            return Response({'error': 'Staff user does not have an assigned department. Cannot determine which TAs to notify.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Get the Department object for the staff's department to use its name and code accurately.
+        try:
+            staff_department_obj = Department.objects.get(code=staff_department_code)
+        except Department.DoesNotExist:
+            logger.warning(
+                f"Department with code '{staff_department_code}' (associated with staff {request.user.email}) "
+                f"not found in the Department table. Using the code as a fallback for department name in notifications."
+            )
+            # Create a fallback temporary object for name/code if full Department object isn't found
+            # This allows the process to continue but highlights a data consistency issue.
+            class FallbackDepartment:
+                def __init__(self, code):
+                    self.code = code
+                    self.name = code # Use code as name
+            staff_department_obj = FallbackDepartment(staff_department_code)
+            # Alternatively, could return an error:
+            # return Response({'error': f"Staff user's department code '{staff_department_code}' does not correspond to a known department."}, status=status.HTTP_404_NOT_FOUND)
+
+        if exam.status != Exam.Status.AWAITING_CROSS_DEPARTMENT_PROCTOR:
+            return Response(
+                {'error': f'Cannot notify TAs for an exam with status "{exam.status_display}". Expected "Awaiting Cross-Department Proctor".'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Filter TAs based on the staff member's department code.
+        # User.department is a CharField storing the code (e.g., 'CS', 'IE').
+        tas_to_notify = User.objects.filter(
+            role=User.Role.TA,
+            department=staff_department_code, # Use the staff's department code for filtering TAs
+            is_active=True,
+            is_approved=True
+        )
+
+        if not tas_to_notify.exists():
+            return Response(
+                {'message': f'No active and approved TAs found in your department ({staff_department_obj.name}) to notify.'},
+                status=status.HTTP_200_OK # It's not an error, just no one to notify.
+            )
+
+        notifications_created_count = 0
+        proctoring_duties_link = f"/proctoring-duties" # General link to TA proctoring page
+
+        exam_course_department_name = "an unspecified department"
+        if exam.course and exam.course.department: # exam.course.department is a ForeignKey to Department model
+            exam_course_department_name = exam.course.department.name
+        
+        notification_message = (
+            f"Exam {exam.course.code} - {exam.get_type_display()} on {exam.date.strftime('%Y-%m-%d %H:%M')} "
+            f"(course from {exam_course_department_name}) requires cross-department proctors. "
+            f"Your department ({staff_department_obj.name}) is invited to assist."
+        )
+
+        for ta_user in tas_to_notify:
+            try:
+                Notification.objects.create(
+                    user=ta_user,
+                    message=notification_message,
+                    notification_type='PROCTORING_INVITATION', # Ensure this type is handled by frontend if special display is needed
+                    related_exam=exam,
+                    link=proctoring_duties_link 
+                )
+                notifications_created_count += 1
+            except Exception as e:
+                logger.error(f"Failed to create notification for TA {ta_user.email} (Exam ID: {exam.id}): {e}")
+
+        AuditLog.objects.create(
+            user=request.user,
+            action='NOTIFY_TAS',
+            object_type='Exam',
+            object_id=exam.id,
+            description=(
+                f"Initiated {notifications_created_count} in-app notifications for TAs in their own "
+                f"department ({staff_department_obj.code}) regarding cross-department proctoring for "
+                f"exam: {exam.course.code} - {exam.get_type_display()}."
+            ),
+            ip_address=request.META.get('REMOTE_ADDR')
+        )
+        
+        response_message = (
+            f"Successfully initiated {notifications_created_count} in-app notification(s) for TAs "
+            f"in your department ({staff_department_obj.name})."
+        )
+        
+        return Response(
+            {'message': response_message, 'notifications_created': notifications_created_count},
+            status=status.HTTP_200_OK
+        )
+
+
 class ScheduleCourseOptionsView(APIView):
     """
     API endpoint to get available course options for a TA's weekly schedule.
@@ -3182,162 +3311,43 @@ class CreateTAFromEmailView(APIView):
     def _extract_name_from_email(self, email):
         """Extract first and last name from email address"""
         try:
-            # Example: john.doe@bilkent.edu.tr -> first_name="John", last_name="Doe"
+            # Remove domain part
             username = email.split('@')[0]
-            parts = username.replace('.', ' ').replace('_', ' ').split()
             
-            if len(parts) >= 2:
-                # Capitalize each part
-                first_name = parts[0].capitalize()
-                last_name = ' '.join([p.capitalize() for p in parts[1:]])
-            else:
-                # If we can't extract both names, use the whole username as first name
-                first_name = username.capitalize()
-                last_name = "Unknown"
+            # Common formats: firstname.lastname, firstname_lastname, first.m.last
+            name_parts = re.split(r'[._]', username)
+            
+            if len(name_parts) >= 2:
+                first_name = name_parts[0].capitalize()
+                last_name = name_parts[-1].capitalize()
                 
-            return {
-                'first_name': first_name,
-                'last_name': last_name
-            }
+                # If last part is a single character, use the part before it as last name
+                if len(last_name) == 1 and len(name_parts) > 2:
+                    last_name = name_parts[-2].capitalize()
+                
+                return {
+                    'first_name': first_name,
+                    'last_name': last_name
+                }
         except Exception as e:
             logger.error(f"Error extracting name from email: {str(e)}")
-            return {
-                'first_name': "New",
-                'last_name': "User"
-            }
-
-    def _find_ta_in_excel(self, email):
-        """
-        Find TA information in the Excel file.
-        Returns a dictionary with TA information or None if not found.
-        """
-        import pandas as pd
-        import os
         
-        try:
-            # Look for Excel files with TA data
-            excel_files = [
-                os.path.join(settings.BASE_DIR, "CS department TA list.xlsx"),
-                os.path.join(settings.BASE_DIR.parent, "CS department TA list.xlsx")
-            ]
-            
-            # Try additional paths that might contain the Excel file
-            for root, dirs, files in os.walk(settings.BASE_DIR.parent):
-                for file in files:
-                    if "TA list" in file and file.endswith(".xlsx"):
-                        excel_files.append(os.path.join(root, file))
-            
-            # Get the first valid Excel file
-            excel_path = None
-            for file_path in excel_files:
-                if os.path.exists(file_path):
-                    excel_path = file_path
-                    break
-            
-            if not excel_path:
-                logger.error("Could not find TA Excel file")
-                return None
-            
-            # Read the Excel file
-            df = pd.read_excel(excel_path)
-            
-            # Clean up column names (remove spaces, etc.)
-            df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
-            
-            # Try to find email in various possible column names
-            email_columns = ['email', 'ta_email', 'email_address', 'mail', 'email_address', 'e-mail']
-            
-            # Find the correct email column
-            email_col = None
-            for col in email_columns:
-                if col in df.columns:
-                    email_col = col
-                    break
-            
-            if not email_col:
-                logger.error(f"Could not find email column in Excel file: {excel_path}")
-                return None
-            
-            # Find the row with the matching email
-            ta_row = df[df[email_col].str.lower() == email.lower()]
-            
-            if ta_row.empty:
-                logger.info(f"Email {email} not found in TA Excel list")
-                return None
-            
-            # Extract TA information
-            ta_data = ta_row.iloc[0].to_dict()
-            
-            # Map Excel columns to our model fields
-            # Common column mappings
-            name_columns = {
-                'first_name': ['first_name', 'first', 'name', 'ta_name', 'first name'],
-                'last_name': ['last_name', 'last', 'surname', 'ta_surname', 'last name'],
-                'phone': ['phone', 'phone_number', 'telephone', 'tel', 'phone number'],
-                'iban': ['iban', 'bank_account', 'bank account'],
-                'department': ['department', 'dept', 'dept_code'],
-                'academic_level': ['academic_level', 'level', 'education_level', 'education level', 'degree'],
-                'employment_type': ['employment_type', 'employment', 'work_type', 'work type', 'type'],
-                'bilkent_id': ['bilkent_id', 'id', 'student_id', 'ta_id', 'uni_id', 'university_id', 'bilkent id']
-            }
-            
-            # Extracted data
-            result = {}
-            
-            # Extract info using column mappings
-            for field, possible_columns in name_columns.items():
-                for col in possible_columns:
-                    if col in ta_data and pd.notna(ta_data[col]):
-                        if field == 'academic_level' and isinstance(ta_data[col], str):
-                            # Map various academic level terms to our model's choices
-                            value = ta_data[col].upper()
-                            if 'PHD' in value or 'DOCTORAL' in value:
-                                result[field] = 'PHD'
-                            elif 'MASTER' in value or 'MS' in value or 'MA' in value:
-                                result[field] = 'MASTERS'
-                            elif 'UNDER' in value or 'BS' in value or 'BA' in value:
-                                result[field] = 'UNDERGRADUATE'
-                            else:
-                                result[field] = 'MASTERS'  # Default
-                        elif field == 'employment_type' and isinstance(ta_data[col], str):
-                            # Map various employment type terms
-                            value = ta_data[col].upper()
-                            if 'FULL' in value:
-                                result[field] = 'FULL_TIME'
-                            elif 'PART' in value:
-                                result[field] = 'PART_TIME'
-                            else:
-                                result[field] = 'PART_TIME'  # Default
-                        else:
-                            result[field] = ta_data[col]
-                        break
-            
-            # Set defaults for missing data
-            if 'first_name' not in result or 'last_name' not in result:
-                name_info = self._extract_name_from_email(email)
-                result['first_name'] = result.get('first_name', name_info['first_name'])
-                result['last_name'] = result.get('last_name', name_info['last_name'])
-            
-            domain_info = self._extract_domain_info(email)
-            result['department'] = result.get('department', domain_info['department'])
-            result['academic_level'] = result.get('academic_level', domain_info['academic_level'])
-            result['employment_type'] = result.get('employment_type', domain_info['employment_type'])
-            
-            logger.info(f"Found TA data in Excel: {result}")
-            return result
-            
-        except Exception as e:
-            logger.error(f"Error processing Excel file: {str(e)}")
-            return None
+        # Default: use email as first name and "User" as last name
+        return {
+            'first_name': email.split('@')[0],
+            'last_name': 'User'
+        }
     
     def generate_password(self, length=12):
         """Generate a secure random password."""
         chars = string.ascii_letters + string.digits + string.punctuation
         # Ensure password has at least one of each type of character
-        password = ''.join(random.choice(string.ascii_lowercase) for _ in range(3))
-        password += ''.join(random.choice(string.ascii_uppercase) for _ in range(3))
-        password += ''.join(random.choice(string.digits) for _ in range(3))
-        password += ''.join(random.choice('!@#$%^&*()_+-=') for _ in range(3))
+        password = random.choice(string.ascii_lowercase)
+        password += random.choice(string.ascii_uppercase)
+        password += random.choice(string.digits)
+        password += random.choice('!@#$%^&*()_+-=[]{}|;:,.<>?')
+        # Fill the rest randomly
+        password += ''.join(random.choice(chars) for _ in range(length - 4))
         # Shuffle the password
         password_list = list(password)
         random.shuffle(password_list)
@@ -3362,44 +3372,23 @@ class CreateTAFromEmailView(APIView):
         
         try:
             with transaction.atomic():
-                # Check if TA exists in Excel file
-                ta_data = self._find_ta_in_excel(email)
-                if not ta_data:
-                    logger.warning(f"No data found in Excel for: {email}")
-                    
-                    # Extract basic info from email if not in Excel
-                    domain_info = self._extract_domain_info(email)
-                    name_info = self._extract_name_from_email(email)
-                    
-                    # Prepare minimal user data
-                    ta_data = {
-                        'first_name': name_info['first_name'],
-                        'last_name': name_info['last_name'],
-                        'department': domain_info['department'],
-                        'academic_level': domain_info['academic_level'],
-                        'employment_type': domain_info['employment_type'],
-                        'phone': '05000000000',  # Placeholder
-                    }
+                # Extract basic info from email
+                domain_info = self._extract_domain_info(email)
+                name_info = self._extract_name_from_email(email)
                 
                 # Generate password
                 password = self.generate_password()
-                
-                # Check if bilkent_id exists in ta_data
-                if 'bilkent_id' not in ta_data:
-                    logger.warning(f"No Bilkent ID found in Excel for: {email}, using default value")
                 
                 # Create the user
                 user = User.objects.create_user(
                     email=email,
                     password=password,
-                    first_name=ta_data.get('first_name', ''),
-                    last_name=ta_data.get('last_name', ''),
+                    first_name=name_info['first_name'],
+                    last_name=name_info['last_name'],
                     role='TA',
-                    department=ta_data.get('department', 'CS'),
-                    phone=ta_data.get('phone', '05000000000'),
-                    iban=ta_data.get('iban', ''),
-                    academic_level=ta_data.get('academic_level', 'MASTERS'),
-                    employment_type=ta_data.get('employment_type', 'PART_TIME'),
+                    department=domain_info['department'],
+                    academic_level=domain_info['academic_level'],
+                    employment_type=domain_info['employment_type'],
                     is_approved=True,  # Auto-approve TAs
                     email_verified=True,  # Auto-verify emails
                     bilkent_id=ta_data.get('bilkent_id', '00000000')
@@ -3423,7 +3412,7 @@ class CreateTAFromEmailView(APIView):
                 plain_message = f"""
                 Hello {user.first_name} {user.last_name},
                 
-                Your account for the Bilkent TA Management System has been created.
+                Your account has been created in the Bilkent TA Management System.
                 
                 Your temporary password is: {password}
                 
@@ -3434,8 +3423,6 @@ class CreateTAFromEmailView(APIView):
                 Bilkent TA Management System
                 """
                 
-                # Send the email
-                email_sent = False
                 try:
                     send_mail(
                         subject=subject,
@@ -3446,9 +3433,9 @@ class CreateTAFromEmailView(APIView):
                         fail_silently=False,
                     )
                     email_sent = True
-                    logger.info(f"Sent password email to {user.email}")
                 except Exception as e:
                     logger.error(f"Failed to send email to {user.email}: {str(e)}")
+                    email_sent = False
                 
                 return Response({
                     'exists': False,
@@ -3470,3 +3457,47 @@ class CreateTAFromEmailView(APIView):
                 'created': False,
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class UserNotificationsView(generics.ListAPIView):
+    """
+    API endpoint for users to fetch their notifications.
+    Shows unread notifications first, then read ones.
+    """
+    serializer_class = serializers.NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        # Order by is_read (False first, so unread are on top), then by creation date descending
+        return Notification.objects.filter(user=user).order_by('is_read', '-created_at')
+
+
+class MarkNotificationAsReadView(APIView):
+    """
+    API endpoint to mark a specific notification as read.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        notification = get_object_or_404(Notification, pk=pk, user=request.user)
+        if not notification.is_read:
+            notification.mark_as_read()
+            return Response({'message': 'Notification marked as read.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'Notification was already read.'}, status=status.HTTP_200_OK)
+
+
+class MarkAllNotificationsAsReadView(APIView):
+    """
+    API endpoint to mark all of a user's notifications as read.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        unread_notifications = Notification.objects.filter(user=request.user, is_read=False)
+        count = unread_notifications.count()
+        if count > 0:
+            for notification in unread_notifications:
+                notification.mark_as_read() # This saves each notification
+            return Response({'message': f'{count} notification(s) marked as read.'}, status=status.HTTP_200_OK)
+        return Response({'message': 'No unread notifications to mark as read.'}, status=status.HTTP_200_OK)

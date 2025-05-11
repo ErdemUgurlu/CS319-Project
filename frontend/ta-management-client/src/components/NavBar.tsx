@@ -83,6 +83,12 @@ const NavBar: React.FC = () => {
         icon: <WorkIcon />,
         path: '/workload',
         roles: ['TA']
+      },
+      {
+        text: 'Proctoring Duties',
+        icon: <AssignmentIcon />,
+        path: '/proctoring-duties',
+        roles: ['TA']
       }
     ];
     

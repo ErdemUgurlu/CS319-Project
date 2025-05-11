@@ -50,12 +50,13 @@ import {
   Upload as UploadIcon, 
   CloudUpload as CloudUploadIcon,
   AssignmentInd as AssignProctorsIcon,
-  CheckCircleOutline as CheckCircleOutlineIcon,
-  HighlightOff as HighlightOffIcon
+  RateReview as RateReviewIcon,
+  MonetizationOn as MonetizationOnIcon // Potentially for paid assignments
 } from '@mui/icons-material';
 import { Exam, ExamType, ExamForm, ExamStatus, AssignPlacesForm, SetProctorsForm, Classroom } from '../../interfaces/exam';
 import { Course } from '../../interfaces/course';
 import examService from '../../services/examService';
+import courseService from '../../services/courseService'; // Added import for courseService
 import { useAuth } from '../../context/AuthContext';
 import { format } from 'date-fns';
 import DragDropFileUpload from '../common/DragDropFileUpload';
@@ -69,6 +70,13 @@ interface ExamListProps {
   showNotification: (message: string, type: 'success' | 'error' | 'info') => void;
   initialTab?: ExamStatus | 'ALL' | string;
   departmentFilter?: string;
+}
+
+// Define a local interface for department summaries
+interface DepartmentSummary {
+  id: number;
+  code: string;
+  name: string;
 }
 
 const ExamList: React.FC<ExamListProps> = ({
@@ -125,26 +133,22 @@ const ExamList: React.FC<ExamListProps> = ({
   const [isAutoSuggestPhase, setIsAutoSuggestPhase] = useState(false);
   const [insufficientTAsDialogOpen, setInsufficientTAsDialogOpen] = useState(false);
   
-  // --- NEW STATE for Override Rule Checkboxes ---
-  const [overrideAcademicLevelRule, setOverrideAcademicLevelRule] = useState(true); // Checked by default
-  const [overrideConsecutiveProctoringRule, setOverrideConsecutiveProctoringRule] = useState(true); // Checked by default
-  // --- END NEW STATE ---
-
-  // --- NEW STATE for Dean's Cross-Departmental Approval ---
-  const [deanApprovalDialogOpen, setDeanApprovalDialogOpen] = useState(false);
-  const [examForDeanApproval, setExamForDeanApproval] = useState<Exam | null>(null);
-  const [selectedHelpingDepartment, setSelectedHelpingDepartment] = useState<string>('');
-  const [deanActionError, setDeanActionError] = useState<string | null>(null);
+  // --- NEW STATE for Manage Cross-Department Request Dialog ---
+  const [manageCrossDeptRequestDialogOpen, setManageCrossDeptRequestDialogOpen] = useState(false);
+  const [examForManagingCrossDeptRequest, setExamForManagingCrossDeptRequest] = useState<Exam | null>(null);
+  const [selectedCrossDeptApprovalDepts, setSelectedCrossDeptApprovalDepts] = useState<string[]>([]);
+  const [trueAllSystemDepartments, setTrueAllSystemDepartments] = useState<DepartmentSummary[]>([]); // New state for all departments
+  
+  // --- NEW STATE for Override Rule Checkboxes (Restored for InsufficientTAsDialog functionality) ---
+  const [overrideAcademicLevelRule, setOverrideAcademicLevelRule] = useState(true); 
+  const [overrideConsecutiveProctoringRule, setOverrideConsecutiveProctoringRule] = useState(true); 
   // --- END NEW STATE ---
   
-  // --- NEW FUNCTION to fetch eligible TAs with override options ---
+  // --- NEW FUNCTION to fetch eligible TAs with override options (Restored for InsufficientTAsDialog) ---
   const fetchAndSetEligibleTAs = useCallback(async (examId: number, doOverrideAcademic: boolean, doOverrideConsecutive: boolean) => {
     if (!examId) return;
     setLoadingEligibleTAs(true);
     try {
-      // Assume proctoringService.getEligibleProctorsForExam can take an options object
-      // This options object is assumed to be translated into backend query parameters
-      // e.g., ?override_academic_level=true&override_consecutive_proctoring=true
       const tas = await proctoringService.getEligibleProctorsForExam(examId, {
         overrideAcademicLevel: doOverrideAcademic,
         overrideConsecutiveProctoring: doOverrideConsecutive,
@@ -168,33 +172,64 @@ const ExamList: React.FC<ExamListProps> = ({
     } catch (err: any) {
       console.error("Error fetching eligible TAs with overrides:", err);
       showNotification("Failed to load available TAs with new overrides", "error");
-      setEligibleTAs([]); // Clear TAs on error
+      setEligibleTAs([]); 
     } finally {
       setLoadingEligibleTAs(false);
     }
   }, [setLoadingEligibleTAs, showNotification, setEligibleTAs, setSelectedProctorIds]);
   // --- END NEW FUNCTION ---
-  
-  // Fetch classrooms when component mounts
+
+  // Derive all unique departments from the courses prop
+  const allSystemDepartments = React.useMemo(() => {
+    const depts = new Map<string, DepartmentSummary>();
+    courses.forEach(course => {
+      if (course.department && !depts.has(course.department.code)) {
+        depts.set(course.department.code, {
+          id: course.department.id, 
+          code: course.department.code,
+          name: course.department.name 
+        });
+      }
+    });
+    return Array.from(depts.values());
+  }, [courses]);
+
+  useEffect(() => {
+    const fetchAllDepartments = async () => {
+      try {
+        const response = await courseService.getAllDepartments();
+        // Assuming response.data is the array of departments
+        if (response && response.data && Array.isArray(response.data)) {
+          setTrueAllSystemDepartments(response.data.map((d: any) => ({ id: d.id, code: d.code, name: d.name })));
+        } else if (response && Array.isArray(response)) { // Handle if API returns array directly
+           setTrueAllSystemDepartments(response.map((d: any) => ({ id: d.id, code: d.code, name: d.name })));
+        }
+         else {
+          console.error('Failed to fetch or parse departments for cross-department modal. Response:', response);
+          setTrueAllSystemDepartments([]);
+        }
+      } catch (error) {
+        console.error('Error fetching all departments for cross-department modal:', error);
+        showNotification('Could not load full department list for cross-department requests', 'error');
+        setTrueAllSystemDepartments([]);
+      }
+    };
+    fetchAllDepartments();
+  }, [showNotification]); // showNotification is a stable function from props, but good to include if its identity could change
+
   useEffect(() => {
     console.log('ExamList mounted with initialTab:', initialTab);
     console.log('Current Tab value set to:', currentTab);
     if (isDeanOffice) {
       fetchClassrooms();
     }
-  }, [isDeanOffice, initialTab]);
-  
-  // Log whenever currentTab changes
-  useEffect(() => {
-    console.log('Current tab changed to:', currentTab);
-    console.log('isDeanOffice:', isDeanOffice);
     console.log('Available tabs:', {
       ALL: 'ALL',
       WAITING_FOR_PLACES: ExamStatus.WAITING_FOR_PLACES,
+      WAITING_FOR_CROSS_DEPARTMENT_APPROVAL: ExamStatus.WAITING_FOR_CROSS_DEPARTMENT_APPROVAL,
       WAITING_FOR_STUDENT_LIST: ExamStatus.WAITING_FOR_STUDENT_LIST,
       AWAITING_PROCTORS: ExamStatus.AWAITING_PROCTORS,
-      READY: ExamStatus.READY,
-      AWAITING_DEAN_CROSS_APPROVAL: ExamStatus.AWAITING_DEAN_CROSS_APPROVAL
+      READY: ExamStatus.READY
     });
   }, [currentTab, isDeanOffice]);
   
@@ -257,19 +292,12 @@ const ExamList: React.FC<ExamListProps> = ({
       return false;
     }
     
-    // Always show "Waiting for Places" exams to Dean's Office if that tab is selected or ALL tab (and status matches or is undefined)
+    // Always show "Waiting for Places" exams to Dean's Office regardless of tab
+    // unless they're specifically filtering by another status
     if (isDeanOffice && 
-        (currentTab === ExamStatus.WAITING_FOR_PLACES || currentTab === "WAITING_FOR_PLACES") &&
-        (!exam.status || exam.status === ExamStatus.WAITING_FOR_PLACES)) {
-      console.log('Showing exam to Dean Office (Waiting for Places tab or undefined status):', exam);
-      return true;
-    }
-
-    // Show "Awaiting Dean Cross Approval" exams to Dean's Office if that tab is selected
-    if (isDeanOffice && 
-        (currentTab === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL) && 
-        exam.status === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL) {
-      console.log('Showing exam to Dean Office (Awaiting Dean Cross Approval tab):', exam);
+        (exam.status === ExamStatus.WAITING_FOR_PLACES || !exam.status) && 
+        currentTab === 'ALL') {
+      console.log('Showing exam to Dean Office (all tab):', exam);
       return true;
     }
     
@@ -544,7 +572,9 @@ const ExamList: React.FC<ExamListProps> = ({
       // If status field isn't implemented yet, allow it for Staff or Instructors
       return isStaff || isInstructor;
     }
-    return (isStaff || isInstructor) && exam.status === ExamStatus.AWAITING_PROCTORS;
+    // return (isStaff || isInstructor) && exam.status === ExamStatus.AWAITING_PROCTORS;
+    return (isStaff || isInstructor) && 
+           (exam.status === ExamStatus.AWAITING_PROCTORS || exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR);
   };
 
   // Format date for display
@@ -573,7 +603,6 @@ const ExamList: React.FC<ExamListProps> = ({
       case ExamStatus.WAITING_FOR_PLACES: return 'Waiting for Places';
       case ExamStatus.AWAITING_PROCTORS: return 'Awaiting Proctors';
       case ExamStatus.READY: return 'Ready';
-      case ExamStatus.AWAITING_DEAN_CROSS_APPROVAL: return 'Awaiting Dean Approval for Cross-Departmental';
       default: return status;
     }
   };
@@ -742,13 +771,16 @@ const ExamList: React.FC<ExamListProps> = ({
   };
 
   // --- NEW HANDLERS for Assign Proctors Dialog ---
-  const handleOpenAssignProctorsDialog = async (exam: Exam) => {
+  const handleOpenAssignProctorsDialog = async (exam: Exam, isPaidFlow: boolean = false) => {
     setExamToAssignProctors(exam);
+    setIsPaidAssignment(isPaidFlow); // Set based on the flow
     setAssignProctorsDialogOpen(true);
-    // Initial fetch with no overrides active
-    await fetchAndSetEligibleTAs(exam.id, false, false); 
-    setReplaceExistingProctors(false);
-    setIsAutoSuggestPhase(false);
+    // Reset selections when dialog opens
+    setSelectedProctorIds([]);
+    // Fetch eligible TAs with default override values (false, false)
+    if (exam) {
+      await fetchAndSetEligibleTAs(exam.id, false, false); 
+    }
   };
 
   const handleCloseAssignProctorsDialog = () => {
@@ -930,61 +962,125 @@ const ExamList: React.FC<ExamListProps> = ({
     setInsufficientTAsDialogOpen(false);
   };
 
-  const handleRequestCrossDepartmental = async () => {
+  // --- RESTORED HANDLER for Requesting Cross-Departmental Proctors ---
+  const handleRequestCrossDepartmentProctors = async () => {
     if (!examToAssignProctors) {
-      showNotification("No exam selected for this request.", "error");
+      showNotification("No exam selected for this action.", "error");
       return;
     }
-    setLoading(true);
+
+    setLoading(true); 
     try {
-      await examService.requestCrossDepartmentalProctors(examToAssignProctors.id);
+      await examService.updateExam(examToAssignProctors.id, { 
+        status: ExamStatus.WAITING_FOR_CROSS_DEPARTMENT_APPROVAL 
+      });
       showNotification(
-        `Request for cross-departmental proctors for ${examToAssignProctors.course.code} - ${examToAssignProctors.type_display} submitted successfully. Status updated to Awaiting Dean's Approval.`,
+        `Request for cross-departmental proctors for ${examToAssignProctors.course.code} - ${examToAssignProctors.type_display} has been submitted. Status updated to Waiting for Approval.`,
         'success'
       );
-      handleCloseInsufficientTAsDialog();
-      handleCloseAssignProctorsDialog(); // Also close the main assign dialog
-      onDataChange(); // Refresh exam list
+      onDataChange(); 
+      handleCloseInsufficientTAsDialog(); 
+      
+      // If Dean's Office initiated, switch them to the approval tab
+      if (isDeanOffice) {
+        setCurrentTab(ExamStatus.WAITING_FOR_CROSS_DEPARTMENT_APPROVAL);
+      }
+      // Also close the main assign proctors dialog if it was the source
+       handleCloseAssignProctorsDialog(); 
+
     } catch (error: any) {
       console.error('Error requesting cross-departmental proctors:', error);
-      showNotification(error.response?.data?.error || 'Failed to request cross-departmental proctors', 'error');
+      showNotification(error.response?.data?.detail || 'Failed to submit request for cross-departmental proctors', 'error');
     } finally {
       setLoading(false);
     }
   };
+  // --- END RESTORED HANDLER ---
 
-  // --- NEW useEffect to refetch TAs when override rules change in InsufficientTAsDialog ---
+  // --- NEW useEffect to refetch TAs when override rules change in InsufficientTAsDialog (Restored) ---
   useEffect(() => {
     if (insufficientTAsDialogOpen && examToAssignProctors) {
-      // overrideAcademicLevelRule (state) = true means checkbox is CHECKED, rule is ENFORCED.
-      // To ACTIVATE override, checkbox is UNCHECKED, state is false.
-      // So, we pass !overrideAcademicLevelRule to the fetch function.
       fetchAndSetEligibleTAs(
         examToAssignProctors.id,
-        !overrideAcademicLevelRule,
-        !overrideConsecutiveProctoringRule
+        !overrideAcademicLevelRule, // Pass true to override if checkbox is UNCHECKED (state is false)
+        !overrideConsecutiveProctoringRule // Same logic here
       );
     }
   }, [
     overrideAcademicLevelRule,
     overrideConsecutiveProctoringRule,
     insufficientTAsDialogOpen,
-    examToAssignProctors, // examToAssignProctors itself might be null initially
+    examToAssignProctors, 
     fetchAndSetEligibleTAs
   ]);
   // --- END NEW useEffect ---
 
-  // --- NEW FUNCTION for handling Dean's Approval Dialog ---
-  const handleOpenDeanApprovalDialog = (exam: Exam, action: 'APPROVE' | 'REJECT') => {
-    setExamForDeanApproval(exam);
-    setSelectedHelpingDepartment(''); // Reset selection
-    setDeanActionError(null); // Clear previous errors
-    setDeanApprovalDialogOpen(true);
-    // Note: The actual action (APPROVE/REJECT) will be handled by the dialog's submit function
-    // This handler just opens the dialog and primes it.
-    // If we needed to store the action type, we could add another state variable.
+  // --- Placeholder Handlers for New Manage Cross-Department Request Dialog ---
+  const handleOpenManageCrossDeptRequestDialog = (exam: Exam) => {
+    setExamForManagingCrossDeptRequest(exam);
+    setSelectedCrossDeptApprovalDepts([]); // Reset selections
+    setManageCrossDeptRequestDialogOpen(true);
   };
-  // --- END NEW FUNCTION ---
+
+  const handleActualApproveCrossDepartmentRequest = async () => {
+    if (!examForManagingCrossDeptRequest) {
+      showNotification('No exam selected for approval.', 'error');
+      return;
+    }
+    if (selectedCrossDeptApprovalDepts.length === 0) {
+      showNotification('Please select at least one assisting department.', 'info');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const payload = {
+        status: ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR, // Using the existing status
+        cross_approved_department_codes: selectedCrossDeptApprovalDepts
+      };
+      await examService.updateExam(examForManagingCrossDeptRequest.id, payload);
+      
+      showNotification(
+        `Cross-department request for ${examForManagingCrossDeptRequest.course.department.code}${examForManagingCrossDeptRequest.course.code} approved for department(s): ${selectedCrossDeptApprovalDepts.join(', ')}. Status updated.`,
+        'success'
+      );
+      onDataChange(); // Refresh data
+      setManageCrossDeptRequestDialogOpen(false); // Close dialog
+    } catch (error: any) {
+      console.error('Error approving cross-department request:', error);
+      const errorMessage = error.response?.data?.detail || 'Failed to approve cross-department request. Please try again.';
+      showNotification(errorMessage, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleActualRejectCrossDepartmentRequest = async () => {
+    if (!examForManagingCrossDeptRequest) {
+      showNotification('No exam selected for rejection.', 'error');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await examService.updateExam(examForManagingCrossDeptRequest.id, { 
+        status: ExamStatus.AWAITING_PROCTORS 
+      });
+      showNotification(
+        `Cross-department request for ${examForManagingCrossDeptRequest.course.department.code}${examForManagingCrossDeptRequest.course.code} - ${examForManagingCrossDeptRequest.type_display} rejected. Exam status has been updated to Awaiting Proctors.`,
+        'success'
+      );
+      onDataChange(); // Refresh the main exam list data
+      setManageCrossDeptRequestDialogOpen(false); // Close the current dialog
+    } catch (error: any) {
+      console.error('Error rejecting cross-department request:', error);
+      const errorMessage = error.response?.data?.detail || 'Failed to reject the cross-department request. Please try again.';
+      showNotification(errorMessage, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+  // --- END Placeholder Handlers ---
 
   return (
     <Box>
@@ -1028,7 +1124,7 @@ const ExamList: React.FC<ExamListProps> = ({
                   />
                 </Box>
               } 
-              value={ExamStatus.WAITING_FOR_PLACES}
+              value="WAITING_FOR_PLACES"
             />
           )}
           {isDeanOffice && (
@@ -1037,14 +1133,14 @@ const ExamList: React.FC<ExamListProps> = ({
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <span>Cross-Dept. Approval</span>
                   <Chip 
-                    label={exams.filter(e => e.status === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL).length} 
-                    color="info"
+                    label={exams.filter(e => e.status === ExamStatus.WAITING_FOR_CROSS_DEPARTMENT_APPROVAL).length} 
+                    color="warning" 
                     size="small" 
                     sx={{ ml: 1 }}
                   />
                 </Box>
               } 
-              value={ExamStatus.AWAITING_DEAN_CROSS_APPROVAL}
+              value={ExamStatus.WAITING_FOR_CROSS_DEPARTMENT_APPROVAL} 
             />
           )}
           {!isDeanOffice && (
@@ -1065,6 +1161,23 @@ const ExamList: React.FC<ExamListProps> = ({
           )}
           {(isStaff || isInstructor) && (
             <Tab label="Awaiting Proctors" value={ExamStatus.AWAITING_PROCTORS} />
+          )}
+          {/* New Tab for Awaiting Cross-Department Proctor Assignment (Visible to Staff/Admin) */}
+          {(isStaff) && (
+            <Tab 
+              label={
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <span>Cross-Dept. Proctors</span>
+                  <Chip 
+                    label={exams.filter(e => e.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR).length} 
+                    color="info" // Or another color that makes sense
+                    size="small" 
+                    sx={{ ml: 1 }}
+                  />
+                </Box>
+              } 
+              value={ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR} 
+            />
           )}
           <Tab label="Ready" value={ExamStatus.READY} />
         </Tabs>
@@ -1168,82 +1281,92 @@ const ExamList: React.FC<ExamListProps> = ({
                     )}
                   </TableCell>
                   <TableCell align="center">
-                    {exam.status === ExamStatus.AWAITING_PROCTORS ? 
+                    {(exam.status === ExamStatus.AWAITING_PROCTORS || exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR) ? 
                       `${exam.assigned_proctor_count ?? 0} / ${exam.proctor_count ?? 'N/A'}` 
                       : 
                       (exam.status === ExamStatus.READY ? `${exam.assigned_proctor_count ?? 0}` : (exam.proctor_count ?? '?'))
                     }
                   </TableCell>
                   <TableCell align="right" sx={{ whiteSpace: 'nowrap' }}>
-                    {!isReadOnly && (
-                      <>
-                        {isStaff && canEditExam(exam) && (
-                          <Tooltip title="Edit Exam Details">
-                            <IconButton onClick={() => handleOpenDialog(exam)} size="small">
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {isStaff && examToDelete !== exam && canEditExam(exam) && ( // Ensure not to show delete if already marked
-                          <Tooltip title="Delete Exam">
-                            <IconButton onClick={() => handleConfirmDelete(exam)} size="small">
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {isDeanOffice && canAssignPlaces(exam) && (
-                          <Tooltip title="Assign Classroom">
-                            <IconButton onClick={() => handleOpenAssignPlaces(exam)} size="small">
-                              <AssignmentTurnedInIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {isStaff && canSetProctors(exam) && (
-                           <Tooltip title="Set Required Proctors">
-                            <IconButton onClick={() => handleOpenSetProctors(exam)} size="small">
-                              <AssignProctorsIcon /> {/* Changed to a more generic assignment icon or use specific proctor icon */}
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        {isStaff && canUploadStudentList(exam) && (
-                          <Tooltip title="Upload Student List">
-                            <IconButton onClick={() => handleOpenUploadStudentList(exam)} size="small">
-                              <CloudUploadIcon />
-                            </IconButton>
-                          </Tooltip>
-                        )}
-                        
-                        {/* Dean's Office Actions for Cross-Departmental Approval */}
-                        {(() => {
-                          // Debugging logs
-                          if (exam.status === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL) {
-                            console.log(`[DeanActionsDebug] Exam ID: ${exam.id}, Status: ${exam.status}, Expected Status: ${ExamStatus.AWAITING_DEAN_CROSS_APPROVAL}, isDeanOffice: ${isDeanOffice}, !isReadOnly: ${!isReadOnly}`);
-                          }
-                          return isDeanOffice && exam.status === ExamStatus.AWAITING_DEAN_CROSS_APPROVAL;
-                        })() && (
-                          <>
-                            <Tooltip title="Approve Cross-Departmental Request">
-                              <IconButton
-                                onClick={() => handleOpenDeanApprovalDialog(exam, 'APPROVE')}
-                                size="small"
-                                color="primary"
-                              >
-                                <CheckCircleOutlineIcon />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Reject Cross-Departmental Request">
-                              <IconButton
-                                onClick={() => handleOpenDeanApprovalDialog(exam, 'REJECT')}
-                                size="small"
-                                color="error"
-                              >
-                                <HighlightOffIcon />
-                              </IconButton>
-                            </Tooltip>
-                          </>
-                        )}
-                      </>
+                    {canEditExam(exam) && (
+                      <Tooltip title="Edit Exam">
+                        <IconButton onClick={() => handleOpenDialog(exam)} size="small">
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     )}
+                    
+                    {canUploadStudentList(exam) && (
+                      <Tooltip title="Upload Student List">
+                        <IconButton onClick={() => handleOpenUploadStudentList(exam)} size="small">
+                          <CloudUploadIcon fontSize="small" color={exam.has_student_list ? "success" : "warning"} />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {canAssignPlaces(exam) && (
+                      <Tooltip title="Assign Places">
+                        <IconButton onClick={() => handleOpenAssignPlaces(exam)} size="small">
+                          <AssignmentTurnedInIcon fontSize="small" color="primary" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {isDeanOffice && exam.status === ExamStatus.WAITING_FOR_PLACES && (
+                      <Tooltip title="Import Places from Excel">
+                        <IconButton onClick={() => handleOpenImportPlacesForExam(exam)} size="small">
+                          <UploadIcon fontSize="small" color="secondary" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {/* --- "Assign Proctors" Button --- */}
+                    {isStaff && (exam.status === ExamStatus.AWAITING_PROCTORS || exam.status === ExamStatus.READY) && (
+                      <Tooltip title="Assign Proctors"> 
+                        <IconButton onClick={() => handleOpenAssignProctorsDialog(exam, false)} size="small">
+                          <AssignProctorsIcon fontSize="small" color="primary" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    {/* --- END Assign Proctors Button --- */}
+                    
+                    {canSetProctors(exam) && (
+                      <Tooltip title="Set the number of proctors">
+                        <IconButton onClick={() => handleOpenSetProctors(exam)} size="small">
+                          <DoneIcon fontSize="small" color="success" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {canEditExam(exam) && (
+                      <Tooltip title="Delete Exam">
+                        <IconButton onClick={() => handleConfirmDelete(exam)} size="small">
+                          <DeleteIcon fontSize="small" color="error" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    
+                    {/* --- NEW "Manage Cross-Department Request" Button for Dean's Office --- */}
+                    {isDeanOffice && exam.status === ExamStatus.WAITING_FOR_CROSS_DEPARTMENT_APPROVAL && (
+                      <Tooltip title="Manage Cross-Department Request">
+                        <IconButton onClick={() => handleOpenManageCrossDeptRequestDialog(exam)} size="small">
+                          <RateReviewIcon fontSize="small" color="info" />
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    {/* --- END NEW Button --- */}
+
+                    {/* --- NEW \"Assign Paid Cross-Department Proctor\" Button --- */}
+                    {isStaff && exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR && (
+                      <Tooltip title="Assign Paid Cross-Department Proctor">
+                        <IconButton onClick={() => handleOpenAssignProctorsDialog(exam, true)} size="small">
+                          {/* Using AssignProctorsIcon with different color, or use MonetizationOnIcon if preferred */}
+                          <AssignProctorsIcon fontSize="small" color="secondary" /> 
+                          {/* <MonetizationOnIcon fontSize="small" color="success" /> */}
+                        </IconButton>
+                      </Tooltip>
+                    )}
+                    {/* --- END NEW Assign Paid Cross-Department Proctor Button --- */}
                   </TableCell>
                 </TableRow>
               ))
@@ -1807,6 +1930,85 @@ const ExamList: React.FC<ExamListProps> = ({
       </Dialog>
       {/* --- End Assign Proctors Dialog --- */}
 
+      {/* --- NEW Manage Cross-Department Request Dialog --- */}
+      <Dialog open={manageCrossDeptRequestDialogOpen} onClose={() => setManageCrossDeptRequestDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Manage Cross-Department Proctor Request</DialogTitle>
+        <DialogContent dividers>
+          {examForManagingCrossDeptRequest && (
+            <>
+              <Typography variant="subtitle1">
+                Exam: {examForManagingCrossDeptRequest.course.department.code}{examForManagingCrossDeptRequest.course.code} - {examForManagingCrossDeptRequest.type_display}
+              </Typography>
+              <Typography variant="body2" gutterBottom>
+                Date: {formatDate(examForManagingCrossDeptRequest.date)} at {examForManagingCrossDeptRequest.time}
+              </Typography>
+              
+              {/* --- DEBUGGING CONSOLE LOGS --- */}
+              <script>
+                {`
+                  console.log('Dialog Open: examForManagingCrossDeptRequest department code:', ${JSON.stringify(examForManagingCrossDeptRequest?.course?.department?.code)});
+                  console.log('Dialog Open: allSystemDepartments:', ${JSON.stringify(trueAllSystemDepartments)});
+                `}
+              </script>
+              {/* --- END DEBUGGING CONSOLE LOGS --- */}
+
+              <Box sx={{ mt: 2, mb: 1 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  Select assisting department(s):
+                </Typography>
+                {examForManagingCrossDeptRequest && trueAllSystemDepartments.filter(dept => dept.code !== examForManagingCrossDeptRequest.course.department.code).length === 0 && (
+                  <Typography color="text.secondary">No other departments available to select.</Typography>
+                )}
+                {examForManagingCrossDeptRequest && trueAllSystemDepartments
+                  .filter(dept => dept.code !== examForManagingCrossDeptRequest.course.department.code)
+                  .map(dept => (
+                    <FormControlLabel
+                      key={dept.code}
+                      control={
+                        <Checkbox
+                          checked={selectedCrossDeptApprovalDepts.includes(dept.code)}
+                          onChange={(e) => {
+                            const deptCode = dept.code;
+                            setSelectedCrossDeptApprovalDepts(prev => 
+                              e.target.checked 
+                                ? [...prev, deptCode] 
+                                : prev.filter(d => d !== deptCode)
+                            );
+                          }}
+                          name={dept.code}
+                        />
+                      }
+                      label={`${dept.name} (${dept.code})`}
+                    />
+                ))}
+              </Box>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setManageCrossDeptRequestDialogOpen(false)} disabled={loading}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleActualRejectCrossDepartmentRequest} 
+            color="error" 
+            variant="outlined" 
+            disabled={loading || !examForManagingCrossDeptRequest}
+          >
+            Reject Request
+          </Button>
+          <Button 
+            onClick={handleActualApproveCrossDepartmentRequest} 
+            color="primary" 
+            variant="contained" 
+            disabled={loading || !examForManagingCrossDeptRequest || selectedCrossDeptApprovalDepts.length === 0}
+          >
+            Approve with Selected
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* --- END NEW Dialog --- */}
+
       {/* Dialog for Insufficient TAs */}
       <Dialog
         open={insufficientTAsDialogOpen}
@@ -1857,12 +2059,12 @@ const ExamList: React.FC<ExamListProps> = ({
             Assign Found TAs
           </Button>
           <Button onClick={handleCloseInsufficientTAsDialog} color="primary">
-            Override Restrictions
+            Close / Apply Overrides
           </Button>
-          <Button onClick={handleRequestCrossDepartmental} color="primary" disabled={loading}>
+          <Button onClick={handleRequestCrossDepartmentProctors} color="primary" disabled={loading}>
             Request Cross-Departmental Proctors
           </Button>
-          <Button onClick={handleCloseInsufficientTAsDialog} color="secondary" autoFocus disabled={loading}>
+          <Button onClick={handleCloseInsufficientTAsDialog} color="secondary" autoFocus>
             Cancel
           </Button>
         </DialogActions>

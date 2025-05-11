@@ -163,6 +163,17 @@ const proctoringService = {
     }
   },
 
+  // Reject assignment
+  rejectAssignment: async (assignmentId: number): Promise<any> => {
+    try {
+      const response = await api.delete(`/proctoring/reject-assignment/${assignmentId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error rejecting assignment:', error);
+      throw error;
+    }
+  },
+
   // Get upcoming exams that need proctors (for staff and instructors)
   getUpcomingExams: async (): Promise<any> => {
     try {
