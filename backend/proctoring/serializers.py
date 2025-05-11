@@ -116,7 +116,7 @@ class EligibleProctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'email', 'full_name', 'academic_level',
+            'id', 'email', 'full_name', 'academic_level', 'employment_type',
             'is_eligible', 'details', 'current_workload',
             'is_assigned_to_current_exam', 'is_teaching_course_sections'
         )

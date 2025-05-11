@@ -31,6 +31,7 @@ export interface EligibleProctor {
   academic_level: string;
   is_eligible: boolean;
   current_workload: number;
+  employment_type: string;
   is_assigned_to_current_exam?: boolean;
   is_teaching_course_sections?: boolean;
   details: {

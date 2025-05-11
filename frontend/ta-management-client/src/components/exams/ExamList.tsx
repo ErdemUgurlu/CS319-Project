@@ -93,6 +93,7 @@ const ExamList: React.FC<ExamListProps> = ({
   const isStaff = authState.user?.role === 'STAFF' || authState.user?.role === 'ADMIN';
   const isInstructor = authState.user?.role === 'INSTRUCTOR';
   const isDeanOffice = authState.user?.role === 'DEAN_OFFICE';
+  const currentUserDepartment = authState.user?.department; // Corrected: Assuming department is available and is the code string
   
   const [openDialog, setOpenDialog] = useState(false);
   const [editingExam, setEditingExam] = useState<Exam | null>(null);
@@ -125,7 +126,8 @@ const ExamList: React.FC<ExamListProps> = ({
   // --- NEW STATE for Assign Proctors Dialog ---
   const [assignProctorsDialogOpen, setAssignProctorsDialogOpen] = useState(false);
   const [examToAssignProctors, setExamToAssignProctors] = useState<Exam | null>(null);
-  const [eligibleTAs, setEligibleTAs] = useState<EligibleProctor[]>([]);
+  const [fullTimeEligibleTAs, setFullTimeEligibleTAs] = useState<EligibleProctor[]>([]); // New state for full-time
+  const [partTimeEligibleTAs, setPartTimeEligibleTAs] = useState<EligibleProctor[]>([]); // New state for part-time
   const [selectedProctorIds, setSelectedProctorIds] = useState<number[]>([]);
   const [loadingEligibleTAs, setLoadingEligibleTAs] = useState(false);
   const [isPaidAssignment, setIsPaidAssignment] = useState(false);
@@ -149,35 +151,58 @@ const ExamList: React.FC<ExamListProps> = ({
     if (!examId) return;
     setLoadingEligibleTAs(true);
     try {
-      const tas = await proctoringService.getEligibleProctorsForExam(examId, {
+      const tasFromService = await proctoringService.getEligibleProctorsForExam(examId, {
         overrideAcademicLevel: doOverrideAcademic,
         overrideConsecutiveProctoring: doOverrideConsecutive,
+        // excludePartTime removed here
       });
 
-      const sortedTAsForDisplay = [...tas].sort((a, b) => {
+      const allFetchedTAs = [...tasFromService];
+
+      const ftTAs = allFetchedTAs.filter(ta => ta.employment_type !== 'PART_TIME');
+      const ptTAs = allFetchedTAs.filter(ta => ta.employment_type === 'PART_TIME');
+
+      const sortedFullTimeTAs = [...ftTAs].sort((a, b) => {
         const aIsTeaching = a.is_teaching_course_sections || false;
         const bIsTeaching = b.is_teaching_course_sections || false;
         if (aIsTeaching && !bIsTeaching) return -1;
         if (!aIsTeaching && bIsTeaching) return 1;
         return (a.current_workload ?? Infinity) - (b.current_workload ?? Infinity);
       });
-      
-      setEligibleTAs(sortedTAsForDisplay);
+      setFullTimeEligibleTAs(sortedFullTimeTAs);
 
-      const currentlyAssignedIds = sortedTAsForDisplay
+      const sortedPartTimeTAs = [...ptTAs].sort((a, b) => (a.current_workload ?? Infinity) - (b.current_workload ?? Infinity));
+      setPartTimeEligibleTAs(sortedPartTimeTAs);
+
+      const currentlyAssignedIds = allFetchedTAs
         .filter(ta => ta.is_assigned_to_current_exam)
         .map(ta => ta.id);
       setSelectedProctorIds(currentlyAssignedIds);
 
     } catch (err: any) {
-      console.error("Error fetching eligible TAs with overrides:", err);
-      showNotification("Failed to load available TAs with new overrides", "error");
-      setEligibleTAs([]); 
+      console.error("Error fetching eligible TAs:", err); // Updated error message
+      showNotification("Failed to load available TAs", "error"); // Updated error message
+      setFullTimeEligibleTAs([]); 
+      setPartTimeEligibleTAs([]);
     } finally {
       setLoadingEligibleTAs(false);
     }
-  }, [setLoadingEligibleTAs, showNotification, setEligibleTAs, setSelectedProctorIds]);
+  }, [showNotification, setFullTimeEligibleTAs, setPartTimeEligibleTAs, setSelectedProctorIds]); // Added new states to dependencies
   // --- END NEW FUNCTION ---
+
+  // Helper function to check if current user is from the exam's original department
+  const isUserFromExamOriginalDepartment = (exam: Exam): boolean => {
+    if (!currentUserDepartment || !exam?.course?.department?.code) return false;
+    return currentUserDepartment === exam.course.department.code;
+  };
+
+  // Helper function to check if current user is from one of the assisting departments
+  const isUserFromAssistingDepartment = (exam: Exam): boolean => {
+    const examWithAssisting = exam as any; // Temporary cast to bypass linter for assisting_departments
+    if (!currentUserDepartment || !examWithAssisting?.assisting_departments || examWithAssisting.assisting_departments.length === 0) return false;
+    // Assuming exam.assisting_departments is Array<{ id: number; code: string; name: string; }>
+    return examWithAssisting.assisting_departments.some((dept: { code: string }) => dept.code === currentUserDepartment);
+  };
 
   // Derive all unique departments from the courses prop
   const allSystemDepartments = React.useMemo(() => {
@@ -544,14 +569,16 @@ const ExamList: React.FC<ExamListProps> = ({
 
   // Check if a user can edit or delete a specific exam
   const canEditExam = (exam: Exam): boolean => {
-    if (isStaff) return true;
-    
-    // Instructors can only edit/delete exams for their courses
-    if (isInstructor) {
-      // Logic to check if course belongs to the instructor will be handled by the backend
-      return true; // The backend will restrict access appropriately
+    if (exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR) {
+      // Only staff from the original department can edit
+      return isStaff && isUserFromExamOriginalDepartment(exam);
     }
-    
+    // Existing logic for other statuses
+    if (isStaff) return true;
+    if (isInstructor) {
+      // Backend handles if instructor owns the course
+      return true; 
+    }
     return false;
   };
 
@@ -568,13 +595,15 @@ const ExamList: React.FC<ExamListProps> = ({
 
   // Check if a user can set proctor count
   const canSetProctors = (exam: Exam): boolean => {
+    if (exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR) {
+      // Only staff/instructors from the original department can set proctor count
+      return (isStaff || isInstructor) && isUserFromExamOriginalDepartment(exam);
+    }
+    // Existing logic for other statuses
     if (!exam.status) {
-      // If status field isn't implemented yet, allow it for Staff or Instructors
       return isStaff || isInstructor;
     }
-    // return (isStaff || isInstructor) && exam.status === ExamStatus.AWAITING_PROCTORS;
-    return (isStaff || isInstructor) && 
-           (exam.status === ExamStatus.AWAITING_PROCTORS || exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR);
+    return (isStaff || isInstructor) && exam.status === ExamStatus.AWAITING_PROCTORS;
   };
 
   // Format date for display
@@ -760,7 +789,11 @@ const ExamList: React.FC<ExamListProps> = ({
 
   // Check if a user can upload a student list
   const canUploadStudentList = (exam: Exam): boolean => {
-    // Staff and instructors can always upload student lists
+    if (exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR) {
+      // Only staff/instructors from the original department can upload
+      return (isStaff || isInstructor) && isUserFromExamOriginalDepartment(exam);
+    }
+    // Existing logic for other statuses
     return isStaff || isInstructor;
   };
 
@@ -777,16 +810,17 @@ const ExamList: React.FC<ExamListProps> = ({
     setAssignProctorsDialogOpen(true);
     // Reset selections when dialog opens
     setSelectedProctorIds([]);
-    // Fetch eligible TAs with default override values (false, false)
+    // Fetch eligible TAs - excludePartTime argument removed
     if (exam) {
-      await fetchAndSetEligibleTAs(exam.id, false, false); 
+      await fetchAndSetEligibleTAs(exam.id, false, false);
     }
   };
 
   const handleCloseAssignProctorsDialog = () => {
     setAssignProctorsDialogOpen(false);
     setExamToAssignProctors(null);
-    setEligibleTAs([]);
+    setFullTimeEligibleTAs([]); // Clear new state
+    setPartTimeEligibleTAs([]); // Clear new state
     setSelectedProctorIds([]);
     setIsAutoSuggestPhase(false);
   };
@@ -829,32 +863,27 @@ const ExamList: React.FC<ExamListProps> = ({
       // --- Phase 1: Suggest TAs ---
       const requiredProctorCount = examToAssignProctors.proctor_count ?? 0;
       
-      // Check if eligibleTAs are fewer than required
-      if (requiredProctorCount > 0 && eligibleTAs.length < requiredProctorCount) {
+      // Use fullTimeEligibleTAs for auto-suggestion eligibility check
+      if (requiredProctorCount > 0 && fullTimeEligibleTAs.length < requiredProctorCount) {
         setInsufficientTAsDialogOpen(true); // Open the new dialog
         return; // Stop further processing for this click
       }
 
-      if (requiredProctorCount === 0 || eligibleTAs.length === 0) {
-        showNotification("Cannot auto-suggest: Required proctor count is 0 or no eligible TAs available at all.", "info");
+      if (requiredProctorCount === 0 || fullTimeEligibleTAs.length === 0) {
+        showNotification("Cannot auto-suggest: Required proctor count is 0 or no eligible Full-Time TAs available.", "info"); // Updated message
         return;
       }
 
-      // Prioritization for Auto-Suggestion:
-      // 1. TAs already assigned to this exam (is_assigned_to_current_exam === true).
-      // 2. TAs teaching sections of the exam's course (is_teaching_course_sections === true) AND not already assigned to this exam.
-      // 3. Other TAs.
-      // All groups sorted by lowest current_workload.
-
-      const alreadyAssignedToThisExamTAs = eligibleTAs
+      // Prioritization for Auto-Suggestion using fullTimeEligibleTAs:
+      const alreadyAssignedToThisExamTAs = fullTimeEligibleTAs
         .filter(ta => ta.is_assigned_to_current_exam)
         .sort((a, b) => (a.current_workload ?? Infinity) - (b.current_workload ?? Infinity));
 
-      const courseTAsNotYetAssigned = eligibleTAs
+      const courseTAsNotYetAssigned = fullTimeEligibleTAs
         .filter(ta => ta.is_teaching_course_sections && !ta.is_assigned_to_current_exam)
         .sort((a, b) => (a.current_workload ?? Infinity) - (b.current_workload ?? Infinity));
         
-      const otherRemainingTAs = eligibleTAs
+      const otherRemainingTAs = fullTimeEligibleTAs
         .filter(ta => !ta.is_assigned_to_current_exam && !ta.is_teaching_course_sections)
         .sort((a, b) => (a.current_workload ?? Infinity) - (b.current_workload ?? Infinity));
       
@@ -917,7 +946,7 @@ const ExamList: React.FC<ExamListProps> = ({
       return;
     }
 
-    if (eligibleTAs.length === 0) {
+    if (fullTimeEligibleTAs.length === 0 && partTimeEligibleTAs.length === 0) {
       showNotification("No eligible TAs were found to assign.", "info");
       handleCloseInsufficientTAsDialog(); // Close the dialog as there's nothing to assign
       return;
@@ -925,7 +954,7 @@ const ExamList: React.FC<ExamListProps> = ({
 
     setLoading(true);
     try {
-      const proctorIdsToAssign = eligibleTAs.map(ta => ta.id);
+      const proctorIdsToAssign = fullTimeEligibleTAs.map(ta => ta.id);
 
       await proctoringService.assignProctorsToExam(examToAssignProctors.id, {
         assignment_type: 'MANUAL', 
@@ -1004,6 +1033,7 @@ const ExamList: React.FC<ExamListProps> = ({
         examToAssignProctors.id,
         !overrideAcademicLevelRule, // Pass true to override if checkbox is UNCHECKED (state is false)
         !overrideConsecutiveProctoringRule // Same logic here
+        // excludePartTime argument removed
       );
     }
   }, [
@@ -1356,8 +1386,9 @@ const ExamList: React.FC<ExamListProps> = ({
                     )}
                     {/* --- END NEW Button --- */}
 
-                    {/* --- NEW \"Assign Paid Cross-Department Proctor\" Button --- */}
-                    {isStaff && exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR && (
+                    {/* --- NEW "Assign Paid Cross-Department Proctor" Button --- */}
+                    {isStaff && exam.status === ExamStatus.AWAITING_CROSS_DEPARTMENT_PROCTOR && 
+                      (isUserFromExamOriginalDepartment(exam) || isUserFromAssistingDepartment(exam)) && (
                       <Tooltip title="Assign Paid Cross-Department Proctor">
                         <IconButton onClick={() => handleOpenAssignProctorsDialog(exam, true)} size="small">
                           {/* Using AssignProctorsIcon with different color, or use MonetizationOnIcon if preferred */}
@@ -1846,7 +1877,7 @@ const ExamList: React.FC<ExamListProps> = ({
                     color="inherit"
                     onClick={() => {
                       setSelectedProctorIds(
-                        eligibleTAs
+                        fullTimeEligibleTAs
                           .filter(ta => ta.is_assigned_to_current_exam)
                           .map(ta => ta.id)
                       ); // Revert to only those already assigned or empty if none were.
@@ -1864,10 +1895,11 @@ const ExamList: React.FC<ExamListProps> = ({
               {/* --- END NEW Button --- */}
 
               <Typography variant="subtitle1" sx={{ mt: isAutoSuggestPhase ? 1 : 2, mb: 1 }}>
-                {isAutoSuggestPhase ? "Review Suggested TAs (or select manually):" : "Available TAs for Manual Assignment:"}
+                {isAutoSuggestPhase ? "Review Suggested TAs (or select manually from Full-Time):" : "Full-Time TAs for Manual Assignment:"}
               </Typography>
-              {eligibleTAs.length === 0 && <Typography sx={{mb: 1, color: "text.secondary"}}>No TAs currently eligible for this exam or all are already assigned.</Typography>}
-              {eligibleTAs.map((ta) => {
+              {fullTimeEligibleTAs.length === 0 && !isAutoSuggestPhase && <Typography sx={{mb: 1, color: "text.secondary"}}>No Full-Time TAs currently eligible or all are already assigned.</Typography>}
+              {isAutoSuggestPhase && selectedProctorIds.length === 0 && <Typography sx={{mb:1, color: "text.secondary"}}>No TAs were suggested. You can select manually.</Typography>}
+              {fullTimeEligibleTAs.map((ta) => {
                 const labelId = `checkbox-list-label-${ta.id}`;
                 return (
                   <ListItem
@@ -1905,6 +1937,54 @@ const ExamList: React.FC<ExamListProps> = ({
                   </ListItem>
                 );
               })}
+
+              {/* --- NEW Section for Part-Time TAs --- */}
+              {!isAutoSuggestPhase && partTimeEligibleTAs.length > 0 && (
+                <>
+                  <Typography variant="subtitle1" sx={{ mt: 3, mb: 1 }}>
+                    Part-Time TAs (Manual Assignment Only):
+                  </Typography>
+                  {partTimeEligibleTAs.map((ta) => {
+                    const labelId = `checkbox-list-label-pt-${ta.id}`;
+                    return (
+                      <ListItem
+                        key={ta.id}
+                        secondaryAction={
+                          <Chip 
+                            label={`Current Workload: ${ta.current_workload}`}
+                            size="small"
+                            color={ta.current_workload && ta.current_workload >= 2 ? 'error' : 'default'}
+                          />
+                        }
+                        disablePadding
+                      >
+                        <ListItemButton role={undefined} onClick={() => handleToggleProctorSelection(ta.id)} dense>
+                          <ListItemIcon>
+                            <Checkbox
+                              edge="start"
+                              checked={selectedProctorIds.indexOf(ta.id) !== -1}
+                              tabIndex={-1}
+                              disableRipple
+                              inputProps={{ 'aria-labelledby': labelId }}
+                            />
+                          </ListItemIcon>
+                          <ListItemText 
+                              id={labelId} 
+                              primary={`${ta.full_name} (${ta.email})`} 
+                              secondary={`Academic Level: ${ta.academic_level} (Part-Time)`}
+                              sx={{ 
+                                  color: ta.is_assigned_to_current_exam ? 'primary.main' : 'inherit',
+                                  fontWeight: ta.is_assigned_to_current_exam ? 'bold' : 'normal'
+                              }}
+                          />
+                        </ListItemButton>
+                      </ListItem>
+                    );
+                  })}
+                </>
+              )}
+              {/* --- END NEW Section for Part-Time TAs --- */}
+
               <FormControlLabel
                 control={<Checkbox checked={isPaidAssignment} onChange={(e) => setIsPaidAssignment(e.target.checked)} name="isPaidAssignment" />}
                 label="Mark selected assignments as paid"
@@ -2021,10 +2101,10 @@ const ExamList: React.FC<ExamListProps> = ({
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="insufficient-tas-dialog-description">
-            The system could not find enough available Teaching Assistants (TAs) to meet the required number of proctors for this exam.
-            Required: {examToAssignProctors?.proctor_count ?? 'N/A'}, Available: {eligibleTAs.length}.
+            The system could not find enough available Full-Time Teaching Assistants (TAs) to meet the required number of proctors for this exam.
+            Required: {examToAssignProctors?.proctor_count ?? 'N/A'}, Available Full-Time: {fullTimeEligibleTAs.length}.
             <br /><br />
-            You can still assign proctors manually from the available list, or adjust the number of required proctors for the exam and try again.
+            You can still assign proctors manually from the available lists, or adjust the number of required proctors for the exam and try again.
           </DialogContentText>
           {/* --- NEW OVERRIDE CHECKBOXES --- */}
           <Box sx={{ mt: 2, mb: 1 }}>
