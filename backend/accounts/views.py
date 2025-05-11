@@ -1221,16 +1221,18 @@ class ReactivateUserView(APIView):
 
 
 class MyTAsListView(generics.ListAPIView):
-    """API endpoint for instructors to view their assigned TAs."""
-    serializer_class = serializers.InstructorTAAssignmentSerializer
+    """API endpoint for instructors to view TAs assigned to them."""
+    serializer_class = serializers.TADetailSerializer # CHANGED
     permission_classes = [IsAuthenticated]
-    
+
     def get_queryset(self):
         user = self.request.user
-        if user.role != 'INSTRUCTOR':
-            return InstructorTAAssignment.objects.none()
-        
-        return InstructorTAAssignment.objects.filter(instructor=user)
+        if user.role == User.Role.INSTRUCTOR:
+            # Get IDs of TAs assigned to this instructor
+            assigned_ta_ids = InstructorTAAssignment.objects.filter(instructor=user).values_list('ta_id', flat=True)
+            # Return User objects for these TAs, ensuring they are active and approved
+            return User.objects.filter(id__in=assigned_ta_ids, role=User.Role.TA, is_active=True, is_approved=True).select_related('ta_profile')
+        return User.objects.none()
 
 
 class AvailableTAsListView(generics.ListAPIView):

@@ -72,7 +72,7 @@ const Dashboard: React.FC = () => {
               </Box>
               <Box sx={{ width: { xs: '100%', md: '47%' } }}>
                 <Card>
-                  <CardActionArea onClick={() => navigate('/leaves')}>
+                  <CardActionArea onClick={() => navigate('/leave-requests')}>
                     <CardHeader title="Leave Requests" />
                     <CardContent>
                       <Typography>

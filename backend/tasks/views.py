@@ -39,6 +39,36 @@ class MyTasksView(generics.ListCreateAPIView):
         return Task.objects.filter(
             Q(assignee=self.request.user) | Q(creator=self.request.user)
         ).order_by('-created_at')
+    
+    def create(self, request, *args, **kwargs):
+        # Check if assignee ID is provided and belongs to instructor's TAs
+        if request.user.role == 'INSTRUCTOR' and 'assigned_to' in request.data and request.data['assigned_to']:
+            assignee_id = request.data['assigned_to']
+            try:
+                # Check if the TA exists and has the TA role
+                ta = User.objects.get(id=assignee_id, role='TA')
+                
+                # Check if this TA is assigned to this instructor
+                assigned_ta_exists = InstructorTAAssignment.objects.filter(
+                    instructor=request.user,
+                    ta_id=assignee_id
+                ).exists()
+                
+                print(f"MyTasksView.create - TA assigned to instructor: {assigned_ta_exists}")
+                
+                if not assigned_ta_exists:
+                    return Response(
+                        {"error": "You can only assign tasks to your own TAs"},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+            except User.DoesNotExist:
+                return Response(
+                    {"error": "TA not found"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+        
+        # Proceed with the normal create flow
+        return super().create(request, *args, **kwargs)
         
     def perform_create(self, serializer):
         # Set the current user as the creator of the task
@@ -118,32 +148,27 @@ class TaskDetailView(generics.RetrieveUpdateDestroyAPIView):
             print(f"TaskDetailView.update - checking assignee_id: {assignee_id}")
             
             if assignee_id:
-                # Check if the TA is from the same department as the instructor
+                # Check if the TA exists and has the TA role
                 try:
                     ta = User.objects.get(id=assignee_id, role='TA')
-                    if ta.department != request.user.department:
+                    
+                    # Check if this TA is assigned to this instructor
+                    assigned_ta_exists = InstructorTAAssignment.objects.filter(
+                        instructor=request.user,
+                        ta_id=assignee_id
+                    ).exists()
+                    
+                    print(f"TaskDetailView.update - TA assigned to instructor: {assigned_ta_exists}")
+                    
+                    if not assigned_ta_exists:
                         return Response(
-                            {"error": "You can only assign tasks to TAs from your own department"},
+                            {"error": "You can only assign tasks to your own TAs"},
                             status=status.HTTP_403_FORBIDDEN
                         )
                 except User.DoesNotExist:
                     return Response(
                         {"error": "TA not found"},
                         status=status.HTTP_404_NOT_FOUND
-                    )
-                    
-                # Check if this TA is assigned to this instructor
-                assigned_ta_exists = InstructorTAAssignment.objects.filter(
-                    instructor=request.user,
-                    ta_id=assignee_id
-                ).exists()
-                
-                print(f"TaskDetailView.update - TA assigned to instructor: {assigned_ta_exists}")
-                
-                if not assigned_ta_exists:
-                    return Response(
-                        {"error": "You can only assign tasks to your own TAs"},
-                        status=status.HTTP_403_FORBIDDEN
                     )
         
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -251,9 +276,9 @@ class CompleteTaskView(APIView):
             )
         
         # Check if task is in the right state to be marked as completed
-        if task.status not in ['IN_PROGRESS', 'PENDING']:
+        if task.status != 'IN_PROGRESS':
             return Response(
-                {"error": f"Task cannot be marked as completed because its status is {task.status}."},
+                {"error": f"Task cannot be marked as completed because its status is {task.status}. Tasks must be in 'IN_PROGRESS' status to be completed. Please accept the task first."},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
@@ -363,46 +388,42 @@ class ReviewTaskView(APIView):
         task.status = 'APPROVED' if is_approved else 'REJECTED'
         task.save()
         
-        # If approved, update TA's workload
-        if is_approved:
-            # Get the task completion to see hours spent by TA
+        # If approved, update TA workload
+        if is_approved and task.assignee and task.assignee.role == 'TA' and task.credit_hours > 0:
             try:
-                task_completion = TaskCompletion.objects.get(task=task)
-                hours_spent = task_completion.hours_spent
-                print(f"Task approved - TA reported hours_spent: {hours_spent}, Task credit_hours: {task.credit_hours}")
+                # Ensure assignee is a TA and has a ta_profile
+                ta_profile = task.assignee.ta_profile  # Use ta_profile
+                current_workload = ta_profile.workload_credits if ta_profile.workload_credits is not None else 0
                 
-                # Create workload record with the task's credit hours (this affects the TA's total workload)
-                workload_record = WorkloadRecord.objects.create(
-                    user=task.assignee,
-                    task=task,
-                    hours=task.credit_hours,  # Using credit_hours for official workload
-                    date=timezone.now().date(),
-                    description=f"Task: {task.title} (Credit hours: {task.credit_hours}, Hours spent: {hours_spent})"
-                )
+                # Log before update
+                print(f"ReviewTaskView - Task approved - Updating TA workload for {task.assignee.full_name}")
+                print(f"ReviewTaskView - Current workload: {current_workload} credits")
+                print(f"ReviewTaskView - Adding {task.credit_hours} credits from task: {task.title} (ID: {task.id})")
                 
-                print(f"Workload record created: {workload_record.id} - Added {task.credit_hours} hours to {task.assignee.full_name}'s workload")
+                # Update workload credits
+                ta_profile.workload_credits = current_workload + task.credit_hours
+                ta_profile.save()
                 
-                # If needed, you could use hours_spent instead:
-                # workload_record = WorkloadRecord.objects.create(
-                #     user=task.assignee,
-                #     task=task,
-                #     hours=hours_spent,  # Using TA's reported hours
-                #     date=timezone.now().date(),
-                #     description=f"Task: {task.title}"
-                # )
-                
-            except TaskCompletion.DoesNotExist:
-                print(f"Warning: Task completion not found for task {task.id}. Using only credit hours.")
-                
-                workload_record = WorkloadRecord.objects.create(
-                    user=task.assignee,
-                    task=task,
-                    hours=task.credit_hours,
-                    date=timezone.now().date(),
-                    description=f"Task: {task.title} (Credit hours only)"
-                )
-                
-                print(f"Workload record created: {workload_record.id} - Added {task.credit_hours} hours to {task.assignee.full_name}'s workload")
+                # Log after update
+                print(f"ReviewTaskView - Workload updated successfully - New workload: {ta_profile.workload_credits} credits")
+                logger.info(f"TA {task.assignee.username}'s workload_credits updated from {current_workload} to {ta_profile.workload_credits} by adding {task.credit_hours} credits from task {task.id}.")
+            except User.ta_profile.RelatedObjectDoesNotExist:  # Correct exception for OneToOneField
+                error_msg = f"TAProfile not found for TA {task.assignee.username} with ID {task.assignee.id}. Cannot update workload."
+                print(f"ReviewTaskView ERROR - {error_msg}")
+                logger.error(error_msg)
+            except AttributeError: # If task.assignee doesn't have ta_profile (e.g. not a TA or profile missing)
+                error_msg = f"User {task.assignee.username} (ID: {task.assignee.id}) is not a TA or has no TAProfile. Cannot update workload."
+                print(f"ReviewTaskView ERROR - {error_msg}")
+                logger.error(error_msg)
+            except Exception as e:
+                error_msg = f"Error updating workload for TA {task.assignee.username} (ID: {task.assignee.id}): {str(e)}"
+                print(f"ReviewTaskView ERROR - {error_msg}")
+                logger.error(error_msg)
+        elif is_approved and task.assignee and task.credit_hours <= 0:
+            print(f"ReviewTaskView - Task approved but no credits to add: task.credit_hours = {task.credit_hours}")
+            logger.info(f"Task {task.id} approved for TA {task.assignee.username} but credit_hours is {task.credit_hours}, so no workload update needed.")
+        elif not is_approved:
+            print(f"ReviewTaskView - Task rejected, no workload update needed.")
         
         # Send email notification to TA
         status_text = "approved" if is_approved else "rejected"
@@ -439,6 +460,95 @@ class ReviewTaskView(APIView):
         return Response({"status": status_text}, status=status.HTTP_200_OK)
 
 
+class AcceptTaskView(APIView):
+    """
+    API endpoint for TAs to accept a task, changing its status to IN_PROGRESS.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, task_id):
+        # Check if the user is a TA
+        if request.user.role != 'TA':
+            return Response(
+                {"error": "Only TAs can accept tasks."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        task = get_object_or_404(Task, id=task_id)
+
+        # Check if the task is assigned to the current user
+        if task.assignee != request.user:
+            return Response(
+                {"error": "You can only accept tasks assigned to you."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Check if task is in PENDING state
+        if task.status != 'PENDING':
+            return Response(
+                {"error": f"Task cannot be accepted. Its status is currently '{task.get_status_display()}'."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Update task status to IN_PROGRESS
+        task.status = 'IN_PROGRESS'
+        task.save()
+        logger.info(f"Task {task.id} ('{task.title}') accepted by TA {request.user.email}. Status changed to IN_PROGRESS.")
+
+        # Send email notification to TA (confirmation)
+        try:
+            ta_email = request.user.email
+            if ta_email and '@' in ta_email and '.' in ta_email:
+                subject_ta = f"Task Accepted: {task.title}"
+                message_ta = f"""
+                Dear {request.user.full_name},
+
+                You have successfully accepted the task: "{task.title}".
+                Its status is now IN PROGRESS.
+
+                You can view and update this task in the TA Management System.
+                """
+                send_mail(
+                    subject_ta,
+                    message_ta,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [ta_email],
+                    fail_silently=True,
+                )
+                logger.info(f"AcceptTaskView: Confirmation email sent to TA {ta_email} for task {task.id}")
+        except Exception as e:
+            logger.error(f"AcceptTaskView: Error sending acceptance confirmation email to TA {request.user.email} for task {task.id}: {str(e)}")
+
+        # Send email notification to Instructor
+        if task.creator:
+            try:
+                instructor_email = task.creator.email
+                if instructor_email and '@' in instructor_email and '.' in instructor_email:
+                    subject_instructor = f"Task Started: {task.title} by {request.user.full_name}"
+                    message_instructor = f"""
+                    Dear {task.creator.full_name},
+
+                    The TA {request.user.full_name} has accepted and started working on the task:
+                    Task Title: {task.title}
+                    Assigned TA: {request.user.full_name}
+                    Status: IN PROGRESS
+
+                    You can monitor this task in the TA Management System.
+                    """
+                    send_mail(
+                        subject_instructor,
+                        message_instructor,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [instructor_email],
+                        fail_silently=True,
+                    )
+                    logger.info(f"AcceptTaskView: Notification email sent to Instructor {instructor_email} for task {task.id}")
+            except Exception as e:
+                logger.error(f"AcceptTaskView: Error sending start notification email to Instructor {task.creator.email} for task {task.id}: {str(e)}")
+
+        return Response({"status": "IN_PROGRESS", "message": "Task accepted successfully and status updated to IN PROGRESS."}, status=status.HTTP_200_OK)
+
+
 # Commented out TaskComment view as the model/serializer may not exist
 # class TaskCommentListCreateView(generics.ListCreateAPIView):
 #     serializer_class = TaskSerializer # Corrected from TaskCommentSerializer
@@ -455,3 +565,92 @@ class ReviewTaskView(APIView):
 #         task = get_object_or_404(Task, id=task_id)
 #         self.check_object_permissions(self.request, task)
 #         serializer.save(task=task, author=self.request.user)
+
+
+class CreateTaskView(generics.CreateAPIView):
+    """
+    API endpoint özellikle yeni görev oluşturmak için.
+    """
+    serializer_class = TaskSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def create(self, request, *args, **kwargs):
+        # Check if assignee ID is provided and belongs to instructor's TAs
+        if request.user.role == 'INSTRUCTOR' and 'assigned_to' in request.data and request.data['assigned_to']:
+            assignee_id = request.data.get('assigned_to')
+            try:
+                # Check if the TA exists and has the TA role
+                ta = User.objects.get(id=assignee_id, role='TA')
+                
+                # Check if this TA is assigned to this instructor
+                assigned_ta_exists = InstructorTAAssignment.objects.filter(
+                    instructor=request.user,
+                    ta_id=assignee_id
+                ).exists()
+                
+                print(f"CreateTaskView.create - TA assigned to instructor: {assigned_ta_exists}")
+                
+                if not assigned_ta_exists:
+                    return Response(
+                        {"error": "You can only assign tasks to your own TAs"},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+            except User.DoesNotExist:
+                return Response(
+                    {"error": "TA not found"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+        
+        # Proceed with the normal create flow
+        return super().create(request, *args, **kwargs)
+    
+    def perform_create(self, serializer):
+        # Set the current user as the creator of the task
+        print(f"CreateTaskView.perform_create - user: {self.request.user}")
+        print(f"CreateTaskView.perform_create - request data: {self.request.data}")
+        print(f"CreateTaskView.perform_create - assigned_to in request: {self.request.data.get('assigned_to')}")
+        serializer.save(creator=self.request.user)
+        
+        # Log the created task data
+        task = serializer.instance
+        print(f"CreateTaskView.perform_create - created task: {task.id}, title: {task.title}")
+        print(f"CreateTaskView.perform_create - assignee: {task.assignee}, creator: {task.creator}")
+        
+        # If task is assigned to a TA, send notification email
+        if task.assignee and task.assignee.role == 'TA':
+            try:
+                # Check if email is valid
+                ta_email = task.assignee.email
+                if ta_email and '@' in ta_email and '.' in ta_email:
+                    # Send task assignment notification to TA
+                    print(f"CreateTaskView.perform_create - sending notification to TA: {ta_email}")
+                    
+                    subject = f"New Task Assignment: {task.title}"
+                    message = f"""
+                    Dear {task.assignee.full_name},
+                    
+                    You have been assigned a new task by {self.request.user.full_name}:
+                    
+                    Title: {task.title}
+                    Description: {task.description}
+                    Due Date: {task.due_date.strftime('%d-%m-%Y') if task.due_date else 'Not set'}
+                    Status: {task.status}
+                    Credit Hours: {task.credit_hours or 'Not specified'}
+                    
+                    Please log in to the TA Management System to view details and update this task.
+                    """
+                    
+                    send_mail(
+                        subject,
+                        message,
+                        settings.DEFAULT_FROM_EMAIL,
+                        [ta_email],
+                        fail_silently=True,
+                    )
+                    
+                    print(f"CreateTaskView.perform_create - notification email sent to {ta_email}")
+                else:
+                    print(f"CreateTaskView.perform_create - Invalid TA email: {ta_email}, skipping notification")
+            except Exception as e:
+                # Log the error but don't stop the API response
+                print(f"CreateTaskView.perform_create - Email notification error: {str(e)}")

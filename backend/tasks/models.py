@@ -2,6 +2,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 from accounts.models import User, Section
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Task(models.Model):
@@ -112,3 +117,39 @@ class TaskAttachment(models.Model):
     
     def __str__(self):
         return f"{self.filename} - {self.task.title}"
+
+
+@receiver(pre_save, sender=Task)
+def update_ta_workload_on_approval(sender, instance, **kwargs):
+    """Update TA workload when a task is approved"""
+    # Try to get the previous state of the task
+    try:
+        # Check if this is an existing task (has an ID)
+        if instance.pk:
+            # Get the original task from the database
+            original = Task.objects.get(pk=instance.pk)
+            
+            # If the task status is changing to APPROVED
+            if original.status != 'APPROVED' and instance.status == 'APPROVED':
+                # Check if task has a TA assignee and credit hours
+                if instance.assignee and instance.assignee.role == 'TA' and instance.credit_hours and instance.credit_hours > 0:
+                    try:
+                        # Get the TA profile
+                        ta_profile = instance.assignee.ta_profile
+                        current_workload = ta_profile.workload_credits if ta_profile.workload_credits is not None else 0
+                        
+                        # Log before update
+                        logger.info(f"Signal: Task {instance.id} status changed to APPROVED - Updating TA workload")
+                        logger.info(f"Signal: Current workload for {instance.assignee.username}: {current_workload} credits")
+                        logger.info(f"Signal: Adding {instance.credit_hours} credits from task: {instance.title}")
+                        
+                        # Update workload credits
+                        ta_profile.workload_credits = current_workload + instance.credit_hours
+                        ta_profile.save()
+                        
+                        # Log after update
+                        logger.info(f"Signal: Workload updated successfully - New workload: {ta_profile.workload_credits} credits")
+                    except Exception as e:
+                        logger.error(f"Signal: Error updating TA workload: {str(e)}")
+    except Exception as e:
+        logger.error(f"Signal: Error in task pre_save signal: {str(e)}")

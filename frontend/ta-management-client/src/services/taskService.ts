@@ -74,6 +74,8 @@ export interface EnhancedTA {
   email?: string;
   department?: string;
   ta_employment_type?: string;
+  employment_type?: string;
+  employment_type_display?: string;
   current_workload?: number;
   workload_cap?: number;
   workload_percentage?: number;
@@ -85,7 +87,10 @@ class TaskService {
   // Get all tasks or tasks for a specific TA if user is TA
   async getTasks() {
     try {
+      console.log('Fetching tasks from:', '/tasks/my-tasks/');
       const response = await api.get('/tasks/my-tasks/');
+      console.log('Tasks API response:', response);
+      
       // Check if response data is valid and transform if needed
       if (response.data && typeof response.data === 'object') {
         // If response is an object with a 'tasks' property, return that
@@ -101,8 +106,16 @@ class TaskService {
         return { data: [] };
       }
       return { data: [] };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error in getTasks:', error);
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response data:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received, request details:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
       throw error;
     }
   }
@@ -133,11 +146,22 @@ class TaskService {
     
     // Log the data being sent to backend
     console.log('Creating task with data:', backendTaskData);
+    console.log('Sending task creation request to:', '/tasks/create-task/');
     
     try {
-      return await api.post('/tasks/my-tasks/', backendTaskData);
-    } catch (error) {
+      const response = await api.post('/tasks/create-task/', backendTaskData);
+      console.log('Task creation response:', response);
+      return response;
+    } catch (error: any) {
       console.error('Error creating task:', error);
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response data:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received, request details:', error.request);
+      } else {
+        console.error('Error setting up request:', error.message);
+      }
       throw error;
     }
   }
@@ -191,6 +215,7 @@ class TaskService {
   async getAvailableTAs() {
     try {
       // Get TAs assigned to the instructor
+      console.log('Fetching available TAs from:', '/accounts/instructor/tas/');
       const response = await api.get('/accounts/instructor/tas/');
       console.log('Raw TA response:', response.data);
       
@@ -226,43 +251,27 @@ class TaskService {
         console.warn('Response data keys:', Object.keys(response.data || {}));
       }
       
-      // If we have TA data, try to enrich it with workload information
-      if (taData.length > 0) {
-        try {
-          // Try to get workload information for the TAs
-          const workloadResponse = await api.get('/workload/instructor/ta-workloads/');
-          console.log('Workload response:', workloadResponse.data);
-          
-          if (workloadResponse.data && Array.isArray(workloadResponse.data)) {
-            // Map workload data to TAs by ID
-            const workloadMap: Record<number, TAWorkload> = {};
-            workloadResponse.data.forEach((item: TAWorkload | any) => {
-              if (item && item.ta_id) {
-                workloadMap[item.ta_id] = item;
-              }
-            });
-            
-            // Enrich TA data with workload info
-            taData = taData.map((ta: EnhancedTA) => {
-              const workload = workloadMap[ta.id] || {};
-              return {
-                ...ta,
-                current_workload: workload.current_workload || 0,
-                workload_cap: workload.workload_cap || 0,
-                workload_percentage: workload.workload_percentage || 0
-              };
-            });
-          }
-        } catch (workloadError) {
-          console.warn('Failed to fetch workload data:', workloadError);
-          // Continue without workload data
-        }
-      }
+      // Skip workload API call as it doesn't exist in the backend
+      // Just add placeholder workload values
+      taData = taData.map((ta: EnhancedTA) => {
+        return {
+          ...ta,
+          current_workload: 0,
+          workload_cap: 40,
+          workload_percentage: 0
+        };
+      });
       
       console.log('Final enriched TA data:', taData);
       return { data: taData };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error in getAvailableTAs:', error);
+      if (error.response) {
+        console.error('Response status:', error.response.status);
+        console.error('Response data:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received, request details:', error.request);
+      }
       return { data: [] }; // Return empty array instead of throwing
     }
   }
@@ -286,6 +295,19 @@ class TaskService {
   // Review a completed task (for instructors)
   async reviewTask(taskId: number, data: ReviewTaskData) {
     return await api.post(`/tasks/task/${taskId}/review/`, data);
+  }
+
+  // TA accepts a task
+  async acceptTask(taskId: number) {
+    console.log(`Sending request to accept task: ${taskId} to URL: /tasks/task/${taskId}/accept/`);
+    try {
+      const response = await api.post(`/tasks/task/${taskId}/accept/`);
+      console.log('Accept task response:', response);
+      return response;
+    } catch (error) {
+      console.error('Error accepting task:', error);
+      throw error;
+    }
   }
 }
 
