@@ -49,6 +49,22 @@ from decimal import Decimal
 import os
 from .utils import process_student_list_file
 from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, permissions
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate, login, logout
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.conf import settings
+from django.db import transaction
+from django.db.models import Q, Count, Prefetch, Sum, F # Added Sum and F
+from django.utils.crypto import get_random_string # For password generation
+import pandas as pd # For Excel processing
+import logging # Added logging
+import openpyxl # Ensure openpyxl is available for xlsx
 
 logger = logging.getLogger(__name__)
 
@@ -3184,162 +3200,43 @@ class CreateTAFromEmailView(APIView):
     def _extract_name_from_email(self, email):
         """Extract first and last name from email address"""
         try:
-            # Example: john.doe@bilkent.edu.tr -> first_name="John", last_name="Doe"
+            # Remove domain part
             username = email.split('@')[0]
-            parts = username.replace('.', ' ').replace('_', ' ').split()
             
-            if len(parts) >= 2:
-                # Capitalize each part
-                first_name = parts[0].capitalize()
-                last_name = ' '.join([p.capitalize() for p in parts[1:]])
-            else:
-                # If we can't extract both names, use the whole username as first name
-                first_name = username.capitalize()
-                last_name = "Unknown"
+            # Common formats: firstname.lastname, firstname_lastname, first.m.last
+            name_parts = re.split(r'[._]', username)
+            
+            if len(name_parts) >= 2:
+                first_name = name_parts[0].capitalize()
+                last_name = name_parts[-1].capitalize()
                 
-            return {
-                'first_name': first_name,
-                'last_name': last_name
-            }
+                # If last part is a single character, use the part before it as last name
+                if len(last_name) == 1 and len(name_parts) > 2:
+                    last_name = name_parts[-2].capitalize()
+                
+                return {
+                    'first_name': first_name,
+                    'last_name': last_name
+                }
         except Exception as e:
             logger.error(f"Error extracting name from email: {str(e)}")
-            return {
-                'first_name': "New",
-                'last_name': "User"
-            }
-
-    def _find_ta_in_excel(self, email):
-        """
-        Find TA information in the Excel file.
-        Returns a dictionary with TA information or None if not found.
-        """
-        import pandas as pd
-        import os
         
-        try:
-            # Look for Excel files with TA data
-            excel_files = [
-                os.path.join(settings.BASE_DIR, "CS department TA list.xlsx"),
-                os.path.join(settings.BASE_DIR.parent, "CS department TA list.xlsx")
-            ]
-            
-            # Try additional paths that might contain the Excel file
-            for root, dirs, files in os.walk(settings.BASE_DIR.parent):
-                for file in files:
-                    if "TA list" in file and file.endswith(".xlsx"):
-                        excel_files.append(os.path.join(root, file))
-            
-            # Get the first valid Excel file
-            excel_path = None
-            for file_path in excel_files:
-                if os.path.exists(file_path):
-                    excel_path = file_path
-                    break
-            
-            if not excel_path:
-                logger.error("Could not find TA Excel file")
-                return None
-            
-            # Read the Excel file
-            df = pd.read_excel(excel_path)
-            
-            # Clean up column names (remove spaces, etc.)
-            df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns]
-            
-            # Try to find email in various possible column names
-            email_columns = ['email', 'ta_email', 'email_address', 'mail', 'email_address', 'e-mail']
-            
-            # Find the correct email column
-            email_col = None
-            for col in email_columns:
-                if col in df.columns:
-                    email_col = col
-                    break
-            
-            if not email_col:
-                logger.error(f"Could not find email column in Excel file: {excel_path}")
-                return None
-            
-            # Find the row with the matching email
-            ta_row = df[df[email_col].str.lower() == email.lower()]
-            
-            if ta_row.empty:
-                logger.info(f"Email {email} not found in TA Excel list")
-                return None
-            
-            # Extract TA information
-            ta_data = ta_row.iloc[0].to_dict()
-            
-            # Map Excel columns to our model fields
-            # Common column mappings
-            name_columns = {
-                'first_name': ['first_name', 'first', 'name', 'ta_name', 'first name'],
-                'last_name': ['last_name', 'last', 'surname', 'ta_surname', 'last name'],
-                'phone': ['phone', 'phone_number', 'telephone', 'tel', 'phone number'],
-                'iban': ['iban', 'bank_account', 'bank account'],
-                'department': ['department', 'dept', 'dept_code'],
-                'academic_level': ['academic_level', 'level', 'education_level', 'education level', 'degree'],
-                'employment_type': ['employment_type', 'employment', 'work_type', 'work type', 'type'],
-                'bilkent_id': ['bilkent_id', 'id', 'student_id', 'ta_id', 'uni_id', 'university_id', 'bilkent id']
-            }
-            
-            # Extracted data
-            result = {}
-            
-            # Extract info using column mappings
-            for field, possible_columns in name_columns.items():
-                for col in possible_columns:
-                    if col in ta_data and pd.notna(ta_data[col]):
-                        if field == 'academic_level' and isinstance(ta_data[col], str):
-                            # Map various academic level terms to our model's choices
-                            value = ta_data[col].upper()
-                            if 'PHD' in value or 'DOCTORAL' in value:
-                                result[field] = 'PHD'
-                            elif 'MASTER' in value or 'MS' in value or 'MA' in value:
-                                result[field] = 'MASTERS'
-                            elif 'UNDER' in value or 'BS' in value or 'BA' in value:
-                                result[field] = 'UNDERGRADUATE'
-                            else:
-                                result[field] = 'MASTERS'  # Default
-                        elif field == 'employment_type' and isinstance(ta_data[col], str):
-                            # Map various employment type terms
-                            value = ta_data[col].upper()
-                            if 'FULL' in value:
-                                result[field] = 'FULL_TIME'
-                            elif 'PART' in value:
-                                result[field] = 'PART_TIME'
-                            else:
-                                result[field] = 'PART_TIME'  # Default
-                        else:
-                            result[field] = ta_data[col]
-                        break
-            
-            # Set defaults for missing data
-            if 'first_name' not in result or 'last_name' not in result:
-                name_info = self._extract_name_from_email(email)
-                result['first_name'] = result.get('first_name', name_info['first_name'])
-                result['last_name'] = result.get('last_name', name_info['last_name'])
-            
-            domain_info = self._extract_domain_info(email)
-            result['department'] = result.get('department', domain_info['department'])
-            result['academic_level'] = result.get('academic_level', domain_info['academic_level'])
-            result['employment_type'] = result.get('employment_type', domain_info['employment_type'])
-            
-            logger.info(f"Found TA data in Excel: {result}")
-            return result
-            
-        except Exception as e:
-            logger.error(f"Error processing Excel file: {str(e)}")
-            return None
+        # Default: use email as first name and "User" as last name
+        return {
+            'first_name': email.split('@')[0],
+            'last_name': 'User'
+        }
     
     def generate_password(self, length=12):
         """Generate a secure random password."""
         chars = string.ascii_letters + string.digits + string.punctuation
         # Ensure password has at least one of each type of character
-        password = ''.join(random.choice(string.ascii_lowercase) for _ in range(3))
-        password += ''.join(random.choice(string.ascii_uppercase) for _ in range(3))
-        password += ''.join(random.choice(string.digits) for _ in range(3))
-        password += ''.join(random.choice('!@#$%^&*()_+-=') for _ in range(3))
+        password = random.choice(string.ascii_lowercase)
+        password += random.choice(string.ascii_uppercase)
+        password += random.choice(string.digits)
+        password += random.choice('!@#$%^&*()_+-=[]{}|;:,.<>?')
+        # Fill the rest randomly
+        password += ''.join(random.choice(chars) for _ in range(length - 4))
         # Shuffle the password
         password_list = list(password)
         random.shuffle(password_list)
@@ -3364,44 +3261,23 @@ class CreateTAFromEmailView(APIView):
         
         try:
             with transaction.atomic():
-                # Check if TA exists in Excel file
-                ta_data = self._find_ta_in_excel(email)
-                if not ta_data:
-                    logger.warning(f"No data found in Excel for: {email}")
-                    
-                    # Extract basic info from email if not in Excel
-                    domain_info = self._extract_domain_info(email)
-                    name_info = self._extract_name_from_email(email)
-                    
-                    # Prepare minimal user data
-                    ta_data = {
-                        'first_name': name_info['first_name'],
-                        'last_name': name_info['last_name'],
-                        'department': domain_info['department'],
-                        'academic_level': domain_info['academic_level'],
-                        'employment_type': domain_info['employment_type'],
-                        'phone': '05000000000',  # Placeholder
-                    }
+                # Extract basic info from email
+                domain_info = self._extract_domain_info(email)
+                name_info = self._extract_name_from_email(email)
                 
                 # Generate password
                 password = self.generate_password()
-                
-                # Check if bilkent_id exists in ta_data
-                if 'bilkent_id' not in ta_data:
-                    logger.warning(f"No Bilkent ID found in Excel for: {email}, using default value")
                 
                 # Create the user
                 user = User.objects.create_user(
                     email=email,
                     password=password,
-                    first_name=ta_data.get('first_name', ''),
-                    last_name=ta_data.get('last_name', ''),
+                    first_name=name_info['first_name'],
+                    last_name=name_info['last_name'],
                     role='TA',
-                    department=ta_data.get('department', 'CS'),
-                    phone=ta_data.get('phone', '05000000000'),
-                    iban=ta_data.get('iban', ''),
-                    academic_level=ta_data.get('academic_level', 'MASTERS'),
-                    employment_type=ta_data.get('employment_type', 'PART_TIME'),
+                    department=domain_info['department'],
+                    academic_level=domain_info['academic_level'],
+                    employment_type=domain_info['employment_type'],
                     is_approved=True,  # Auto-approve TAs
                     email_verified=True,  # Auto-verify emails
                     bilkent_id=ta_data.get('bilkent_id', '00000000')
@@ -3425,7 +3301,7 @@ class CreateTAFromEmailView(APIView):
                 plain_message = f"""
                 Hello {user.first_name} {user.last_name},
                 
-                Your account for the Bilkent TA Management System has been created.
+                Your account has been created in the Bilkent TA Management System.
                 
                 Your temporary password is: {password}
                 
@@ -3436,8 +3312,6 @@ class CreateTAFromEmailView(APIView):
                 Bilkent TA Management System
                 """
                 
-                # Send the email
-                email_sent = False
                 try:
                     send_mail(
                         subject=subject,
@@ -3448,9 +3322,9 @@ class CreateTAFromEmailView(APIView):
                         fail_silently=False,
                     )
                     email_sent = True
-                    logger.info(f"Sent password email to {user.email}")
                 except Exception as e:
                     logger.error(f"Failed to send email to {user.email}: {str(e)}")
+                    email_sent = False
                 
                 return Response({
                     'exists': False,
@@ -3472,3 +3346,454 @@ class CreateTAFromEmailView(APIView):
                 'created': False,
                 'message': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class TAImportView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    parser_classes = [MultiPartParser, FormParser] # Ensure parsers are set
+
+    def post(self, request, *args, **kwargs):
+        logger.info(f"TAImportView POST request received. User: {request.user.email}, Headers: {request.headers}")
+        logger.info(f"Request FILES: {request.FILES}")
+        logger.info(f"Request POST data: {request.POST}")
+
+        # Get the department of the staff member performing the import
+        importer_dept = request.user.department
+        logger.info(f"Importer department: {importer_dept}")
+
+        if 'file' not in request.FILES:
+            logger.error("No file found in request.FILES for TA import.")
+            return Response({'error': 'No file provided. Please select an Excel file to upload.', 'details': 'File key missing in request.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        file_obj = request.FILES['file']
+        logger.info(f"Received file: {file_obj.name}, size: {file_obj.size}, content_type: {file_obj.content_type}")
+
+        allowed_mime_types = [
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+            'application/wps-office.xlsx', 
+            'application/vnd.ms-excel.sheet.macroEnabled.12',
+        ]
+        
+        if file_obj.content_type not in allowed_mime_types and not file_obj.name.endswith('.xlsx'):
+             logger.error(f"Invalid file type: {file_obj.content_type}. File name: {file_obj.name}")
+             return Response({
+                 'error': 'Invalid file type.',
+                 'details': f"Received content type: {file_obj.content_type}. Expected an Excel (.xlsx) file. Ensure the file name ends with .xlsx if the MIME type is not standard."
+             }, status=status.HTTP_400_BAD_REQUEST)
+
+        # ---DataFrame creation and column normalization moved up and wrapped in try-except ---
+        try:
+            df = pd.read_excel(file_obj, engine='openpyxl')
+            df.columns = [col.strip().lower().replace(' ', '_') for col in df.columns] # Normalize column names
+        except pd.errors.EmptyDataError:
+            logger.error("The uploaded Excel file is empty.")
+            return Response({"error": "The uploaded Excel file is empty."}, status=status.HTTP_400_BAD_REQUEST)
+        except pd.errors.ParserError as e:
+            logger.error(f"Could not parse the Excel file: {e}")
+            return Response({"error": "Could not parse the Excel file. Please ensure it's a valid .xlsx file.", "details": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e: # Catch other potential pandas errors during read/column normalization
+            logger.error(f"Error reading or processing Excel columns: {e}", exc_info=True)
+            return Response({"error": f"Error reading or processing Excel file structure: {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+        # --- End of DataFrame creation block ---
+
+        # Now check for required columns after df is successfully created
+        required_columns = [
+            'name', 'surname', 'email', 'bilkent_id', 'iban', 'phone_number',
+            'employment_type', 'academic_level', 'undergraduate_university', 'workload_number'
+        ]
+        missing_cols = [col for col in required_columns if col not in df.columns]
+        if missing_cols:
+            logger.error(f"Missing required columns in Excel file: {missing_cols}. Available columns: {list(df.columns)}")
+            return Response({
+                "error": "Missing required columns in Excel file.",
+                "details": f"The following columns are missing: {', '.join(missing_cols)}. Please ensure your Excel file includes all required headers: {', '.join(required_columns)} (case-insensitive, spaces will be replaced by underscores). Available columns found: {list(df.columns)}",
+                "missing_columns": missing_cols,
+                "available_columns": list(df.columns)
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        success_count = 0
+        error_list = []
+        successful_imports = [] # Initialize list to store successful imports with passwords
+
+        # This try-except now focuses on row-processing errors
+        try:
+            for index, row in df.iterrows():
+                try:
+                    with transaction.atomic():
+                        # Normalize inputs
+                        name = str(row.get('name', '')).strip()
+                        surname = str(row.get('surname', '')).strip()
+                        email = str(row.get('email', '')).strip().lower()
+                        bilkent_id_str = str(row.get('bilkent_id', '')).strip()
+                        iban = str(row.get('iban', '')).strip()
+                        phone_number = str(row.get('phone_number', '')).strip()
+                        employment_type_raw = str(row.get('employment_type', '')).strip().upper()
+                        academic_level_raw = str(row.get('academic_level', '')).strip()
+                        undergraduate_university = str(row.get('undergraduate_university', '')).strip()
+                        workload_number_str = str(row.get('workload_number', '')).strip()
+
+                        row_errors = []
+                        # Basic validation
+                        if not all([name, surname, email, bilkent_id_str, phone_number, employment_type_raw, academic_level_raw, workload_number_str]):
+                            row_errors.append("Missing one or more required fields (name, surname, email, bilkent_id, phone_number, employment_type, academic_level, workload_number).")
+                        
+                        # Bilkent ID validation
+                        bilkent_id = None
+                        if bilkent_id_str:
+                            try:
+                                # Attempt to convert to float first to handle cases like "12345.0" then to int
+                                bilkent_id = int(float(bilkent_id_str))
+                            except ValueError:
+                                row_errors.append(f"Invalid Bilkent ID format: {bilkent_id_str}")
+                        else:
+                            row_errors.append("Bilkent ID is required.")
+
+                        # Workload number validation
+                        workload_number = None
+                        if workload_number_str:
+                            try:
+                                # Attempt to convert to float first then to int
+                                workload_number = int(float(workload_number_str))
+                            except ValueError:
+                                row_errors.append(f"Invalid workload number format: {workload_number_str}")
+                        else:
+                            row_errors.append("Workload number is required.")
+
+                        # Employment Type mapping
+                        employment_type_map = {'P': User.EmploymentType.PART_TIME, 'F': User.EmploymentType.FULL_TIME}
+                        employment_type = employment_type_map.get(employment_type_raw)
+                        if not employment_type:
+                            row_errors.append(f"Invalid employment type: {employment_type_raw}. Must be 'P' or 'F'.")
+
+                        # Academic Level mapping
+                        academic_level_map = {
+                            'MASTERS': User.AcademicLevel.MASTERS,
+                            'MASTER': User.AcademicLevel.MASTERS, # Allow "MASTER" as well
+                            'PHD': User.AcademicLevel.PHD
+                        }
+                        academic_level_normalized = academic_level_raw.upper().replace("'", "") # Remove apostrophes for "MASTER'S"
+                        academic_level = academic_level_map.get(academic_level_normalized)
+                        
+                        if not academic_level:
+                           # Try case-insensitive match for "Masters" or "PhD" (already handled by .upper() but good fallback)
+                            if academic_level_raw.lower() == 'masters':
+                                academic_level = User.AcademicLevel.MASTERS
+                            elif academic_level_raw.lower() == 'phd':
+                                academic_level = User.AcademicLevel.PHD
+                            else:
+                                row_errors.append(f"Invalid academic level: {academic_level_raw}. Must be 'PhD' or 'Masters'.")
+                        
+                        # Check for existing user by email or Bilkent ID (only if bilkent_id is valid)
+                        existing_user_query = User.objects.filter(email=email)
+                        if bilkent_id is not None: # only add bilkent_id to query if it's valid
+                            existing_user_query = existing_user_query | User.objects.filter(bilkent_id=bilkent_id)
+                        
+                        if existing_user_query.exists():
+                            row_errors.append(f"User with email {email} or Bilkent ID {bilkent_id_str} already exists.")
+
+                        if row_errors:
+                            error_list.append({"row": index + 2, "errors": row_errors, "data": row.to_dict()}) 
+                            continue
+
+                        # Create User
+                        user = User.objects.create_user(
+                            email=email,
+                            first_name=name,
+                            last_name=surname,
+                            bilkent_id=bilkent_id, # Use the validated integer
+                            iban=iban,
+                            phone=phone_number, 
+                            employment_type=employment_type,
+                            academic_level=academic_level,
+                            role=User.Role.TA,
+                            department=importer_dept, # Assign the importer's department to the TA
+                            is_approved=True, 
+                            is_active=True
+                        )
+                        temp_password = get_random_string(12)
+                        user.set_password(temp_password)
+                        user.save() 
+                        
+                        successful_imports.append({
+                            "email": user.email,
+                            "name": f"{user.first_name} {user.last_name}",
+                            "bilkent_id": user.bilkent_id,
+                            "temporary_password": temp_password
+                        })
+                        
+                        if hasattr(user, 'ta_profile'):
+                            ta_profile = user.ta_profile
+                            ta_profile.undergrad_university = undergraduate_university
+                            ta_profile.workload_number = workload_number # Use the validated integer
+                            ta_profile.save()
+                        else:
+                            TAProfile.objects.create(
+                                user=user,
+                                undergrad_university=undergraduate_university,
+                                workload_number=workload_number # Use the validated integer
+                            )
+                        
+                        success_count += 1
+                        logger.info(f"Successfully created TA: {email}, Bilkent ID: {bilkent_id}. Password: {temp_password} (for dev reference only)")
+
+                        # Send email to the newly created TA
+                        try:
+                            subject = 'Your Bilkent TA Management System Account Has Been Created'
+                            context = {
+                                'user': user,
+                                'temp_password': temp_password,
+                                'login_url': f"{settings.FRONTEND_URL}/login/",
+                                'expiry_date': (timezone.now() + timezone.timedelta(days=7)).strftime('%Y-%m-%d %H:%M'), # Example expiry
+                            }
+                            # Assuming you have a template like 'email/new_ta_temporary_password.html'
+                            # If not, we can create a simpler plain text email for now.
+                            # For robustness, let's check if a more specific template exists or use a generic one.
+                            # html_message = render_to_string('email/new_ta_temporary_password.html', context)
+                            # plain_message = strip_tags(html_message)
+                            
+                            # Using a generic password email template if available, or a direct plain message
+                            html_message = render_to_string('email/password_email_template.html', context) # Reusing existing template
+                            plain_message = f"""
+                            Hello {user.first_name} {user.last_name},
+
+                            An account has been created for you in the Bilkent TA Management System.
+                            Your temporary password is: {temp_password}
+                            This password is valid until {context['expiry_date']}.
+                            Please log in to {context['login_url']} and change your password as soon as possible.
+
+                            Best regards,
+                            Bilkent TA Management System
+                            """
+
+                            send_mail(
+                                subject,
+                                plain_message, # Send plain text version
+                                settings.DEFAULT_FROM_EMAIL,
+                                [user.email],
+                                html_message=html_message, # Also send HTML version
+                                fail_silently=False
+                            )
+                            logger.info(f"Successfully sent temporary password email to {user.email}")
+                        except Exception as email_error:
+                            logger.error(f"Failed to send temporary password email to {user.email}: {email_error}")
+                            # Do not let email failure stop the import of this user if DB ops succeeded
+                            # Add to error_list or a separate email_error_list if needed for reporting to admin
+
+                        if hasattr(user, 'ta_profile'):
+                            ta_profile = user.ta_profile
+                            ta_profile.undergrad_university = undergraduate_university
+                            ta_profile.workload_number = workload_number # Use the validated integer
+                            ta_profile.save()
+                        else:
+                            TAProfile.objects.create(
+                                user=user,
+                                undergrad_university=undergraduate_university,
+                                workload_number=workload_number # Use the validated integer
+                            )
+                        
+                        success_count += 1
+                        logger.info(f"Successfully created TA: {email}, Bilkent ID: {bilkent_id}. Password: {temp_password} (for dev reference only)")
+
+                except Exception as e:
+                    logger.error(f"Error processing row {index + 2}: {str(e)}", exc_info=True)
+                    error_list.append({"row": index + 2, "errors": [f"An unexpected error occurred: {str(e)}"], "data": row.to_dict()})
+            
+            summary_message = f"Import process completed. Successfully imported {success_count} TAs."
+            response_data = {
+                "summary": summary_message,
+                "success_count": success_count,
+                "imported_tas": successful_imports # Add the list of imported TAs and their passwords
+            }
+
+            if error_list:
+                response_data["errors"] = error_list
+                response_data["message"] = "Import completed with some errors." # More accurate message
+                logger.warning(f"TA import completed with errors: {error_list}")
+                return Response(response_data, status=status.HTTP_207_MULTI_STATUS) # Use 207 for partial success
+            
+            response_data["message"] = summary_message # Or a more direct success message
+            logger.info(f"TA import successful: {success_count} TAs imported.")
+            return Response(response_data, status=status.HTTP_201_CREATED)
+
+        except FileNotFoundError:
+             logger.error("File not found during processing. This might be a temporary server issue.")
+             return Response({"error": "File not found during processing. This might be a temporary server issue."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class InstructorImportView(APIView):
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrStaff]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request, *args, **kwargs):
+        logger.info(f"InstructorImportView POST request received. User: {request.user.email}")
+        if 'file' not in request.FILES:
+            logger.error("No file found in request.FILES for instructor import.")
+            return Response({'error': 'No file provided. Please select an Excel file.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        file_obj = request.FILES['file']
+        logger.info(f"Received file for instructor import: {file_obj.name}")
+
+        required_columns = ['name', 'surname', 'bilkent_id', 'phone_number', 'email', 'department']
+        df = None
+        try:
+            df = pd.read_excel(file_obj, engine='openpyxl')
+            df.columns = [str(col).strip().lower().replace(' ', '_') for col in df.columns]
+            
+            missing_cols = [col for col in required_columns if col not in df.columns]
+            if missing_cols:
+                logger.error(f"Missing columns for instructor import: {missing_cols}. Available: {list(df.columns)}")
+                return Response({
+                    "error": "Missing required columns in Excel file.",
+                    "details": f"Missing: {', '.join(missing_cols)}. Required: {', '.join(required_columns)} (case-insensitive). Found: {list(df.columns)}",
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            logger.error(f"Error reading or processing Excel file for instructor import: {e}", exc_info=True)
+            return Response({'error': 'Failed to read or process Excel file.', 'details': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        success_count = 0
+        error_list = []
+        successful_imports = []
+
+        for index, row in df.iterrows():
+            row_data_for_error = row.to_dict() # For error reporting
+            try:
+                with transaction.atomic():
+                    name = str(row.get('name', '')).strip()
+                    surname = str(row.get('surname', '')).strip()
+                    email = str(row.get('email', '')).strip().lower()
+                    bilkent_id_str = str(row.get('bilkent_id', '')).strip()
+                    phone_number = str(row.get('phone_number', '')).strip()
+                    department_name = str(row.get('department', '')).strip() # Department name as string
+
+                    row_errors = []
+                    if not all([name, surname, email, bilkent_id_str, department_name]):
+                        row_errors.append("Missing required fields (Name, Surname, Email, Bilkent ID, Department).")
+                    
+                    bilkent_id = None
+                    if bilkent_id_str:
+                        try:
+                            bilkent_id = int(float(bilkent_id_str)) # Handle cases like "12345.0"
+                        except ValueError:
+                            row_errors.append(f"Invalid Bilkent ID format: {bilkent_id_str}.")
+                    else: # Already covered by all([]) check, but good for clarity
+                        row_errors.append("Bilkent ID is required.")
+
+                    if not email or "@" not in email: # Basic email validation
+                        row_errors.append(f"Invalid email format: {email}.")
+
+                    # Check for existing user
+                    if User.objects.filter(email=email).exists():
+                        row_errors.append(f"User with email {email} already exists.")
+                    if bilkent_id and User.objects.filter(bilkent_id=bilkent_id).exists():
+                        row_errors.append(f"User with Bilkent ID {bilkent_id} already exists.")
+                    
+                    # Department validation (optional: check if department exists if using a Department model)
+                    # For now, we store it as a string as per User model's current flexibility.
+                    # If Department model is strictly used, find or create logic would be needed.
+                    # department_obj = None
+                    # if department_name:
+                    #     try:
+                    #         department_obj = Department.objects.get(name__iexact=department_name)
+                    #     except Department.DoesNotExist:
+                    #         row_errors.append(f"Department '{department_name}' not found.")
+                    # else:
+                    #     row_errors.append("Department is required.")
+
+
+                    if row_errors:
+                        error_list.append({"row": index + 2, "errors": row_errors, "data": row_data_for_error})
+                        continue
+
+                    temp_password = get_random_string(12)
+                    user = User.objects.create_user(
+                        email=email,
+                        first_name=name,
+                        last_name=surname,
+                        bilkent_id=bilkent_id,
+                        phone=phone_number, # Ensure User model field is 'phone'
+                        department=department_name, # Store as string
+                        role=User.Role.INSTRUCTOR,
+                        is_approved=True,
+                        is_active=True # Assuming new instructors are active
+                    )
+                    user.set_password(temp_password)
+                    user.save()
+
+                    successful_imports.append({
+                        "name": f"{user.first_name} {user.last_name}",
+                        "email": user.email,
+                        "bilkent_id": user.bilkent_id,
+                        "temporary_password": temp_password
+                    })
+                    success_count += 1
+                    logger.info(f"Successfully created INSTRUCTOR: {email}, Bilkent ID: {bilkent_id}. Temp Pwd: {temp_password}")
+
+                    # Send welcome email
+                    try:
+                        subject = 'Welcome to the TA Management System - Your Instructor Account'
+                        # Using a generic password email template, adjust context as needed
+                        context = {
+                            'user': user, # User object itself
+                            'first_name': user.first_name,
+                            'email': user.email, # For username
+                            'temp_password': temp_password,
+                            'login_url': f"{settings.FRONTEND_URL}/login/", # Make sure FRONTEND_URL is in settings
+                            'role_display': 'Instructor', # Added for clarity in email
+                            # 'expiry_date': (timezone.now() + timezone.timedelta(days=7)).strftime('%Y-%m-%d %H:%M'), # If password expires
+                        }
+                        # Adapt your email template path
+                        html_message = render_to_string('email/password_email_template.html', context)
+                        plain_message = strip_tags(html_message) # Fallback
+
+                        # If password_email_template is too TA-specific, create a simpler plain_message:
+                        if "TA" in html_message or "Teaching Assistant" in html_message: # Basic check
+                             plain_message = f"""Hello {user.first_name} {user.last_name},
+
+Welcome to the Bilkent University TA Management System.
+An INSTRUCTOR account has been created for you.
+
+Your username is: {user.email}
+Your temporary password is: {temp_password}
+
+Please log in at {context['login_url']} and change your password immediately.
+
+If you have any questions, please contact the system administrator.
+
+Best regards,
+Bilkent University TA Management System"""
+                             html_message = None # Send only plain text if template is not suitable
+
+                        send_mail(
+                            subject,
+                            plain_message,
+                            settings.DEFAULT_FROM_EMAIL,
+                            [user.email],
+                            html_message=html_message,
+                            fail_silently=False
+                        )
+                        logger.info(f"Successfully sent welcome email to new instructor {user.email}")
+                    except Exception as email_error:
+                        logger.error(f"Failed to send welcome email to instructor {user.email}: {email_error}", exc_info=True)
+                        # Optionally, add this to a separate list of email errors for the admin
+                        # For now, the main import is successful, so we don't add to primary error_list for this user.
+                
+            except Exception as e:
+                logger.error(f"Error processing row {index + 2} for instructor import: {e}", exc_info=True)
+                error_list.append({"row": index + 2, "errors": [f"An unexpected error occurred: {str(e)}"], "data": row_data_for_error})
+
+        summary_message = f"Instructor import process completed. Successfully imported {success_count} instructors."
+        response_data = {
+            "summary": summary_message,
+            "success_count": success_count,
+            "imported_instructors": successful_imports
+        }
+
+        if error_list:
+            response_data["errors"] = error_list
+            response_data["summary"] = f"Instructor import completed with {success_count} successes and {len(error_list)} errors."
+            logger.warning(f"Instructor import completed with errors: {error_list}")
+            return Response(response_data, status=status.HTTP_207_MULTI_STATUS if success_count > 0 else status.HTTP_400_BAD_REQUEST)
+        
+        logger.info(f"Instructor import successful: {success_count} instructors imported.")
+        return Response(response_data, status=status.HTTP_201_CREATED)

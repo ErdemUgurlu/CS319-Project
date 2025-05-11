@@ -124,18 +124,20 @@ const NavBar: React.FC = () => {
       
       if (['STAFF', 'ADMIN'].includes(userRole)) {
         items.push({
-          text: 'Approve Users',
+          text: 'Import/Approve Users',
           icon: <HowToRegIcon />,
           path: '/approve-users',
           roles: ['STAFF', 'ADMIN']
         });
         
+/* Hiding User Management from sidebar as per user request
         items.push({
           text: 'User Management',
           icon: <PeopleIcon />,
           path: '/users',
           roles: ['STAFF', 'ADMIN']
         });
+*/
 
         items.push({
           text: 'Course Management',
@@ -259,4 +261,6 @@ const NavBar: React.FC = () => {
   );
 };
 
-export default NavBar; 
+export default NavBar;
+
+export {}; 
