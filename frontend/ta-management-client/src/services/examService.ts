@@ -124,22 +124,6 @@ export const examService = {
         'Content-Type': 'multipart/form-data'
       }
     });
-  },
-
-  // Request cross-departmental proctors for an exam
-  requestCrossDepartmentalProctors: async (examId: number): Promise<any> => {
-    // The backend URL is in proctoring app, not accounts
-    return api.post(`/proctoring/exams/${examId}/request-cross-departmental/`);
-  },
-
-  // Dean action for cross-departmental proctoring requests
-  deanCrossDepartmentalAction: async (examId: number, action: 'APPROVE' | 'REJECT', helpingDepartmentCode?: string): Promise<any> => {
-    const payload: any = { action };
-    if (action === 'APPROVE' && helpingDepartmentCode) {
-      payload.helping_department_code = helpingDepartmentCode;
-    }
-    // The backend URL is in proctoring app
-    return api.post(`/proctoring/exams/${examId}/dean-cross-departmental-approval/`, payload);
   }
 };
 

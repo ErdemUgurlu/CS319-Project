@@ -5,7 +5,7 @@ from datetime import timedelta, datetime
 from rest_framework import generics, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from accounts.models import User, Exam, Course, WeeklySchedule, TAAssignment, Department
+from accounts.models import User, Exam, Course, WeeklySchedule, TAAssignment
 from accounts.permissions import IsStaffOrInstructor
 from .models import ProctorAssignment
 from .serializers import (
@@ -13,89 +13,6 @@ from .serializers import (
     EligibleProctorSerializer,
     ProctorAssignmentCreateSerializer
 )
-
-class RequestCrossDepartmentalProctorsView(APIView):
-    """
-    API endpoint for requesting cross-departmental proctors for an exam.
-    This sets the exam status to AWAITING_DEAN_CROSS_APPROVAL.
-    """
-    permission_classes = [permissions.IsAuthenticated, IsStaffOrInstructor] # Or more specific permissions if needed
-
-    def post(self, request, pk=None):
-        exam = get_object_or_404(Exam, pk=pk)
-
-        # Check if the exam is in a state that allows this request
-        # For example, it should probably be in AWAITING_PROCTORS
-        if exam.status != Exam.Status.AWAITING_PROCTORS:
-            return Response(
-                {"error": f"Cross-departmental proctors can only be requested if the exam is in 'Awaiting Proctors' status. Current status: {exam.get_status_display()}`"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        exam.status = Exam.Status.AWAITING_DEAN_CROSS_APPROVAL
-        exam.save(update_fields=['status'])
-        
-        # Optionally, log this action or send a notification
-        # AuditLog.objects.create(...)
-
-        return Response(
-            {"message": "Request for cross-departmental proctors submitted. Exam is now awaiting dean's office approval.",
-             "exam_status": exam.get_status_display()},
-            status=status.HTTP_200_OK
-        )
-
-class DeanCrossDepartmentalApprovalView(APIView):
-    """
-    API endpoint for Dean's Office to approve or reject cross-departmental proctoring requests.
-    """
-    permission_classes = [permissions.IsAuthenticated, permissions.DjangoModelPermissions] # Using DjangoModelPermissions with a custom model for Dean's Office if more granular control is needed, or a custom IsDeanOffice permission.
-    # For simplicity, assuming IsDeanOffice permission exists or IsStaffOrInstructor is temporarily okay for Staff to test.
-    # Replace with a proper IsDeanOffice permission.
-    # from accounts.permissions import IsDeanOffice # Assuming this exists
-    # permission_classes = [permissions.IsAuthenticated, IsDeanOffice]
-
-    def get_queryset(self): # Required for DjangoModelPermissions if model is not set on view
-        return Exam.objects.all()
-
-    def post(self, request, pk=None):
-        exam = get_object_or_404(Exam, pk=pk)
-        action = request.data.get('action')
-        helping_dept_code = request.data.get('helping_department_code')
-
-        if exam.status != Exam.Status.AWAITING_DEAN_CROSS_APPROVAL:
-            return Response(
-                {"error": f"This action can only be performed if the exam is 'Awaiting Dean Approval for Cross-Departmental'. Current status: {exam.get_status_display()}`"},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if action == 'APPROVE':
-            if not helping_dept_code:
-                return Response({"error": "Helping department code is required for approval."}, status=status.HTTP_400_BAD_REQUEST)
-            
-            # Validate helping_dept_code (e.g., check if it's a valid department and not the exam's own department)
-            try:
-                # Assuming Department model has a 'code' field and is imported
-                helping_department = Department.objects.get(code=helping_dept_code)
-                if helping_department.code == exam.course.department.code:
-                    return Response({"error": "Helping department cannot be the same as the exam's own department."}, status=status.HTTP_400_BAD_REQUEST)
-            except Department.DoesNotExist:
-                return Response({"error": f"Invalid helping department code: {helping_dept_code}"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            exam.status = Exam.Status.AWAITING_CROSS_DEPARTMENT_PROCTORS
-            exam.helping_department_code = helping_dept_code
-            exam.save(update_fields=['status', 'helping_department_code'])
-            # Log action: AuditLog.objects.create(...)
-            return Response({"message": f"Cross-departmental proctoring request approved. Exam assigned to {helping_dept_code} for proctoring.", "exam_status": exam.get_status_display()}, status=status.HTTP_200_OK)
-        
-        elif action == 'REJECT':
-            exam.status = Exam.Status.AWAITING_PROCTORS
-            exam.helping_department_code = None # Clear if previously set
-            exam.save(update_fields=['status', 'helping_department_code'])
-            # Log action: AuditLog.objects.create(...)
-            return Response({"message": "Cross-departmental proctoring request rejected. Exam status reverted to Awaiting Proctors.", "exam_status": exam.get_status_display()}, status=status.HTTP_200_OK)
-        
-        else:
-            return Response({"error": "Invalid action. Must be 'APPROVE' or 'REJECT'."}, status=status.HTTP_400_BAD_REQUEST)
 
 class ExamEligibleTAsView(APIView):
     """
@@ -141,19 +58,24 @@ class ExamEligibleTAsView(APIView):
                                     .values_list('ta_id', flat=True)
         )
 
-        # Initial pool: TAs from the same department as the exam's course
-        base_tas_queryset = User.objects.filter(
+        # First, get all TAs from the same department as the exam's course
+        tas = User.objects.filter(
             role='TA', 
             is_active=True,
-            department=exam_department_code
+            department=exam_department_code  # Filter by the exam's course department code
         )
         
-        # Fundamental Exclusion 1: TAs enrolled in the exam's course
-        base_tas_queryset = base_tas_queryset.exclude(ta_profile__enrolled_courses=exam.course)
+        # Exclude TAs who are enrolled in the exam's course
+        # This uses the 'enrolled_courses' field on the TAProfile model
+        tas = tas.exclude(ta_profile__enrolled_courses=exam.course)
 
-        # Fundamental Exclusion 2: TAs with WeeklySchedule conflicts with THIS exam
+        # Exclude TAs with WeeklySchedule conflicts
+        # A TA has a conflict if any of their schedule entries on that day overlap with the exam time
+        # Overlap condition: (schedule_start < exam_end) AND (schedule_end > exam_start)
+        
         conflicting_schedule_ta_ids_set = set()
         if exam_dt_start_local.date() == exam_dt_end_local.date():
+            # Exam is entirely on one day (local time)
             qs = WeeklySchedule.objects.filter(
                 day=exam_day_short_code,
                 start_time__lt=exam_end_time_local,
@@ -161,40 +83,38 @@ class ExamEligibleTAsView(APIView):
             )
             conflicting_schedule_ta_ids_set.update(qs.values_list('ta_id', flat=True))
         else:
+            # Exam spans midnight (local time)
+            # Part 1: Conflict on the start day (from exam_time_start until midnight)
             qs_part1 = WeeklySchedule.objects.filter(
-                day=exam_day_short_code,
-                start_time__lt=datetime.time(23, 59, 59, 999999),
+                day=exam_day_short_code, # Day of exam_dt_start_local
+                start_time__lt=datetime.time(23, 59, 59, 999999), # End of day
                 end_time__gt=exam_start_time_local
             )
             conflicting_schedule_ta_ids_set.update(qs_part1.values_list('ta_id', flat=True))
+
+            # Part 2: Conflict on the end day (from midnight until exam_time_end)
             exam_day_end_local_code = day_mapping[exam_dt_end_local.weekday()]
             exam_time_end_on_end_day = exam_dt_end_local.time()
             qs_part2 = WeeklySchedule.objects.filter(
                 day=exam_day_end_local_code,
                 start_time__lt=exam_time_end_on_end_day,
-                end_time__gt=datetime.time(0, 0, 0)
+                end_time__gt=datetime.time(0, 0, 0) # Start of day
             )
             conflicting_schedule_ta_ids_set.update(qs_part2.values_list('ta_id', flat=True))
         
-        base_tas_queryset = base_tas_queryset.exclude(id__in=list(conflicting_schedule_ta_ids_set))
+        tas = tas.exclude(id__in=list(conflicting_schedule_ta_ids_set))
 
-        # Separate TAs already assigned to this exam - they bypass some subsequent filters
-        always_include_tas = base_tas_queryset.filter(id__in=list(currently_assigned_ta_ids_for_this_exam))
+        # Exclude TAs with conflicting existing Proctoring Duties
+        potential_ta_ids = list(tas.values_list('id', flat=True)) # IDs of TAs not yet ruled out
         
-        # TAs not yet assigned to this exam will undergo further filtering
-        further_filterable_tas = base_tas_queryset.exclude(id__in=list(currently_assigned_ta_ids_for_this_exam))
-
-        # Stricter Filter 1: Conflicting existing Proctoring Duties (One Day Before/After)
-        # This filter applies ONLY to `further_filterable_tas`
-        override_consecutive_proctoring_param = request.GET.get('override_consecutive_proctoring', 'false').lower() == 'true'
         ta_ids_with_conflicting_proctor_duties = set()
-
-        potential_ids_for_consecutive_check = list(further_filterable_tas.values_list('id', flat=True))
-        if potential_ids_for_consecutive_check:
+        if potential_ta_ids:
+            # Fetch other 'ASSIGNED' proctor duties for these TAs
+            # Exclude assignments for the current target exam itself
             existing_proctor_assignments = ProctorAssignment.objects.filter(
-                ta_id__in=potential_ids_for_consecutive_check,
+                ta_id__in=potential_ta_ids,
                 status=ProctorAssignment.Status.ASSIGNED
-            ).exclude(exam=exam).select_related('exam')
+            ).exclude(exam=exam).select_related('exam') # exam.duration and exam.date are needed
 
             target_exam_date_local = exam_dt_start_local.date()
             day_before_target = target_exam_date_local - timedelta(days=1)
@@ -202,21 +122,29 @@ class ExamEligibleTAsView(APIView):
 
             for assignment in existing_proctor_assignments:
                 assigned_exam = assignment.exam
+                
+                # Convert assigned exam's datetime to local timezone
                 assigned_exam_start_utc = assigned_exam.date
-                duration_minutes = assigned_exam.duration if assigned_exam.duration is not None else 0
+                # Ensure assigned_exam.duration is not None before using it
+                duration_minutes = assigned_exam.duration if assigned_exam.duration is not None else 0 
                 assigned_exam_end_utc = assigned_exam_start_utc + timedelta(minutes=duration_minutes)
+                
                 assigned_exam_start_local = timezone.localtime(assigned_exam_start_utc)
                 assigned_exam_end_local = timezone.localtime(assigned_exam_end_utc)
+                
                 assigned_exam_date_local = assigned_exam_start_local.date()
+
                 is_conflict = False
 
-                if not override_consecutive_proctoring_param:
-                    if assigned_exam_date_local == day_before_target:
-                        is_conflict = True
-                    elif assigned_exam_date_local == day_after_target:
-                        is_conflict = True
-                
-                if not is_conflict and assigned_exam_date_local == target_exam_date_local: # Always check same-day overlap
+                # 1. Check if the assigned exam is on the day before the target exam
+                if assigned_exam_date_local == day_before_target:
+                    is_conflict = True
+                # 2. Check if the assigned exam is on the day after the target exam
+                elif assigned_exam_date_local == day_after_target:
+                    is_conflict = True
+                # 3. Check if the assigned exam is on the same day as the target exam (check for time overlap)
+                elif assigned_exam_date_local == target_exam_date_local:
+                    # Overlap: (existing_duty_start_local < target_exam_end_local) AND (existing_duty_end_local > target_exam_start_local)
                     if (assigned_exam_start_local < exam_dt_end_local and
                             assigned_exam_end_local > exam_dt_start_local):
                         is_conflict = True
@@ -225,27 +153,19 @@ class ExamEligibleTAsView(APIView):
                     ta_ids_with_conflicting_proctor_duties.add(assignment.ta_id)
             
             if ta_ids_with_conflicting_proctor_duties:
-                further_filterable_tas = further_filterable_tas.exclude(id__in=list(ta_ids_with_conflicting_proctor_duties))
+                tas = tas.exclude(id__in=list(ta_ids_with_conflicting_proctor_duties))
 
-        # Stricter Filter 2: Academic level based on the exam's course level
-        # This filter also applies ONLY to `further_filterable_tas`
-        exam_course_level = exam.course.level.upper()
-        override_academic_level_param = request.GET.get('override_academic_level', 'false').lower() == 'true'
+        # Filter by academic level based on the exam's course level
+        exam_course_level = exam.course.level.upper() # Ensure comparison is case-insensitive (e.g., 'UNDERGRADUATE')
 
-        if override_academic_level_param and exam_course_level == Course.CourseLevel.PHD.upper():
-            further_filterable_tas = further_filterable_tas.filter(academic_level__in=[User.AcademicLevel.PHD, User.AcademicLevel.MASTERS])
-        elif exam_course_level == Course.CourseLevel.UNDERGRADUATE.upper():
-            further_filterable_tas = further_filterable_tas.filter(academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD])
+        if exam_course_level == Course.CourseLevel.UNDERGRADUATE.upper():
+            tas = tas.filter(academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD])
         elif exam_course_level in [Course.CourseLevel.GRADUATE.upper(), Course.CourseLevel.PHD.upper()]:
-            further_filterable_tas = further_filterable_tas.filter(academic_level=User.AcademicLevel.PHD)
+            tas = tas.filter(academic_level=User.AcademicLevel.PHD)
+        # If exam_course_level is something else, no further academic level filtering is applied by default.
+        # This assumes Course.level will always be one of the defined choices.
         
-        # Combine the `always_include_tas` with the `further_filterable_tas`
-        # Convert to lists of IDs then combine into a set to ensure uniqueness, then filter by ID list
-        # This handles the case where an already-assigned TA might also meet all other criteria.
-        final_ta_ids = set(always_include_tas.values_list('id', flat=True)) | set(further_filterable_tas.values_list('id', flat=True))
-        tas = User.objects.filter(id__in=list(final_ta_ids))
-        
-        # Calculate current proctor workload for each TA in the final list
+        # Calculate current proctor workload for each TA
         tas = tas.annotate(
             current_workload=Count('proctoring_assignments', 
                                   filter=Q(proctoring_assignments__status__in=['ASSIGNED', 'COMPLETED']))

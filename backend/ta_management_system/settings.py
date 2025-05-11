@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'leaves',
     'reports',
     'proctoring.apps.ProctoringConfig',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,13 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+
+# CSRF Trusted Origins for requests from the frontend
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    # Add any other frontend origins if necessary, e.g., production URL
+]
 
 ROOT_URLCONF = 'ta_management_system.urls'
 

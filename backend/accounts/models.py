@@ -308,8 +308,6 @@ class Exam(models.Model):
         WAITING_FOR_STUDENT_LIST = 'WAITING_FOR_STUDENT_LIST', _('Waiting for Student List')
         WAITING_FOR_PLACES = 'WAITING_FOR_PLACES', _('Waiting for Places')
         AWAITING_PROCTORS = 'AWAITING_PROCTORS', _('Awaiting Proctors')
-        AWAITING_DEAN_CROSS_APPROVAL = 'AWAITING_DEAN_CROSS_APPROVAL', _('Awaiting Dean Approval for Cross-Departmental')
-        AWAITING_CROSS_DEPARTMENT_PROCTORS = 'AWAITING_CROSS_DEPARTMENT_PROCTORS', _('Awaiting Cross-Department Proctors')
         READY = 'READY', _('Ready')
     
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exams')
@@ -321,12 +319,11 @@ class Exam(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_exams')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=50, choices=Status.choices, default=Status.WAITING_FOR_STUDENT_LIST)
+    status = models.CharField(max_length=25, choices=Status.choices, default=Status.WAITING_FOR_STUDENT_LIST)
     student_count = models.PositiveIntegerField(default=0, help_text="Automatically calculated from the student list file if provided")
     student_list_file = models.FileField(upload_to='exam_student_lists/', null=True, blank=True, 
                                         help_text="Excel file containing the list of students for this exam")
     has_student_list = models.BooleanField(default=False, help_text="Indicates if a student list has been uploaded")
-    helping_department_code = models.CharField(max_length=10, null=True, blank=True, help_text="Department code of the department helping with proctors, if cross-departmental request is approved.")
     
     class Meta:
         ordering = ['date']
