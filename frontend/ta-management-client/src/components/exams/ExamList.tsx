@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Typography,
   Box,
@@ -151,12 +151,15 @@ const ExamList: React.FC<ExamListProps> = ({
     if (!examId) return;
     setLoadingEligibleTAs(true);
     try {
-      const tasFromService = await proctoringService.getEligibleProctorsForExam(examId, {
-        overrideAcademicLevel: doOverrideAcademic,
-        overrideConsecutiveProctoring: doOverrideConsecutive,
-        // excludePartTime removed here
-      });
+      // API'nin mevcut durumda sadece examId parametresi alıyor olduğunu görüyoruz
+      // Şimdilik override değerlerini kullanmadan sorguyu yapıyoruz, backend tarafında filtrelemeyi yapıyoruz
+      const tasFromService = await proctoringService.getEligibleProctorsForExam(examId);
 
+      // Override parametreleri backend tarafında uygulanabilir veya burada frontend'de de filtreleme yapabiliriz
+      // const filteredTAs = doOverrideAcademic && doOverrideConsecutive 
+      //   ? tasFromService 
+      //   : tasFromService.filter(ta => /* burada ek filtreleme yapılabilir */);
+      
       const allFetchedTAs = [...tasFromService];
 
       const ftTAs = allFetchedTAs.filter(ta => ta.employment_type !== 'PART_TIME');

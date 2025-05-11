@@ -48810,3 +48810,312 @@ INFO 2025-05-11 10:13:13,261 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.
 INFO 2025-05-11 10:13:13,301 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 2333
 INFO 2025-05-11 10:13:13,301 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 644
 INFO 2025-05-11 10:13:13,333 basehttp "GET /api/accounts/instructor/available-tas/ HTTP/1.1" 200 2333
+INFO 2025-05-11 10:47:34,002 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:47:53,073 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:49:22,930 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-11 10:49:23,283 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/urls.py changed, reloading.
+INFO 2025-05-11 10:49:23,340 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:49:23,822 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:49:48,064 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:51:17,553 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/models.py changed, reloading.
+INFO 2025-05-11 10:51:17,559 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/models.py changed, reloading.
+INFO 2025-05-11 10:51:17,994 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/models.py changed, reloading.
+INFO 2025-05-11 10:51:18,066 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:51:18,066 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:51:18,639 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:51:36,981 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/migrations/__init__.py changed, reloading.
+INFO 2025-05-11 10:51:37,548 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/migrations/__init__.py changed, reloading.
+INFO 2025-05-11 10:51:37,559 autoreload /Users/erdemugurlu/CS319-Project/backend/accounts/migrations/__init__.py changed, reloading.
+INFO 2025-05-11 10:51:37,559 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:51:38,292 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 10:51:38,300 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 11:07:17,398 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 11:08:52,140 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 11:08:58,415 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-11 11:08:58,450 basehttp "GET /admin/ HTTP/1.1" 302 0
+INFO 2025-05-11 11:08:58,486 basehttp "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4190
+INFO 2025-05-11 11:08:58,504 basehttp "GET /static/admin/css/login.css HTTP/1.1" 304 0
+INFO 2025-05-11 11:09:00,553 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 200 4374
+INFO 2025-05-11 11:09:05,074 basehttp "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2025-05-11 11:09:05,096 basehttp "GET /admin/ HTTP/1.1" 200 19700
+ERROR 2025-05-11 11:09:26,322 log Internal Server Error: /api/token/
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 328, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: token_blacklist_outstandingtoken
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/core/handlers/base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/decorators/csrf.py", line 56, in wrapper_view
+    return view_func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/views/generic/base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 509, in dispatch
+    response = self.handle_exception(exc)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 469, in handle_exception
+    self.raise_uncaught_exception(exc)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 480, in raise_uncaught_exception
+    raise exc
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/views.py", line 506, in dispatch
+    response = handler(request, *args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/views.py", line 43, in post
+    serializer.is_valid(raise_exception=True)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 227, in is_valid
+    self._validated_data = self.run_validation(self.initial_data)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework/serializers.py", line 429, in run_validation
+    value = self.validate(value)
+            ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 70, in validate
+    refresh = self.get_token(self.user)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/CS319-Project/backend/accounts/serializers.py", line 475, in get_token
+    token = super().get_token(user)
+            ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/serializers.py", line 61, in get_token
+    return cls.token_class.for_user(user)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/rest_framework_simplejwt/tokens.py", line 261, in for_user
+    OutstandingToken.objects.create(
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 658, in create
+    obj.save(force_insert=True, using=self.db)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 814, in save
+    self.save_base(
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 877, in save_base
+    updated = self._save_table(
+              ^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 1020, in _save_table
+    results = self._do_insert(
+              ^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/base.py", line 1061, in _do_insert
+    return manager._insert(
+           ^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/manager.py", line 87, in manager_method
+    return getattr(self.get_queryset(), name)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/query.py", line 1805, in _insert
+    return query.get_compiler(using=using).execute_sql(returning_fields)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/models/sql/compiler.py", line 1820, in execute_sql
+    cursor.execute(sql, params)
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 102, in execute
+    return super().execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 67, in execute
+    return self._execute_with_wrappers(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 80, in _execute_with_wrappers
+    return executor(sql, params, many, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 84, in _execute
+    with self.db.wrap_database_errors:
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/utils.py", line 91, in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/utils.py", line 89, in _execute
+    return self.cursor.execute(sql, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/erdemugurlu/myenvs/djangovenv/lib/python3.12/site-packages/django/db/backends/sqlite3/base.py", line 328, in execute
+    return super().execute(query, params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+django.db.utils.OperationalError: no such table: token_blacklist_outstandingtoken
+ERROR 2025-05-11 11:09:26,326 basehttp "POST /api/token/ HTTP/1.1" 500 212278
+INFO 2025-05-11 11:09:34,444 basehttp "GET /admin/ HTTP/1.1" 200 19700
+INFO 2025-05-11 11:12:25,608 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 11:12:35,444 basehttp "GET /admin/ HTTP/1.1" 200 19700
+INFO 2025-05-11 11:12:44,815 basehttp "POST /api/token/ HTTP/1.1" 200 897
+WARNING 2025-05-11 11:12:44,876 log Forbidden: /api/accounts/users/
+WARNING 2025-05-11 11:12:44,876 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 403 63
+WARNING 2025-05-11 11:12:44,888 log Forbidden: /api/accounts/users/
+WARNING 2025-05-11 11:12:44,889 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 403 63
+INFO 2025-05-11 11:12:48,494 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:12:48,501 basehttp "OPTIONS /api/accounts/schedule/course-options/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:12:48,512 basehttp "OPTIONS /api/accounts/schedule/course-options/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:12:48,515 basehttp "OPTIONS /api/accounts/weekly-schedule/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:12:48,519 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 241
+INFO 2025-05-11 11:12:48,550 basehttp "GET /api/accounts/schedule/course-options/ HTTP/1.1" 200 16
+INFO 2025-05-11 11:12:48,551 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 241
+INFO 2025-05-11 11:12:48,560 basehttp "GET /api/accounts/schedule/course-options/ HTTP/1.1" 200 16
+INFO 2025-05-11 11:12:53,638 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 120
+INFO 2025-05-11 11:12:53,873 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 362
+INFO 2025-05-11 11:12:54,153 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 362
+WARNING 2025-05-11 11:12:56,191 log Not Found: /api/logout/
+WARNING 2025-05-11 11:12:56,191 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 11:13:01,287 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-11 11:13:01,398 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:13:01,404 basehttp "GET /api/accounts/schedule/course-options/ HTTP/1.1" 200 31
+INFO 2025-05-11 11:13:01,410 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:13:01,412 basehttp "GET /api/accounts/schedule/course-options/ HTTP/1.1" 200 31
+INFO 2025-05-11 11:13:04,966 basehttp "POST /api/accounts/weekly-schedule/ HTTP/1.1" 201 119
+INFO 2025-05-11 11:13:05,198 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 121
+INFO 2025-05-11 11:13:05,476 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 121
+INFO 2025-05-11 11:13:08,399 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 121
+INFO 2025-05-11 11:13:08,404 basehttp "GET /api/accounts/schedule/course-options/ HTTP/1.1" 200 31
+INFO 2025-05-11 11:13:08,428 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 121
+INFO 2025-05-11 11:13:08,433 basehttp "GET /api/accounts/schedule/course-options/ HTTP/1.1" 200 31
+INFO 2025-05-11 11:13:12,149 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:13:12,154 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:13:12,170 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:13:12,172 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:13:15,349 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:13:15,350 basehttp "OPTIONS /api/proctoring/my-proctorings/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:13:15,365 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:13:15,381 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:13:18,314 basehttp "OPTIONS /api/workload/workloads/my_workload/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:13:18,314 basehttp "OPTIONS /api/workload/workloads/my_workload/ HTTP/1.1" 200 0
+WARNING 2025-05-11 11:13:18,326 log Not Found: /api/workload/workloads/my_workload/
+WARNING 2025-05-11 11:13:18,327 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 404 3797
+WARNING 2025-05-11 11:13:18,339 log Not Found: /api/workload/workloads/my_workload/
+WARNING 2025-05-11 11:13:18,339 basehttp "GET /api/workload/workloads/my_workload/ HTTP/1.1" 404 3797
+INFO 2025-05-11 11:13:20,718 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:13:20,729 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:13:24,427 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:13:24,434 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:18:48,982 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 11:19:33,756 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 33453
+INFO 2025-05-11 11:19:33,779 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:19:37,282 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-11 11:19:37,316 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:19:37,338 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:19:42,135 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:19:42,140 basehttp "GET /api/proctoring/my-proctorings/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:20:03,555 basehttp "GET /admin/accounts/student/ HTTP/1.1" 200 15836
+INFO 2025-05-11 11:20:03,578 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:20:04,306 basehttp "GET /admin/accounts/section/ HTTP/1.1" 200 18190
+INFO 2025-05-11 11:20:04,324 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:20:05,370 basehttp "GET /admin/accounts/leave/ HTTP/1.1" 200 16938
+INFO 2025-05-11 11:20:05,385 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:20:16,658 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 200 17572
+INFO 2025-05-11 11:20:16,677 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:20:17,375 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 200 17572
+INFO 2025-05-11 11:20:17,390 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:20:21,036 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10179
+INFO 2025-05-11 11:20:23,758 basehttp "GET /admin/ HTTP/1.1" 200 19700
+INFO 2025-05-11 11:21:29,148 basehttp "GET /admin/accounts/taprofile/ HTTP/1.1" 200 21562
+INFO 2025-05-11 11:21:29,179 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:21:31,701 basehttp "GET /admin/accounts/taprofile/ HTTP/1.1" 200 21562
+INFO 2025-05-11 11:21:31,720 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:21:32,878 basehttp "GET /admin/ HTTP/1.1" 200 19700
+INFO 2025-05-11 11:21:36,638 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 200 17572
+INFO 2025-05-11 11:21:36,658 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:25:54,114 basehttp "GET /admin/ HTTP/1.1" 200 19700
+INFO 2025-05-11 11:25:57,521 basehttp "GET /admin/accounts/classroom/ HTTP/1.1" 200 18926
+INFO 2025-05-11 11:25:57,551 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:30:23,180 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 121
+INFO 2025-05-11 11:30:23,193 basehttp "GET /api/accounts/schedule/course-options/ HTTP/1.1" 200 31
+INFO 2025-05-11 11:30:23,199 basehttp "GET /api/accounts/weekly-schedule/ HTTP/1.1" 200 121
+INFO 2025-05-11 11:30:23,205 basehttp "GET /api/accounts/schedule/course-options/ HTTP/1.1" 200 31
+INFO 2025-05-11 11:31:38,663 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:31:38,683 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:31:38,693 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:31:38,698 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+WARNING 2025-05-11 11:31:47,032 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 11:31:47,032 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 11:31:53,511 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 11:31:53,512 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 11:31:54,000 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 11:31:54,000 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 11:31:54,387 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 11:31:54,388 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 11:31:54,693 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 11:31:54,693 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+INFO 2025-05-11 11:33:55,725 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 11:34:00,311 basehttp "GET /admin/accounts/classroom/ HTTP/1.1" 200 18926
+INFO 2025-05-11 11:34:00,331 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:34:05,445 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 201 100
+INFO 2025-05-11 11:34:31,327 basehttp "GET /admin/ HTTP/1.1" 200 19700
+INFO 2025-05-11 11:34:33,324 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 19178
+INFO 2025-05-11 11:34:33,342 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:34:37,330 basehttp "GET /admin/accounts/instructortaassignment/1/change/ HTTP/1.1" 200 20934
+INFO 2025-05-11 11:34:37,350 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:34:40,374 basehttp "GET /admin/ HTTP/1.1" 200 19700
+INFO 2025-05-11 11:34:41,402 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 33453
+INFO 2025-05-11 11:34:41,418 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:35:36,331 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10179
+INFO 2025-05-11 11:35:40,293 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10179
+INFO 2025-05-11 11:35:40,937 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10179
+INFO 2025-05-11 11:35:41,592 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10179
+INFO 2025-05-11 11:35:42,371 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10179
+INFO 2025-05-11 11:35:42,990 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10179
+INFO 2025-05-11 11:35:45,372 basehttp "GET /admin/accounts/exam/ HTTP/1.1" 200 17572
+INFO 2025-05-11 11:35:45,393 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:35:46,908 basehttp "GET /admin/accounts/ HTTP/1.1" 200 10179
+INFO 2025-05-11 11:35:48,108 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 33453
+INFO 2025-05-11 11:35:48,128 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:35:51,296 basehttp "GET /admin/tasks/ HTTP/1.1" 200 5778
+INFO 2025-05-11 11:35:57,039 basehttp "GET /admin/ HTTP/1.1" 200 19700
+INFO 2025-05-11 11:36:05,937 basehttp "GET /admin/leaves/leaverequest/ HTTP/1.1" 200 19594
+INFO 2025-05-11 11:36:05,953 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 11:36:10,728 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 450
+INFO 2025-05-11 11:36:10,729 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 301
+INFO 2025-05-11 11:36:10,743 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 301
+INFO 2025-05-11 11:36:10,744 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 450
+WARNING 2025-05-11 11:36:14,251 log Not Found: /api/logout/
+WARNING 2025-05-11 11:36:14,251 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 11:36:19,456 basehttp "POST /api/token/ HTTP/1.1" 200 921
+INFO 2025-05-11 11:36:19,503 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:36:19,505 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 450
+INFO 2025-05-11 11:36:19,542 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 11:36:19,543 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 450
+INFO 2025-05-11 11:36:30,054 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 301
+INFO 2025-05-11 11:36:30,072 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 301
+INFO 2025-05-11 11:36:31,467 basehttp "GET /api/leaves/requests/1/ HTTP/1.1" 200 391
+INFO 2025-05-11 11:36:34,798 basehttp "POST /api/leaves/requests/1/review/ HTTP/1.1" 200 56
+INFO 2025-05-11 11:38:27,987 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:38:27,988 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:38:27,990 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:38:27,990 basehttp "OPTIONS /api/accounts/instructor/available-tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:38:33,826 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:38:33,838 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 11:38:34,822 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:38:34,823 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:38:34,871 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 911
+INFO 2025-05-11 11:38:34,881 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 911
+INFO 2025-05-11 11:38:44,456 basehttp "POST /api/tasks/create-task/ HTTP/1.1" 201 494
+INFO 2025-05-11 11:38:44,471 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 496
+WARNING 2025-05-11 11:38:47,764 log Not Found: /api/logout/
+WARNING 2025-05-11 11:38:47,765 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 11:38:49,211 basehttp "POST /api/token/ HTTP/1.1" 200 897
+INFO 2025-05-11 11:38:49,238 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 496
+INFO 2025-05-11 11:38:49,243 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 496
+INFO 2025-05-11 11:38:53,647 basehttp "OPTIONS /api/tasks/task/3/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:38:53,662 basehttp "PUT /api/tasks/task/3/ HTTP/1.1" 200 494
+INFO 2025-05-11 11:38:53,672 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 496
+INFO 2025-05-11 11:38:57,474 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 496
+INFO 2025-05-11 11:38:57,512 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 496
+INFO 2025-05-11 11:38:59,813 basehttp "OPTIONS /api/tasks/task/3/accept/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:39:02,816 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 504
+INFO 2025-05-11 11:39:02,839 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 504
+INFO 2025-05-11 11:39:03,115 basehttp - Broken pipe from ('127.0.0.1', 58541)
+INFO 2025-05-11 11:39:07,626 basehttp "OPTIONS /api/tasks/task/3/complete/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:39:09,238 basehttp "POST /api/tasks/task/3/complete/ HTTP/1.1" 200 22
+INFO 2025-05-11 11:39:09,254 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 633
+WARNING 2025-05-11 11:39:11,305 log Not Found: /api/logout/
+WARNING 2025-05-11 11:39:11,305 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 11:39:16,373 basehttp "POST /api/token/ HTTP/1.1" 200 921
+INFO 2025-05-11 11:39:16,406 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 633
+INFO 2025-05-11 11:39:16,424 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 633
+INFO 2025-05-11 11:39:21,231 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 911
+INFO 2025-05-11 11:39:21,240 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 911
+INFO 2025-05-11 11:39:23,833 basehttp "OPTIONS /api/tasks/task/3/review/ HTTP/1.1" 200 0
+INFO 2025-05-11 11:39:25,417 basehttp "POST /api/tasks/task/3/review/ HTTP/1.1" 200 21
+INFO 2025-05-11 11:39:25,441 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 779
+INFO 2025-05-11 11:39:34,870 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 779
+INFO 2025-05-11 11:39:34,888 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 779
