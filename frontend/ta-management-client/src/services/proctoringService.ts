@@ -1,4 +1,6 @@
 import api from './api';
+import axiosInstance from './api';
+import API_URL from './api';
 
 export interface ProctorAssignment {
   id: number;
@@ -194,13 +196,49 @@ const proctoringService = {
   },
 
   // Get eligible TAs for an exam (for instructors)
-  getEligibleProctorsForExam: async (examId: number): Promise<EligibleProctor[]> => {
+  getEligibleProctorsForExam: async (
+    examId: number,
+    overrideAcademicLevel?: boolean,
+    overrideConsecutiveProctoring?: boolean
+  ): Promise<EligibleProctor[]> => {
     try {
-      const response = await api.get(`/proctoring/exams/${examId}/eligible-tas/`);
+      let baseUrlString = '';
+      if (axiosInstance.defaults.baseURL) {
+        baseUrlString = axiosInstance.defaults.baseURL;
+      } else {
+        // FALLBACK: You NEED to replace this with your actual API base URL string
+        // For example, if it was a named export: import { THE_ACTUAL_API_URL } from './api';
+        // baseUrlString = THE_ACTUAL_API_URL;
+        // Or if it's hardcoded for now (not ideal):
+        baseUrlString = 'http://localhost:8000/api'; 
+        console.warn('ProctoringService: API_URL not found in axiosInstance.defaults.baseURL, using fallback. Please configure properly.');
+      }
+
+      // Ensure baseUrlString doesn't cause double slashes if it already ends with one
+      const cleanedBaseUrl = baseUrlString.endsWith('/') ? baseUrlString.slice(0, -1) : baseUrlString;
+      let url = `${cleanedBaseUrl}/proctoring/exams/${examId}/eligible-tas/`;
+      
+      const params = new URLSearchParams();
+
+      if (overrideAcademicLevel !== undefined) {
+        params.append('override_academic_level', String(overrideAcademicLevel));
+      }
+      if (overrideConsecutiveProctoring !== undefined) {
+        params.append('override_consecutive_proctoring', String(overrideConsecutiveProctoring));
+      }
+
+      const queryString = params.toString();
+      if (queryString) {
+        url += `?${queryString}`;
+      }
+      
+      console.log('ProctoringService: Requesting eligible TAs with URL:', url);
+      
+      const response = await axiosInstance.get(url);
       return response.data;
-    } catch (error) {
-      console.error('Error fetching eligible TAs for exam:', error);
-      throw error;
+    } catch (err: any) {
+      console.error("ProctoringService: Error fetching eligible TAs for exam:", err.message || err);
+      throw err;
     }
   },
 

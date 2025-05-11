@@ -85,7 +85,6 @@ class ExamEligibleTAsView(APIView):
         # Exclusion 2: TAs with WeeklySchedule conflicts with THIS exam
         conflicting_schedule_ta_ids_set = set()
         if exam_dt_start_local.date() == exam_dt_end_local.date():
-            # Exam is entirely on one day (local time)
             qs = WeeklySchedule.objects.filter(
                 day=exam_day_short_code,
                 start_time__lt=exam_end_time_local,
@@ -93,22 +92,18 @@ class ExamEligibleTAsView(APIView):
             )
             conflicting_schedule_ta_ids_set.update(qs.values_list('ta_id', flat=True))
         else:
-            # Exam spans midnight (local time)
-            # Part 1: Conflict on the start day (from exam_time_start until midnight)
             qs_part1 = WeeklySchedule.objects.filter(
-                day=exam_day_short_code, # Day of exam_dt_start_local
-                start_time__lt=datetime.time(23, 59, 59, 999999), # End of day
+                day=exam_day_short_code,
+                start_time__lt=datetime.time(23, 59, 59, 999999),
                 end_time__gt=exam_start_time_local
             )
             conflicting_schedule_ta_ids_set.update(qs_part1.values_list('ta_id', flat=True))
-
-            # Part 2: Conflict on the end day (from midnight until exam_time_end)
             exam_day_end_local_code = day_mapping[exam_dt_end_local.weekday()]
             exam_time_end_on_end_day = exam_dt_end_local.time()
             qs_part2 = WeeklySchedule.objects.filter(
                 day=exam_day_end_local_code,
                 start_time__lt=exam_time_end_on_end_day,
-                end_time__gt=datetime.time(0, 0, 0) # Start of day
+                end_time__gt=datetime.time(0, 0, 0)
             )
             conflicting_schedule_ta_ids_set.update(qs_part2.values_list('ta_id', flat=True))
         
@@ -125,62 +120,66 @@ class ExamEligibleTAsView(APIView):
         # This filter applies ONLY to `further_filterable_tas`
         override_consecutive_proctoring_param = request.GET.get('override_consecutive_proctoring', 'false').lower() == 'true'
         ta_ids_with_conflicting_proctor_duties = set()
-        if potential_ta_ids:
-            # Fetch other 'ASSIGNED' proctor duties for these TAs
-            # Exclude assignments for the current target exam itself
-            existing_proctor_assignments = ProctorAssignment.objects.filter(
-                ta_id__in=potential_ta_ids,
-                status=ProctorAssignment.Status.ASSIGNED
-            ).exclude(exam=exam).select_related('exam') # exam.duration and exam.date are needed
 
-            target_exam_date_local = exam_dt_start_local.date()
-            day_before_target = target_exam_date_local - timedelta(days=1)
-            day_after_target = target_exam_date_local + timedelta(days=1)
+        potential_ids_for_consecutive_check = list(further_filterable_tas.values_list('id', flat=True))
+        
+        existing_proctor_assignments = ProctorAssignment.objects.filter(
+            ta_id__in=potential_ids_for_consecutive_check,
+            status=ProctorAssignment.Status.ASSIGNED
+        ).exclude(exam=exam).select_related('exam')
 
-            for assignment in existing_proctor_assignments:
-                assigned_exam = assignment.exam
-                
-                # Convert assigned exam's datetime to local timezone
-                assigned_exam_start_utc = assigned_exam.date
-                # Ensure assigned_exam.duration is not None before using it
-                duration_minutes = assigned_exam.duration if assigned_exam.duration is not None else 0 
-                assigned_exam_end_utc = assigned_exam_start_utc + timedelta(minutes=duration_minutes)
-                
-                assigned_exam_start_local = timezone.localtime(assigned_exam_start_utc)
-                assigned_exam_end_local = timezone.localtime(assigned_exam_end_utc)
-                
-                assigned_exam_date_local = assigned_exam_start_local.date()
+        target_exam_date_local = exam_dt_start_local.date()
+        day_before_target = target_exam_date_local - timedelta(days=1)
+        day_after_target = target_exam_date_local + timedelta(days=1)
 
-                is_conflict = False
+        for assignment in existing_proctor_assignments:
+            assigned_exam = assignment.exam
+            assigned_exam_start_utc = assigned_exam.date
+            duration_minutes = assigned_exam.duration if assigned_exam.duration is not None else 0
+            assigned_exam_end_utc = assigned_exam_start_utc + timedelta(minutes=duration_minutes)
+            assigned_exam_start_local = timezone.localtime(assigned_exam_start_utc)
+            assigned_exam_end_local = timezone.localtime(assigned_exam_end_utc)
+            assigned_exam_date_local = assigned_exam_start_local.date()
+            is_conflict = False
 
-                # 1. Check if the assigned exam is on the day before the target exam
+            if not override_consecutive_proctoring_param:
                 if assigned_exam_date_local == day_before_target:
                     is_conflict = True
-                # 2. Check if the assigned exam is on the day after the target exam
                 elif assigned_exam_date_local == day_after_target:
                     is_conflict = True
-                # 3. Check if the assigned exam is on the same day as the target exam (check for time overlap)
-                elif assigned_exam_date_local == target_exam_date_local:
-                    # Overlap: (existing_duty_start_local < target_exam_end_local) AND (existing_duty_end_local > target_exam_start_local)
-                    if (assigned_exam_start_local < exam_dt_end_local and
-                            assigned_exam_end_local > exam_dt_start_local):
-                        is_conflict = True
-                
-                if is_conflict:
-                    ta_ids_with_conflicting_proctor_duties.add(assignment.ta_id)
             
-            if ta_ids_with_conflicting_proctor_duties:
-                tas = tas.exclude(id__in=list(ta_ids_with_conflicting_proctor_duties))
+            if not is_conflict and assigned_exam_date_local == target_exam_date_local: # Always check same-day overlap
+                if (assigned_exam_start_local < exam_dt_end_local and
+                        assigned_exam_end_local > exam_dt_start_local):
+                    is_conflict = True
+            
+            if is_conflict:
+                ta_ids_with_conflicting_proctor_duties.add(assignment.ta_id)
+        
+        if ta_ids_with_conflicting_proctor_duties:
+            further_filterable_tas = further_filterable_tas.exclude(id__in=list(ta_ids_with_conflicting_proctor_duties))
 
-        # Filter by academic level based on the exam's course level
-        exam_course_level = exam.course.level.upper() # Ensure comparison is case-insensitive (e.g., 'UNDERGRADUATE')
+        # Stricter Filter 2: Academic level based on the exam's course level
+        # This filter also applies ONLY to `further_filterable_tas`
+        exam_course_level = exam.course.level.upper()
+        override_academic_level_param = request.GET.get('override_academic_level', 'false').lower() == 'true'
 
         if exam_course_level == Course.CourseLevel.UNDERGRADUATE.upper():
-            tas = tas.filter(academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD])
+            # For UNDERGRADUATE courses, MASTERS and PHD TAs are always eligible
+            further_filterable_tas = further_filterable_tas.filter(
+                academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD]
+            )
         elif exam_course_level in [Course.CourseLevel.GRADUATE.upper(), Course.CourseLevel.PHD.upper()]:
-            tas = tas.filter(academic_level=User.AcademicLevel.PHD)
-        # If exam_course_level is something else, no further academic level filtering is applied by default.
-        # This assumes Course.level will always be one of the defined choices.
+            if override_academic_level_param:
+                # For GRADUATE or PHD courses with override, MASTERS and PHD TAs are eligible
+                further_filterable_tas = further_filterable_tas.filter(
+                    academic_level__in=[User.AcademicLevel.MASTERS, User.AcademicLevel.PHD]
+                )
+            else:
+                # Default for GRADUATE or PHD courses (no override): only PHD TAs
+                further_filterable_tas = further_filterable_tas.filter(
+                    academic_level=User.AcademicLevel.PHD
+                )
         
         # Combine the `always_include_tas_queryset` with the fully filtered `further_filterable_tas`
         # Convert to lists of IDs then combine into a set to ensure uniqueness, then filter by ID list.
@@ -371,11 +370,101 @@ class AssignProctorsToExamView(APIView):
                 "assignments": ProctorAssignmentSerializer(all_current_assignments, many=True).data
             }, status=status.HTTP_200_OK)
         
-        else:  # AUTO assignment (Not implemented)
-            return Response(
-                {"error": "Automatic assignment is not yet implemented"},
-                status=status.HTTP_501_NOT_IMPLEMENTED
-            )
+        elif assignment_type == 'AUTOMATIC':
+            # Automatic assignment using the proctor_ids from the validated data
+            proctor_ids = validated_data.get('proctor_ids', [])
+            if not proctor_ids:
+                return Response({"error": "No proctors selected for automatic assignment."}, status=status.HTTP_400_BAD_REQUEST)
+            
+            existing_assignments = ProctorAssignment.objects.filter(exam=exam, status=ProctorAssignment.Status.ASSIGNED)
+            current_assigned_count = existing_assignments.count()
+
+            if replace_existing:
+                # If replacing, the number of new proctors cannot exceed the required count.
+                if len(proctor_ids) > exam.proctor_count:
+                    return Response(
+                        {"error": f"The number of selected proctors ({len(proctor_ids)}) exceeds the required count ({exam.proctor_count}) for this exam."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                # Delete existing assignments before adding new ones
+                existing_assignments.delete()
+                current_assigned_count = 0 # Reset after deletion
+            else:
+                # If not replacing, check if exam already has enough proctors.
+                if current_assigned_count >= exam.proctor_count:
+                    return Response(
+                        {"error": f"Exam already has {current_assigned_count}/{exam.proctor_count} proctors. No more can be assigned without replacing existing ones."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                # Check if adding these proctors would exceed the limit.
+                if current_assigned_count + len(proctor_ids) > exam.proctor_count:
+                    return Response(
+                        {"error": f"Assigning {len(proctor_ids)} new proctor(s) would exceed the required {exam.proctor_count} proctors. Exam currently has {current_assigned_count}. Please select at most {exam.proctor_count - current_assigned_count} more."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                if not proctor_ids: # No new TAs selected to add
+                     return Response({"error": "No new proctors selected to assign."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Proceed with creating assignments
+            assigned_tas_in_this_operation = []
+            successfully_created_count = 0
+
+            for ta_id in proctor_ids:
+                try:
+                    ta_user = User.objects.get(id=ta_id, role='TA')
+                    # If not replacing, ensure TA is not already assigned (get_or_create handles this by not creating)
+                    # If replacing, all existing were deleted, so create will always make a new one here.
+                    assignment, created = ProctorAssignment.objects.get_or_create(
+                        exam=exam,
+                        ta=ta_user,
+                        defaults={
+                            'assigned_by': request.user,
+                            'status': ProctorAssignment.Status.ASSIGNED,
+                            'is_paid': is_paid_assignment # Set is_paid status
+                        }
+                    )
+                    if created:
+                        successfully_created_count += 1
+                        assigned_tas_in_this_operation.append(assignment)
+                    elif replace_existing:
+                        # If it wasn't "created" but we are replacing, it means an old record with same exam+ta existed.
+                        # We should ensure its is_paid status is updated to the current request's value.
+                        if assignment.is_paid != is_paid_assignment:
+                            assignment.is_paid = is_paid_assignment
+                            assignment.save(update_fields=['is_paid'])
+                        successfully_created_count += 1 # Count it as part of this operation
+                        assigned_tas_in_this_operation.append(assignment)
+                    # If not created and not replacing, it means it was already there, skip.
+                    # If we wanted to update is_paid for existing (non-replaced) assignments, 
+                    # that would be a different logic branch, typically not done via get_or_create.
+
+                except User.DoesNotExist:
+                    # Log this or add to a list of errors if partial success is allowed
+                    # For now, we'll let it skip and the final count will reflect reality
+                    pass
+            
+            # Recalculate final assigned count from DB for accuracy
+            final_assigned_proctor_count = ProctorAssignment.objects.filter(exam=exam, status=ProctorAssignment.Status.ASSIGNED).count()
+
+            # Update exam status based on the final count of assigned proctors
+            if final_assigned_proctor_count >= exam.proctor_count and exam.proctor_count > 0:
+                exam.status = Exam.Status.READY
+            elif exam.proctor_count == 0: # If 0 proctors are needed, it's always ready.
+                exam.status = Exam.Status.READY
+            else:
+                exam.status = Exam.Status.AWAITING_PROCTORS
+            exam.save(update_fields=['status'])
+            
+            # Fetch all current assignments for the response
+            all_current_assignments = ProctorAssignment.objects.filter(exam=exam)
+
+            return Response({
+                "message": f"Proctor assignments auto-processed. Exam has {final_assigned_proctor_count}/{exam.proctor_count} proctors. Status: {exam.get_status_display()}",
+                "assignments": ProctorAssignmentSerializer(all_current_assignments, many=True).data
+            }, status=status.HTTP_200_OK)
+        
+        else:
+            return Response({"error": f"Unsupported assignment type: {assignment_type}"}, status=status.HTTP_400_BAD_REQUEST)
 
 class MyProctoringsView(APIView):
     """

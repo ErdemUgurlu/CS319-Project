@@ -143,7 +143,7 @@ const ExamList: React.FC<ExamListProps> = ({
   
   // --- NEW STATE for Override Rule Checkboxes (Restored for InsufficientTAsDialog functionality) ---
   const [overrideAcademicLevelRule, setOverrideAcademicLevelRule] = useState(true); 
-  const [overrideConsecutiveProctoringRule, setOverrideConsecutiveProctoringRule] = useState(true); 
+  const [overrideConsecutiveProctoringRule, setOverrideConsecutiveProctoringRule] = useState(false); 
   // --- END NEW STATE ---
   
   // --- NEW FUNCTION to fetch eligible TAs with override options (Restored for InsufficientTAsDialog) ---
@@ -151,14 +151,11 @@ const ExamList: React.FC<ExamListProps> = ({
     if (!examId) return;
     setLoadingEligibleTAs(true);
     try {
-      // API'nin mevcut durumda sadece examId parametresi alıyor olduğunu görüyoruz
-      // Şimdilik override değerlerini kullanmadan sorguyu yapıyoruz, backend tarafında filtrelemeyi yapıyoruz
-      const tasFromService = await proctoringService.getEligibleProctorsForExam(examId);
-
-      // Override parametreleri backend tarafında uygulanabilir veya burada frontend'de de filtreleme yapabiliriz
-      // const filteredTAs = doOverrideAcademic && doOverrideConsecutive 
-      //   ? tasFromService 
-      //   : tasFromService.filter(ta => /* burada ek filtreleme yapılabilir */);
+      const tasFromService = await proctoringService.getEligibleProctorsForExam(
+        examId,
+        doOverrideAcademic,      // Pass the academic override flag
+        doOverrideConsecutive  // Pass the consecutive proctoring override flag
+      );
       
       const allFetchedTAs = [...tasFromService];
 
@@ -311,50 +308,52 @@ const ExamList: React.FC<ExamListProps> = ({
   };
 
   // Filter exams based on current tab
-  const filteredExams = exams.filter(exam => {
-    console.log('Filtering exam:', exam, 'currentTab:', currentTab, 'isDeanOffice:', isDeanOffice);
-    
-    // If Dean's Office, hide exams with WAITING_FOR_STUDENT_LIST status entirely
-    if (isDeanOffice && exam.status === ExamStatus.WAITING_FOR_STUDENT_LIST) {
-      console.log('Hiding WAITING_FOR_STUDENT_LIST exam from Dean Office:', exam);
-      return false;
-    }
-    
-    // Always show "Waiting for Places" exams to Dean's Office regardless of tab
-    // unless they're specifically filtering by another status
-    if (isDeanOffice && 
-        (exam.status === ExamStatus.WAITING_FOR_PLACES || !exam.status) && 
-        currentTab === 'ALL') {
-      console.log('Showing exam to Dean Office (all tab):', exam);
-      return true;
-    }
-    
-    if (currentTab === 'ALL') {
-      console.log('Showing exam (all tab):', exam);
-      return true;
-    }
-    
-    // Handle case where backend hasn't implemented status field yet
-    if (!exam.status) {
-      // For Dean's Office view, treat undefined status as "Waiting for Places"
-      if (isDeanOffice && (currentTab === ExamStatus.WAITING_FOR_PLACES || currentTab === "WAITING_FOR_PLACES")) {
-        console.log('Showing undefined status exam to Dean Office:', exam);
+  const filteredExams = React.useMemo(() => {
+    return exams.filter(exam => {
+      console.log('Filtering exam:', exam, 'currentTab:', currentTab, 'isDeanOffice:', isDeanOffice);
+      
+      // If Dean's Office, hide exams with WAITING_FOR_STUDENT_LIST status entirely
+      if (isDeanOffice && exam.status === ExamStatus.WAITING_FOR_STUDENT_LIST) {
+        console.log('Hiding WAITING_FOR_STUDENT_LIST exam from Dean Office:', exam);
+        return false;
+      }
+      
+      // Always show "Waiting for Places" exams to Dean's Office regardless of tab
+      // unless they're specifically filtering by another status
+      if (isDeanOffice && 
+          (exam.status === ExamStatus.WAITING_FOR_PLACES || !exam.status) && 
+          currentTab === 'ALL') {
+        console.log('Showing exam to Dean Office (all tab):', exam);
         return true;
       }
-      console.log('Hiding undefined status exam:', exam);
-      return false;
-    }
-    
-    console.log('Checking exam status:', exam.status, '===', currentTab, exam.status === currentTab);
-    
-    // Handle string vs enum comparison for WAITING_FOR_PLACES
-    if ((currentTab === "WAITING_FOR_PLACES" || currentTab === ExamStatus.WAITING_FOR_PLACES) && 
-        exam.status === ExamStatus.WAITING_FOR_PLACES) {
-      return true;
-    }
-    
-    return exam.status === currentTab;
-  });
+      
+      if (currentTab === 'ALL') {
+        console.log('Showing exam (all tab):', exam);
+        return true;
+      }
+      
+      // Handle case where backend hasn't implemented status field yet
+      if (!exam.status) {
+        // For Dean's Office view, treat undefined status as "Waiting for Places"
+        if (isDeanOffice && (currentTab === ExamStatus.WAITING_FOR_PLACES || currentTab === "WAITING_FOR_PLACES")) {
+          console.log('Showing undefined status exam to Dean Office:', exam);
+          return true;
+        }
+        console.log('Hiding undefined status exam:', exam);
+        return false;
+      }
+      
+      console.log('Checking exam status:', exam.status, '===', currentTab, exam.status === currentTab);
+      
+      // Handle string vs enum comparison for WAITING_FOR_PLACES
+      if ((currentTab === "WAITING_FOR_PLACES" || currentTab === ExamStatus.WAITING_FOR_PLACES) && 
+          exam.status === ExamStatus.WAITING_FOR_PLACES) {
+        return true;
+      }
+      
+      return exam.status === currentTab;
+    });
+  }, [exams, currentTab, isDeanOffice]);
 
   // Handle opening exam dialog
   const handleOpenDialog = (exam?: Exam) => {
@@ -868,6 +867,9 @@ const ExamList: React.FC<ExamListProps> = ({
       
       // Use fullTimeEligibleTAs for auto-suggestion eligibility check
       if (requiredProctorCount > 0 && fullTimeEligibleTAs.length < requiredProctorCount) {
+        // Reset override states to default before opening the Insufficient TAs dialog
+        setOverrideAcademicLevelRule(true);     // Default: academic rule active (bypass checkbox unchecked)
+        setOverrideConsecutiveProctoringRule(false); // Default: consecutive rule active (bypass checkbox unchecked)
         setInsufficientTAsDialogOpen(true); // Open the new dialog
         return; // Stop further processing for this click
       }
@@ -1034,9 +1036,8 @@ const ExamList: React.FC<ExamListProps> = ({
     if (insufficientTAsDialogOpen && examToAssignProctors) {
       fetchAndSetEligibleTAs(
         examToAssignProctors.id,
-        !overrideAcademicLevelRule, // Pass true to override if checkbox is UNCHECKED (state is false)
-        !overrideConsecutiveProctoringRule // Same logic here
-        // excludePartTime argument removed
+        !overrideAcademicLevelRule,     // This ensures unchecking "Override" means backend gets override=true (relax rule)
+        overrideConsecutiveProctoringRule // This passes the state directly
       );
     }
   }, [
@@ -2109,6 +2110,28 @@ const ExamList: React.FC<ExamListProps> = ({
             <br /><br />
             You can still assign proctors manually from the available lists, or adjust the number of required proctors for the exam and try again.
           </DialogContentText>
+          <Box sx={{ mt: 2 }}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={!overrideAcademicLevelRule}
+                  onChange={(e) => setOverrideAcademicLevelRule(!e.target.checked)}
+                  name="overrideAcademicLevel"
+                />
+              }
+              label="Bypass the academic level rule"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={overrideConsecutiveProctoringRule}
+                  onChange={(e) => setOverrideConsecutiveProctoringRule(e.target.checked)}
+                  name="overrideConsecutiveProctoring"
+                />
+              }
+              label="Bypass the one day before/after rule (consecutive proctoring)"
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleAssignFoundEligibleTAs} color="primary">

@@ -1,5 +1,5 @@
 import api from './api';
-import jwtDecode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 export interface LoginCredentials {
   email: string;
@@ -17,6 +17,26 @@ export interface RegistrationData {
   iban?: string;
   academic_level?: string;
   employment_type?: string;
+}
+
+// Custom JWT payload type for our application
+export interface JWTPayload {
+  user_id: number;
+  email: string;
+  role: string;
+  exp: number;
+  first_name: string;
+  last_name: string;
+  is_approved: boolean;
+  email_verified: boolean;
+  department: string;
+  user_data?: {
+    role: string;
+    first_name: string;
+    last_name: string;
+  };
+  id?: number;
+  sub?: number;
 }
 
 export interface TokenPayload {
@@ -110,7 +130,7 @@ class AuthService {
       if (!token) return null;
       
       // Decode the token to get user information
-      const decoded = jwtDecode<any>(token);
+      const decoded = jwtDecode<JWTPayload>(token);
       console.log('Full token payload:', decoded);
       
       // Check if token is expired
