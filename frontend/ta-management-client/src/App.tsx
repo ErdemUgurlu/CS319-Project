@@ -16,6 +16,7 @@ import MyWorkload from './pages/MyWorkload';
 import ApproveUsers from './pages/ApproveUsers';
 import ExamManagement from './pages/ExamManagement';
 import ForgotPassword from './pages/ForgotPassword';
+import Profile from './pages/Profile';
 // Instructor pages
 import InstructorProctoring from './pages/instructor/InstructorProctoring';
 import LeaveApprovals from './pages/instructor/LeaveApprovals';
@@ -90,6 +91,7 @@ const ProtectedLayout = () => {
           <Route path="/exam-management" element={<ExamManagementRoute />} />
           <Route path="/exams" element={<ExamManagementRoute />} />
           <Route path="/dean/exam-management" element={<DeanExamManagement />} />
+          <Route path="/profile" element={<Profile />} />
           {/* Add other protected routes */}
         </Routes>
       </Box>

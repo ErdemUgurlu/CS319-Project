@@ -23,6 +23,7 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 from accounts.views import CustomTokenObtainPairView
+from accounts.password_reset import ForgotPasswordView
 from django.views.generic import RedirectView
 
 urlpatterns = [
@@ -35,6 +36,7 @@ urlpatterns = [
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('api/auth/forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
     
     # App-specific URLs
     path('api/accounts/', include('accounts.urls')),

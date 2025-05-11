@@ -40234,3 +40234,185 @@ INFO 2025-05-11 07:22:49,840 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 20
 INFO 2025-05-11 07:22:49,841 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
 INFO 2025-05-11 07:22:57,811 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
 INFO 2025-05-11 07:22:57,816 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 07:39:44,615 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 07:39:50,758 basehttp "GET /admin/ HTTP/1.1" 200 19462
+INFO 2025-05-11 07:39:50,815 basehttp "GET /static/admin/css/base.css HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,817 basehttp "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,818 basehttp "GET /static/admin/css/dark_mode.css HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,818 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,819 basehttp "GET /static/admin/css/responsive.css HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,865 basehttp "GET /static/admin/js/theme.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,866 basehttp "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,882 basehttp "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,882 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 304 0
+INFO 2025-05-11 07:39:50,883 basehttp "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:08,059 basehttp "GET /admin/ HTTP/1.1" 200 19462
+INFO 2025-05-11 07:43:13,312 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32578
+INFO 2025-05-11 07:43:13,358 basehttp "GET /static/admin/css/changelists.css HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,359 basehttp "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,360 basehttp "GET /static/admin/js/core.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,366 basehttp "GET /static/admin/js/jquery.init.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,369 basehttp "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,373 basehttp "GET /static/admin/js/actions.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,375 basehttp "GET /static/admin/js/urlify.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,376 basehttp "GET /static/admin/js/prepopulate.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,376 basehttp "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,381 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:43:13,384 basehttp "GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,386 basehttp "GET /static/admin/img/search.svg HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,411 basehttp "GET /static/admin/js/filters.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,412 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,426 basehttp "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 304 0
+INFO 2025-05-11 07:43:13,427 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+WARNING 2025-05-11 07:43:37,135 log Not Found: /api/logout/
+WARNING 2025-05-11 07:43:37,136 basehttp "POST /api/logout/ HTTP/1.1" 404 3577
+INFO 2025-05-11 07:43:59,630 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+INFO 2025-05-11 07:44:00,366 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-11 07:44:04,455 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-11 07:44:04,456 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-11 07:44:04,471 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 07:44:04,484 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 07:44:16,632 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 15456
+INFO 2025-05-11 07:44:16,708 basehttp "GET /static/admin/js/cancel.js HTTP/1.1" 304 0
+INFO 2025-05-11 07:44:17,960 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-11 07:44:18,035 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 30907
+INFO 2025-05-11 07:44:18,083 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:45:02,494 basehttp "OPTIONS /api/accounts/import-tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 07:45:08,053 basehttp "POST /api/accounts/import-tas/ HTTP/1.1" 207 799
+INFO 2025-05-11 07:45:08,073 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 07:45:12,852 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32582
+INFO 2025-05-11 07:45:12,885 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:45:23,359 basehttp "POST /admin/accounts/user/ HTTP/1.1" 200 15458
+INFO 2025-05-11 07:45:24,834 basehttp "POST /admin/accounts/user/ HTTP/1.1" 302 0
+INFO 2025-05-11 07:45:24,893 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 30907
+INFO 2025-05-11 07:45:24,944 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:45:31,051 basehttp "GET /admin/accounts/user/?role__exact=INSTRUCTOR HTTP/1.1" 200 25948
+INFO 2025-05-11 07:45:31,097 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:45:37,617 basehttp "POST /admin/accounts/user/?role__exact=INSTRUCTOR HTTP/1.1" 200 15376
+INFO 2025-05-11 07:45:38,820 basehttp "POST /admin/accounts/user/?role__exact=INSTRUCTOR HTTP/1.1" 302 0
+INFO 2025-05-11 07:45:38,862 basehttp "GET /admin/accounts/user/?role__exact=INSTRUCTOR HTTP/1.1" 200 20567
+INFO 2025-05-11 07:45:38,901 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 07:45:45,943 basehttp "OPTIONS /api/accounts/import-instructors/ HTTP/1.1" 200 0
+INFO 2025-05-11 07:45:54,355 basehttp "POST /api/accounts/import-instructors/ HTTP/1.1" 201 505
+INFO 2025-05-11 07:45:54,374 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 07:45:58,715 basehttp "GET /admin/accounts/user/?role__exact=INSTRUCTOR HTTP/1.1" 200 25954
+INFO 2025-05-11 07:45:58,748 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 07:46:53,421 log Not Found: /api/logout/
+WARNING 2025-05-11 07:46:53,422 basehttp "POST /api/logout/ HTTP/1.1" 404 3577
+INFO 2025-05-11 08:00:07,459 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:00:08,803 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:00:27,990 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:00:29,044 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:00:33,742 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:00:34,775 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:00:40,699 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:02:03,899 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:02:04,244 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:02:04,960 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:02:05,305 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:02:08,582 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:02:09,673 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:02:10,908 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:02:11,942 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:02:14,967 basehttp "GET /admin/ HTTP/1.1" 200 19459
+INFO 2025-05-11 08:02:22,571 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:02:26,942 basehttp "GET /admin/ HTTP/1.1" 200 19459
+INFO 2025-05-11 08:02:29,594 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 30778
+INFO 2025-05-11 08:02:29,637 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 08:02:35,002 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 30778
+INFO 2025-05-11 08:02:35,037 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 08:02:45,841 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-11 08:02:45,912 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 08:02:45,925 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 08:02:57,311 basehttp "POST /api/accounts/import-tas/ HTTP/1.1" 207 799
+INFO 2025-05-11 08:02:57,331 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 08:03:03,520 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32590
+INFO 2025-05-11 08:03:03,566 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 08:03:08,607 log Not Found: /api/logout/
+WARNING 2025-05-11 08:03:08,608 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 08:06:26,537 basehttp "OPTIONS /api/auth/forgot-password/ HTTP/1.1" 200 0
+WARNING 2025-05-11 08:06:26,543 log Unauthorized: /api/auth/forgot-password/
+WARNING 2025-05-11 08:06:26,544 basehttp "POST /api/auth/forgot-password/ HTTP/1.1" 401 183
+INFO 2025-05-11 08:06:42,485 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32590
+INFO 2025-05-11 08:06:42,539 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 08:07:28,512 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:07:28,534 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:07:28,541 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:07:29,680 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:07:29,681 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:07:29,708 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:07:35,628 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:07:35,633 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:07:35,669 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\views.py changed, reloading.
+INFO 2025-05-11 08:07:36,716 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:07:36,718 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:07:36,740 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:07:51,924 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:08:03,806 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32590
+INFO 2025-05-11 08:08:03,842 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 08:08:13,490 log Unauthorized: /api/auth/forgot-password/
+WARNING 2025-05-11 08:08:13,492 basehttp "POST /api/auth/forgot-password/ HTTP/1.1" 401 183
+INFO 2025-05-11 08:08:51,381 basehttp "GET /admin/accounts/user/105/change/ HTTP/1.1" 200 43952
+INFO 2025-05-11 08:08:51,445 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,446 basehttp "GET /static/admin/js/calendar.js HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,450 basehttp "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,452 basehttp "GET /static/admin/js/SelectBox.js HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,456 basehttp "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,457 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 08:08:51,458 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,458 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,476 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,531 basehttp "GET /static/admin/img/selector-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,531 basehttp "GET /static/admin/img/icon-unknown.svg HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,532 basehttp "GET /static/admin/img/icon-unknown-alt.svg HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,533 basehttp "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 304 0
+INFO 2025-05-11 08:08:51,534 basehttp "GET /static/admin/img/icon-clock.svg HTTP/1.1" 304 0
+INFO 2025-05-11 08:09:02,830 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32590
+INFO 2025-05-11 08:09:29,137 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\urls.py changed, reloading.
+INFO 2025-05-11 08:09:29,176 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\urls.py changed, reloading.
+INFO 2025-05-11 08:09:29,809 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\urls.py changed, reloading.
+INFO 2025-05-11 08:09:29,837 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\urls.py changed, reloading.
+INFO 2025-05-11 08:09:30,217 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:09:30,300 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:09:30,925 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:09:30,927 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:09:49,223 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:10:35,115 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32590
+INFO 2025-05-11 08:10:35,149 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 08:10:42,900 log Unauthorized: /api/auth/forgot-password/
+WARNING 2025-05-11 08:10:42,902 basehttp "POST /api/auth/forgot-password/ HTTP/1.1" 401 183
+WARNING 2025-05-11 08:10:57,403 log Unauthorized: /api/auth/forgot-password/
+WARNING 2025-05-11 08:10:57,404 basehttp "POST /api/auth/forgot-password/ HTTP/1.1" 401 183
+WARNING 2025-05-11 08:11:12,116 log Unauthorized: /api/auth/forgot-password/
+WARNING 2025-05-11 08:11:12,117 basehttp "POST /api/auth/forgot-password/ HTTP/1.1" 401 183
+WARNING 2025-05-11 08:11:32,328 log Unauthorized: /api/auth/forgot-password/
+WARNING 2025-05-11 08:11:32,329 basehttp "POST /api/auth/forgot-password/ HTTP/1.1" 401 183
+WARNING 2025-05-11 08:12:44,706 log Unauthorized: /api/auth/forgot-password/
+WARNING 2025-05-11 08:12:44,707 basehttp "POST /api/auth/forgot-password/ HTTP/1.1" 401 183
+INFO 2025-05-11 08:13:59,051 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\password_reset.py changed, reloading.
+INFO 2025-05-11 08:13:59,070 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\password_reset.py changed, reloading.
+INFO 2025-05-11 08:13:59,073 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\password_reset.py changed, reloading.
+INFO 2025-05-11 08:13:59,074 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\password_reset.py changed, reloading.
+INFO 2025-05-11 08:13:59,076 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\accounts\password_reset.py changed, reloading.
+INFO 2025-05-11 08:14:00,314 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:00,321 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:00,334 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:00,335 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:00,357 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:12,919 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\settings.py changed, reloading.
+INFO 2025-05-11 08:14:12,922 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\settings.py changed, reloading.
+INFO 2025-05-11 08:14:12,923 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\settings.py changed, reloading.
+INFO 2025-05-11 08:14:12,950 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\settings.py changed, reloading.
+INFO 2025-05-11 08:14:12,953 autoreload C:\Users\memre\OneDrive\Masaüstü\CS319-Project\backend\ta_management_system\settings.py changed, reloading.
+INFO 2025-05-11 08:14:14,067 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:14,069 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:14,075 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:14,075 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:14,085 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:31,319 basehttp "POST /api/auth/forgot-password/ HTTP/1.1" 200 77
+INFO 2025-05-11 08:14:39,882 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 08:14:51,106 basehttp "POST /api/token/ HTTP/1.1" 200 921
+WARNING 2025-05-11 08:14:51,230 log Forbidden: /api/accounts/users/
+WARNING 2025-05-11 08:14:51,232 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 403 63
+WARNING 2025-05-11 08:14:51,244 log Forbidden: /api/accounts/users/
+WARNING 2025-05-11 08:14:51,246 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 403 63

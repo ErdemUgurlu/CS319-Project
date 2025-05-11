@@ -10,7 +10,7 @@ from django.utils.encoding import force_bytes, force_str
 from rest_framework import status, generics, permissions, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from django_filters.rest_framework import DjangoFilterBackend
 import uuid
 import logging
@@ -3797,3 +3797,81 @@ Bilkent University TA Management System"""
         
         logger.info(f"Instructor import successful: {success_count} instructors imported.")
         return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+class ForgotPasswordView(APIView):
+    """
+    View for handling forgot password requests.
+    Generates a temporary password, updates the user's password,
+    and sends an email with the temporary password.
+    """
+    permission_classes = [permissions.AllowAny]  # Use the permissions namespace instead of directly referencing AllowAny
+
+    def post(self, request):
+        email = request.data.get('email')
+        
+        if not email:
+            return Response(
+                {"error": "Email is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        # Find the user with the provided email
+        user = None
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            # We don't want to reveal if a user exists or not for security reasons
+            # So we still return 200 OK even if the user doesn't exist
+            pass
+        
+        if user:
+            # Generate a temporary password (10 characters)
+            temp_password = ''.join(random.choices(
+                string.ascii_letters + string.digits, k=10
+            ))
+            
+            # Update user's password
+            user.set_password(temp_password)
+            user.save()
+            
+            # Send email with the temporary password
+            subject = 'Bilkent TA Management System - Temporary Password'
+            message = f"""
+            Hello {user.first_name},
+            
+            You have requested a password reset for your Bilkent TA Management System account.
+            
+            Your temporary password is: {temp_password}
+            
+            Please log in with this temporary password and change it immediately for security reasons.
+            
+            If you did not request this password reset, please contact the system administrator.
+            
+            Best regards,
+            Bilkent TA Management System Team
+            """
+            
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [email],
+                    fail_silently=False,
+                )
+                # Add logging to help debug email issues
+                print(f"Sent password reset email to {email}")
+                logger.info(f"Sent password reset email to {email} with password {temp_password}")
+            except Exception as e:
+                print(f"Failed to send password reset email: {str(e)}")
+                logger.error(f"Failed to send password reset email: {str(e)}")
+        else:
+            # Log when email is not found
+            logger.info(f"Password reset requested for non-existent email: {email}")
+        
+        # Always return success to prevent email enumeration attacks
+        return Response(
+            {"message": "If the email is registered, a temporary password has been sent."},
+            status=status.HTTP_200_OK
+        )
