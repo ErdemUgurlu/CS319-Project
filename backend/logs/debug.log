@@ -40416,3 +40416,170 @@ WARNING 2025-05-11 08:14:51,230 log Forbidden: /api/accounts/users/
 WARNING 2025-05-11 08:14:51,232 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 403 63
 WARNING 2025-05-11 08:14:51,244 log Forbidden: /api/accounts/users/
 WARNING 2025-05-11 08:14:51,246 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 403 63
+INFO 2025-05-11 09:42:38,537 autoreload Watching for file changes with StatReloader
+INFO 2025-05-11 09:45:32,197 basehttp "OPTIONS /api/leaves/types/ HTTP/1.1" 200 0
+INFO 2025-05-11 09:45:32,197 basehttp "OPTIONS /api/leaves/types/ HTTP/1.1" 200 0
+INFO 2025-05-11 09:45:32,197 basehttp "OPTIONS /api/leaves/my-requests/ HTTP/1.1" 200 0
+INFO 2025-05-11 09:45:32,198 basehttp "OPTIONS /api/leaves/my-requests/ HTTP/1.1" 200 0
+INFO 2025-05-11 09:45:32,222 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 09:45:32,225 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 09:45:32,236 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 09:45:32,238 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+WARNING 2025-05-11 09:45:44,616 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:45:44,616 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+INFO 2025-05-11 09:45:52,777 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-11 09:45:52,831 basehttp "GET /admin/ HTTP/1.1" 200 19459
+INFO 2025-05-11 09:45:53,507 basehttp "GET /static/admin/css/dashboard.css HTTP/1.1" 304 0
+INFO 2025-05-11 09:45:53,530 basehttp "GET /static/admin/img/icon-deletelink.svg HTTP/1.1" 304 0
+WARNING 2025-05-11 09:45:53,798 log Not Found: /favicon.ico
+WARNING 2025-05-11 09:45:53,798 basehttp "GET /favicon.ico HTTP/1.1" 404 3725
+INFO 2025-05-11 09:46:02,643 basehttp "GET /admin/accounts/taassignment/ HTTP/1.1" 200 18900
+INFO 2025-05-11 09:46:02,667 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 09:46:03,999 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 16918
+INFO 2025-05-11 09:46:04,019 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 09:46:09,706 basehttp "GET /admin/accounts/instructortaassignment/add/ HTTP/1.1" 200 20913
+INFO 2025-05-11 09:46:09,725 basehttp "GET /static/admin/css/forms.css HTTP/1.1" 304 0
+INFO 2025-05-11 09:46:09,725 basehttp "GET /static/admin/js/prepopulate_init.js HTTP/1.1" 304 0
+INFO 2025-05-11 09:46:09,727 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 09:46:09,912 basehttp "GET /static/admin/js/change_form.js HTTP/1.1" 304 0
+INFO 2025-05-11 09:46:09,912 basehttp "GET /static/admin/css/widgets.css HTTP/1.1" 304 0
+INFO 2025-05-11 09:46:16,814 basehttp "POST /admin/accounts/instructortaassignment/add/ HTTP/1.1" 302 0
+INFO 2025-05-11 09:46:16,828 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 19253
+INFO 2025-05-11 09:46:16,846 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 09:46:19,187 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:46:19,187 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:46:19,866 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:46:19,867 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:46:20,263 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:46:20,264 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:46:20,436 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:46:20,436 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+INFO 2025-05-11 09:46:27,498 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 09:46:27,499 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 09:46:27,511 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 09:46:27,511 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+WARNING 2025-05-11 09:46:39,419 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:46:39,419 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:46:40,616 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:46:40,616 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:46:41,030 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:46:41,030 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:49:59,387 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:49:59,388 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:50:00,099 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:50:00,099 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:50:00,581 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:50:00,582 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:50:00,897 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:50:00,898 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+WARNING 2025-05-11 09:50:01,132 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:50:01,132 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+INFO 2025-05-11 09:50:26,292 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 52
+INFO 2025-05-11 09:50:26,293 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+WARNING 2025-05-11 09:50:29,072 log Bad Request: /api/leaves/my-requests/
+WARNING 2025-05-11 09:50:29,073 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 400 60
+INFO 2025-05-11 10:06:16,854 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-11 10:06:33,785 log Not Found: /api/logout/
+WARNING 2025-05-11 10:06:33,786 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 10:06:35,699 basehttp "OPTIONS /api/token/ HTTP/1.1" 200 0
+WARNING 2025-05-11 10:06:35,828 log Unauthorized: /api/token/
+WARNING 2025-05-11 10:06:35,828 basehttp "POST /api/token/ HTTP/1.1" 401 63
+WARNING 2025-05-11 10:06:39,070 log Unauthorized: /api/token/
+WARNING 2025-05-11 10:06:39,070 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-11 10:06:51,623 basehttp "GET /admin/accounts/instructortaassignment/ HTTP/1.1" 200 18977
+INFO 2025-05-11 10:06:51,645 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 10:06:53,546 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32600
+INFO 2025-05-11 10:06:53,564 basehttp "GET /static/admin/img/icon-no.svg HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:53,567 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 10:06:53,742 basehttp "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,326 basehttp "GET /admin/accounts/user/104/change/ HTTP/1.1" 200 44243
+INFO 2025-05-11 10:06:56,350 basehttp "GET /static/admin/js/calendar.js HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,351 basehttp "GET /static/admin/js/admin/DateTimeShortcuts.js HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,352 basehttp "GET /static/admin/js/SelectBox.js HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,353 basehttp "GET /static/admin/js/SelectFilter2.js HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,355 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 10:06:56,563 basehttp "GET /static/admin/img/icon-calendar.svg HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,563 basehttp "GET /static/admin/img/icon-unknown.svg HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,563 basehttp "GET /static/admin/img/icon-clock.svg HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,564 basehttp "GET /static/admin/img/selector-icons.svg HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:56,564 basehttp "GET /static/admin/img/icon-unknown-alt.svg HTTP/1.1" 304 0
+INFO 2025-05-11 10:06:58,375 basehttp "GET /admin/accounts/user/104/password/ HTTP/1.1" 200 15263
+INFO 2025-05-11 10:07:07,750 basehttp "POST /admin/accounts/user/104/password/ HTTP/1.1" 302 0
+INFO 2025-05-11 10:07:07,779 basehttp "GET /admin/accounts/user/104/change/ HTTP/1.1" 200 44379
+INFO 2025-05-11 10:07:07,796 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 10:07:16,063 basehttp "POST /api/token/ HTTP/1.1" 200 915
+INFO 2025-05-11 10:07:16,108 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 10:07:16,112 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 546
+INFO 2025-05-11 10:07:16,117 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 52
+INFO 2025-05-11 10:07:16,127 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 546
+INFO 2025-05-11 10:07:32,571 basehttp "POST /api/leaves/my-requests/ HTTP/1.1" 201 102
+WARNING 2025-05-11 10:07:35,830 log Not Found: /api/logout/
+WARNING 2025-05-11 10:07:35,831 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 10:07:42,742 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32600
+INFO 2025-05-11 10:07:42,763 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+WARNING 2025-05-11 10:07:48,786 log Unauthorized: /api/token/
+WARNING 2025-05-11 10:07:48,787 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-11 10:07:50,172 basehttp "POST /api/token/ HTTP/1.1" 200 915
+INFO 2025-05-11 10:07:50,216 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 546
+INFO 2025-05-11 10:07:50,217 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 304
+INFO 2025-05-11 10:07:50,226 basehttp "GET /api/leaves/types/ HTTP/1.1" 200 546
+INFO 2025-05-11 10:07:50,229 basehttp "GET /api/leaves/my-requests/ HTTP/1.1" 200 304
+WARNING 2025-05-11 10:08:03,421 log Not Found: /api/logout/
+WARNING 2025-05-11 10:08:03,422 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+WARNING 2025-05-11 10:08:08,767 log Unauthorized: /api/token/
+WARNING 2025-05-11 10:08:08,768 basehttp "POST /api/token/ HTTP/1.1" 401 63
+INFO 2025-05-11 10:08:15,432 basehttp "GET /admin/accounts/user/101/change/ HTTP/1.1" 200 44218
+INFO 2025-05-11 10:08:15,454 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 10:08:17,293 basehttp "GET /admin/accounts/user/101/password/ HTTP/1.1" 200 15261
+INFO 2025-05-11 10:08:23,750 basehttp "POST /admin/accounts/user/101/password/ HTTP/1.1" 302 0
+INFO 2025-05-11 10:08:23,778 basehttp "GET /admin/accounts/user/101/change/ HTTP/1.1" 200 44354
+INFO 2025-05-11 10:08:23,795 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 10:08:29,087 basehttp "POST /api/token/ HTTP/1.1" 200 939
+INFO 2025-05-11 10:08:33,678 basehttp "OPTIONS /api/leaves/instructor/requests/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:08:33,678 basehttp "OPTIONS /api/leaves/instructor/requests/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:08:33,692 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 304
+INFO 2025-05-11 10:08:33,702 basehttp "GET /api/leaves/instructor/requests/ HTTP/1.1" 200 304
+INFO 2025-05-11 10:08:35,207 basehttp "OPTIONS /api/leaves/requests/1/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:08:35,217 basehttp "GET /api/leaves/requests/1/ HTTP/1.1" 200 396
+INFO 2025-05-11 10:08:43,167 basehttp "OPTIONS /api/leaves/requests/1/review/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:08:45,438 basehttp "POST /api/leaves/requests/1/review/ HTTP/1.1" 200 56
+INFO 2025-05-11 10:09:05,571 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:09:05,571 basehttp "OPTIONS /api/tasks/my-tasks/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:09:05,582 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 10:09:05,594 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 10:09:06,377 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:09:06,377 basehttp "OPTIONS /api/accounts/instructor/tas/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:09:06,393 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 478
+INFO 2025-05-11 10:09:06,404 basehttp "GET /api/accounts/instructor/tas/ HTTP/1.1" 200 478
+INFO 2025-05-11 10:09:11,500 basehttp "OPTIONS /api/tasks/create-task/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:09:13,074 basehttp "POST /api/tasks/create-task/ HTTP/1.1" 201 508
+INFO 2025-05-11 10:09:13,091 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 510
+WARNING 2025-05-11 10:09:16,062 log Not Found: /api/logout/
+WARNING 2025-05-11 10:09:16,063 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 10:09:19,008 basehttp "POST /api/token/ HTTP/1.1" 200 915
+INFO 2025-05-11 10:09:19,042 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 510
+INFO 2025-05-11 10:09:19,053 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 510
+INFO 2025-05-11 10:09:23,419 basehttp "OPTIONS /api/tasks/task/1/accept/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:09:26,882 basehttp "POST /api/tasks/task/1/accept/ HTTP/1.1" 200 98
+INFO 2025-05-11 10:09:26,902 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 518
+INFO 2025-05-11 10:09:33,152 basehttp "OPTIONS /api/tasks/task/1/complete/ HTTP/1.1" 200 0
+INFO 2025-05-11 10:09:34,695 basehttp "POST /api/tasks/task/1/complete/ HTTP/1.1" 200 22
+INFO 2025-05-11 10:09:34,715 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 646
+WARNING 2025-05-11 10:09:41,101 log Not Found: /api/logout/
+WARNING 2025-05-11 10:09:41,102 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 10:09:44,045 basehttp "POST /api/token/ HTTP/1.1" 200 921
+INFO 2025-05-11 10:09:44,074 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 10:09:44,082 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+WARNING 2025-05-11 10:09:49,029 log Not Found: /api/logout/
+WARNING 2025-05-11 10:09:49,029 basehttp "POST /api/logout/ HTTP/1.1" 404 3726
+INFO 2025-05-11 10:09:51,605 basehttp "GET /admin/accounts/user/ HTTP/1.1" 200 32600
+INFO 2025-05-11 10:09:51,623 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 10:09:55,764 basehttp "GET /admin/accounts/user/15/change/ HTTP/1.1" 200 44248
+INFO 2025-05-11 10:09:55,786 basehttp "GET /admin/jsi18n/ HTTP/1.1" 200 3343
+INFO 2025-05-11 10:10:05,704 basehttp "POST /api/token/ HTTP/1.1" 200 910
+INFO 2025-05-11 10:10:05,747 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 10:10:05,753 basehttp "GET /api/tasks/my-tasks/ HTTP/1.1" 200 2
+INFO 2025-05-11 10:10:08,075 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-11 10:10:08,075 basehttp "OPTIONS /api/accounts/users/?is_approved=false HTTP/1.1" 200 0
+INFO 2025-05-11 10:10:08,089 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52
+INFO 2025-05-11 10:10:08,098 basehttp "GET /api/accounts/users/?is_approved=false HTTP/1.1" 200 52

@@ -35,6 +35,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import DownloadIcon from '@mui/icons-material/Download';
 import { format, parseISO } from 'date-fns';
 import * as leaveService from '../services/leaveService';
+import axios from 'axios';
 
 const LeaveRequests: React.FC = () => {
   const { authState } = useAuth();
@@ -228,7 +229,40 @@ const LeaveRequests: React.FC = () => {
       handleCloseDialog();
     } catch (err) {
       console.error('Error submitting leave request:', err);
+      // Check if err.response and err.response.data exist
+      if (axios.isAxiosError(err) && err.response && err.response.data) {
+        // err.response.data might be an object like:
+        // { "start_date": ["Date has wrong format. Use one of these formats instead: YYYY-MM-DD."] }
+        // Or { "detail": "Some other error" }
+        // Or even a string
+        console.error('Backend validation errors:', err.response.data);
+        
+        // Attempt to create a user-friendly message from backend errors
+        let backendErrorMessages = [];
+        if (typeof err.response.data === 'object' && err.response.data !== null) {
+            for (const key in err.response.data) {
+                if (Array.isArray(err.response.data[key])) {
+                    backendErrorMessages.push(`${key}: ${err.response.data[key].join(', ')}`);
+                } else {
+                    backendErrorMessages.push(`${key}: ${err.response.data[key]}`);
+                }
+            }
+            // Check for a common DRF non_field_errors or detail message
+            if (backendErrorMessages.length === 0 && (err.response.data.detail || err.response.data.non_field_errors)) {
+              setDialogError(err.response.data.detail || err.response.data.non_field_errors.join('; '));
+            } else if (backendErrorMessages.length > 0) {
+              setDialogError(`Failed to submit. Server errors: ${backendErrorMessages.join('; ')}`);
+            } else {
+              setDialogError('Failed to submit leave request. An unknown error occurred with the server response.');
+            }
+        } else if (typeof err.response.data === 'string') {
+             setDialogError(`Failed to submit. Server error: ${err.response.data}`);
+        } else {
       setDialogError('Failed to submit leave request. Please try again.');
+        }
+      } else {
+        setDialogError('Failed to submit leave request. Please try again. Check network connection.');
+      }
     } finally {
       setDialogLoading(false);
     }
