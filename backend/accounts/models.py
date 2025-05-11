@@ -330,7 +330,7 @@ class Exam(models.Model):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='created_exams')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    status = models.CharField(max_length=25, choices=Status.choices, default=Status.WAITING_FOR_STUDENT_LIST)
+    status = models.CharField(max_length=40, choices=Status.choices, default=Status.WAITING_FOR_STUDENT_LIST)
     student_count = models.PositiveIntegerField(default=0, help_text="Automatically calculated from the student list file if provided")
     student_list_file = models.FileField(upload_to='exam_student_lists/', null=True, blank=True, 
                                         help_text="Excel file containing the list of students for this exam")
