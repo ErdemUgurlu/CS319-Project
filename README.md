@@ -98,11 +98,9 @@ The **TA Management System** is a **Linux and web-based platform** designed to e
 
 ###   **Role-Based Access Control**  
   **User Groups:**  
-- **TA**  
-- **Faculty**  
-- **Department Staff**  
-- **Department Chair**  
-- **Dean**  
+- **TA**     
+- **Authorized Staff**  
+- **Dean's Office**  
 - **Administrator**  
 
   **Global System Settings** (e.g., current semester) can only be modified by **administrators**.  
